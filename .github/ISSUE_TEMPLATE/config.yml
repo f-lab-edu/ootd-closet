@@ -1,2 +1,7 @@
 blank_issues_enabled: false
-contact_links: []
+issue_templates:
+  - name: "✨ Feature Template"
+    about: "새로운 기능 추가 템플릿"
+    title: "[Feature]: "
+    labels: ["feature"]
+    filename: "feature-issue-template.yml"
