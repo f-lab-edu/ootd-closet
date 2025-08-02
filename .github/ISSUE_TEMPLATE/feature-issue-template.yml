@@ -1,10 +1,8 @@
-name: "✨ Feature"
-description: "새로운 기능 추가 작성해주세요"
+name: "✨ Feature Template"
+description: "새로운 기능 추가 템플릿"
 title: "[Feature]: "
-labels:
-  - "feature"
-assignees:
-  - jaewoo9797
+labels: ["feature"]
+
 body:
   - type: markdown
     attributes:
