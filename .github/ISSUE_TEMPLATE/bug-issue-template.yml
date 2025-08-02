@@ -1,0 +1,22 @@
+name: "🐞 버그 신고"
+description: "발견한 버그를 신고해주세요."
+labels: ["bug"]
+body:
+  - type: textarea
+    attributes:
+      label: 🐛 버그 설명
+      description: 문제 내용을 구체적으로 작성해주세요.
+      placeholder: 예) 로그인 시 페이지가 멈춥니다.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 🔄 재현 방법
+      description: 재현 가능한 단계별 설명을 적어주세요.
+      placeholder: 1. 로그인 화면 진입 2. 아이디 입력 3. 로그인 버튼 클릭
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 📷 스크린샷(선택)
+      description: 버그 관련 이미지나 로그를 첨부해주세요.
