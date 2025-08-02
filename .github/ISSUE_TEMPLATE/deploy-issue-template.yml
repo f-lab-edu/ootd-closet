@@ -1,0 +1,38 @@
+name: "🚀 배포"
+description: "배포 관련 작업을 정리해주세요."
+labels: ["deployment"]
+body:
+  - type: textarea
+    attributes:
+      label: 📢 배포 목적 및 개요
+      description: 배포하는 이유와 간단한 설명을 작성해주세요.
+      placeholder: 예) v1.0.0 정식 배포, 긴급 버그 수정 배포 등
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: ✅ 배포 작업 내용
+      description: 배포 단계별 작업 내역을 체크박스 형식으로 작성해주세요.
+      placeholder: |
+        - [ ] 코드 빌드 및 테스트
+        - [ ] 서버에 배포
+        - [ ] DB 마이그레이션 수행
+        - [ ] 정상 동작 확인
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: ⚠️ 배포 시 주의사항 및 리스크
+      description: 배포 시 예상되는 위험 요소나 주의사항을 작성해주세요.
+      placeholder: 예) DB 마이그레이션 시간 오래 걸림, 다운타임 발생 가능 등
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: 🙋🏻 참고 자료
+      description: 배포 관련 문서, 이슈, PR 링크 등이 있으면 적어주세요.
+    validations:
+      required: false
