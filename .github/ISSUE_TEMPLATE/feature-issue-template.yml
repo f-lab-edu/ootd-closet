@@ -1,0 +1,46 @@
+name: "✨ Feature"
+description: "새로운 기능 추가 작성해주세요"
+title: "[Feature]: "
+labels:
+  - "feature"
+assignees:
+  - jaewoo9797
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 기능 요청 요약
+        간단히 어떤 기능인지 적어주세요.
+
+  - type: textarea
+    id: feature_description
+    attributes:
+      label: 📄기능 상세 설명
+      description: |
+        기능의 목적, 기대 효과, 동작 방식 등을 구체적으로 작성해주세요.
+      placeholder: |
+        예) 사용자 프로필 사진 변경 기능 추가 요청합니다.
+    validations:
+      required: true
+
+  - type: textarea
+    id: use_case
+    attributes:
+      label: ✅작업할 내용
+      description: |
+        할 일을 체크박스 형태로 작성해주세요.
+      placeholder: |
+        최대한 세분화 해서 적어주세요.
+    validations:
+      required: false
+
+  - type: textarea
+    id: 추가 참고사항
+    attributes:
+      label: 추가 참고사항(선택)
+      description: |
+        참고할 만한 링크, 유사 기능, 관련 이슈 등이 있으면 적어주세요.
+      placeholder: |
+        예) 기존 앱의 A 기능과 유사합니다.
+    validations:
+      required: false
