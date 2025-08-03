@@ -8,6 +8,7 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.closet.common.exception.follow.SelfFollowNotAllowedException;
 import org.closet.domain.base.BaseEntity;
 import org.closet.domain.user.User;
 
@@ -27,9 +28,9 @@ public class Follow extends BaseEntity {
 
     @Builder
     public Follow(User follower, User followee) {
-//        if (follower.getId().equals(followee.getId())) {
-//            throw SelfFollowNotAllowedException.withUserId(follower.getId().toString());
-//        }
+        if (follower.getId().equals(followee.getId())) {
+            throw SelfFollowNotAllowedException.withUserId(follower.getId().toString());
+        }
         this.follower = follower;
         this.followee = followee;
     }
