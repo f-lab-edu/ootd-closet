@@ -1,8 +1,15 @@
-package project.closet.security.jwt;
+package org.closet.domain.jwt;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import java.time.Instant;
 import java.util.UUID;
-import project.closet.domain.base.BaseUpdatableEntity;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.closet.domain.base.BaseUpdatableEntity;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,8 +30,12 @@ public class JwtSession extends BaseUpdatableEntity {
     private Instant expirationTime;
 
     @Builder
-    public JwtSession(UUID userId, String accessToken, String refreshToken,
-                      Instant expirationTime) {
+    public JwtSession(
+        UUID userId,
+        String accessToken,
+        String refreshToken,
+        Instant expirationTime
+    ) {
         this.userId = userId;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
