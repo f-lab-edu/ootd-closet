@@ -1,6 +1,5 @@
 rootProject.name = 'closet'
-include 'domain'
 include 'api'
-include 'application'
-include 'infrastructure'
 include 'common'
+include 'domain'
+include 'infrastructure'
