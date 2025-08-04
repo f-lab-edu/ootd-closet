@@ -1,4 +1,4 @@
-package org.closet.domain.notification;
+package org.closet.domain.notification.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

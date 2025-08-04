@@ -1,4 +1,4 @@
-package org.closet.domain.weather;
+package org.closet.domain.weather.entity;
 
 public enum PrecipitationType {
     // 없음(0), 비(1), 비/눈(2), 눈(3), 소나기(4)

@@ -1,4 +1,4 @@
-package org.closet.domain.weather;
+package org.closet.domain.weather.entity;
 
 public enum SkyStatus {
     // 맑음, 구름 많음, 흐림

@@ -1,13 +1,14 @@
-package project.closet.user.repository;
+package org.closet.infra.persistence.user;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.closet.domain.user.entity.User;
+import org.closet.domain.user.repository.UserRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import project.closet.user.entity.User;
 
-public interface UserRepository extends JpaRepository<User, UUID>, UserRepositoryCustom {
+public interface UserJpaRepository extends UserRepository, JpaRepository<User, UUID>, UserRepositoryCustom {
 
     Optional<User> findByEmail(String email);
 

@@ -10,7 +10,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.closet.domain.base.BaseUpdatableEntity;
-import org.closet.domain.user.User;
+import org.closet.domain.user.entity.User;
 
 @Getter
 @Entity

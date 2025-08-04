@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.closet.common.exception.follow.SelfFollowNotAllowedException;
 import org.closet.domain.base.BaseEntity;
-import org.closet.domain.user.User;
+import org.closet.domain.user.entity.User;
 
 @Entity
 @Table(name = "follows")

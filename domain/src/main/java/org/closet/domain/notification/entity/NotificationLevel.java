@@ -1,4 +1,4 @@
-package org.closet.domain.notification;
+package org.closet.domain.notification.entity;
 
 public enum NotificationLevel {
     INFO,

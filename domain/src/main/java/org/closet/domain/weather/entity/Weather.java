@@ -1,4 +1,4 @@
-package org.closet.domain.weather;
+package org.closet.domain.weather.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

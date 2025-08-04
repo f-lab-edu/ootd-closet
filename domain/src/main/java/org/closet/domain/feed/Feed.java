@@ -15,8 +15,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.closet.domain.base.BaseUpdatableEntity;
 import org.closet.domain.clothes.Clothes;
-import org.closet.domain.user.User;
-import org.closet.domain.weather.Weather;
+import org.closet.domain.user.entity.User;
+import org.closet.domain.weather.entity.Weather;
 import org.hibernate.annotations.BatchSize;
 
 @Getter
