@@ -19,6 +19,7 @@ import project.closet.exception.user.UserNotFoundException;
 import project.closet.follower.entity.Follow;
 import project.closet.follower.repository.FollowRepository;
 import project.closet.follower.service.FollowService;
+import project.closet.storage.S3ContentStorage;
 import project.closet.user.entity.User;
 import project.closet.user.repository.UserRepository;
 
@@ -30,6 +31,7 @@ public class BasicFollowService implements FollowService {
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final S3ContentStorage s3ContentStorage;
 
     @Transactional
     @Override
@@ -38,64 +40,62 @@ public class BasicFollowService implements FollowService {
         // TODO 중복 검사 로직 추가 or 데이터베이스 제약조건 추가
         UUID followerId = followCreateRequest.followerId();
         User follower = userRepository.findByIdWithProfile(followerId)
-                .orElseThrow(() -> UserNotFoundException.withId(followerId));
+            .orElseThrow(() -> UserNotFoundException.withId(followerId));
 
         UUID followeeId = followCreateRequest.followeeId();
         User followee = userRepository.findByIdWithProfile(followeeId)
-                .orElseThrow(() -> UserNotFoundException.withId(followeeId));
+            .orElseThrow(() -> UserNotFoundException.withId(followeeId));
 
         Follow follow = Follow.builder()
-                .follower(follower)
-                .followee(followee)
-                .build();
+            .follower(follower)
+            .followee(followee)
+            .build();
 
         // 알림 생성 이벤트
         eventPublisher.publishEvent(new FollowCreateEvent(followeeId, follower.getName()));
-        return FollowDto.from(followRepository.save(follow));
+        return toFollowDto(followRepository.save(follow));
     }
 
     @Transactional(readOnly = true)
     @Override
     public FollowSummaryDto getFollowSummary(UUID userId, UUID currentUserId) {
         log.debug("Getting follow summary for userId: {}, currentUserId: {}", userId,
-                currentUserId);
+            currentUserId);
 
         long followerCount = followRepository.countByFolloweeId(userId);
         long followingCount = followRepository.countByFollowerId(userId);
 
         Optional<Follow> myFollow = followRepository.findByFollowerIdAndFolloweeId(currentUserId,
-                userId);
+            userId);
         boolean followedByMe = myFollow.isPresent();
         UUID followedByMeId = myFollow.map(Follow::getId).orElse(null);
 
         boolean followingMe = followRepository.existsByFollowerIdAndFolloweeId(userId, currentUserId);
 
         return new FollowSummaryDto(
-                userId,
-                followerCount,
-                followingCount,
-                followedByMe,
-                followedByMeId,
-                followingMe
+            userId,
+            followerCount,
+            followingCount,
+            followedByMe,
+            followedByMeId,
+            followingMe
         );
     }
 
     @Transactional(readOnly = true)
     @Override
     public FollowListResponse getFollowingList(UUID followerId, String cursor, UUID idAfter,
-            int limit, String nameLike) {
+                                               int limit, String nameLike) {
         List<Follow> follows = followRepository.findFollowingsWithCursor(
-                followerId,
-                cursor != null ? Instant.parse(cursor) : null,
-                idAfter,
-                nameLike,
-                limit
+            followerId,
+            cursor != null ? Instant.parse(cursor) : null,
+            idAfter,
+            nameLike,
+            limit
         );
         boolean hasNext = follows.size() > limit;
         List<Follow> pageItems = hasNext ? follows.subList(0, limit) : follows;
-        List<FollowDto> followDtos = pageItems.stream()
-                .map(FollowDto::from)
-                .toList();
+        List<FollowDto> followDtos = toFollowerDto(pageItems);
 
         String nextCursor = null;
         UUID nextIdAfter = null;
@@ -107,31 +107,29 @@ public class BasicFollowService implements FollowService {
 
         long totalCount = followRepository.countByFollowerId(followerId);
         return new FollowListResponse(
-                followDtos,
-                nextCursor,
-                nextIdAfter,
-                hasNext,
-                totalCount,
-                "createdAt",
-                "DESCENDING"
+            followDtos,
+            nextCursor,
+            nextIdAfter,
+            hasNext,
+            totalCount,
+            "createdAt",
+            "DESCENDING"
         );
     }
 
     @Transactional(readOnly = true)
     @Override
     public FollowListResponse getFollowerList(UUID followeeId, String cursor, UUID idAfter,
-            int limit, String nameLike) {
+                                              int limit, String nameLike) {
         Instant parsedCursor = (cursor != null) ? Instant.parse(cursor) : null;
 
         List<Follow> follows = followRepository.findFollowersWithCursor(
-                followeeId, parsedCursor, idAfter, nameLike, limit);
+            followeeId, parsedCursor, idAfter, nameLike, limit);
 
         boolean hasNext = follows.size() > limit;
         List<Follow> pageItems = hasNext ? follows.subList(0, limit) : follows;
 
-        List<FollowDto> followDtos = pageItems.stream()
-                .map(FollowDto::from)
-                .toList();
+        List<FollowDto> followDtos = toFollowerDto(pageItems);
 
         String nextCursor = null;
         UUID nextIdAfter = null;
@@ -144,14 +142,28 @@ public class BasicFollowService implements FollowService {
         long totalCount = followRepository.countByFolloweeId(followeeId);
 
         return new FollowListResponse(
-                followDtos,
-                nextCursor,
-                nextIdAfter,
-                hasNext,
-                totalCount,
-                "createdAt",
-                "DESC"
+            followDtos,
+            nextCursor,
+            nextIdAfter,
+            hasNext,
+            totalCount,
+            "createdAt",
+            "DESC"
         );
+    }
+
+    private FollowDto toFollowDto(Follow follow) {
+        String followerImageUrl =
+            s3ContentStorage.getPresignedUrl(follow.getFollower().getProfile().getProfileImageKey());
+        String followeeImageUrl =
+            s3ContentStorage.getPresignedUrl(follow.getFollowee().getProfile().getProfileImageKey());
+        return FollowDto.fromWithImageUrl(follow, followeeImageUrl, followerImageUrl);
+    }
+
+    private List<FollowDto> toFollowerDto(List<Follow> followList) {
+        return followList.stream()
+            .map(this::toFollowDto)
+            .toList();
     }
 
     @Transactional

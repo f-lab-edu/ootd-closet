@@ -9,19 +9,19 @@ public record FollowDto(
         UserSummary follower
 ) {
 
-    public static FollowDto from(Follow follow) {
+    public static FollowDto fromWithImageUrl(Follow follow, String followeeImage,  String followerImage) {
         return new FollowDto(
-                follow.getId(),
-                new UserSummary(
-                        follow.getFollowee().getId(),
-                        follow.getFollowee().getName(),
-                        follow.getFollowee().getProfile().getProfileImageKey()
+            follow.getId(),
+            new UserSummary(
+                follow.getFollowee().getId(),
+                follow.getFollowee().getName(),
+                followeeImage
                 ),
-                new UserSummary(
-                        follow.getFollower().getId(),
-                        follow.getFollower().getName(),
-                        follow.getFollower().getProfile().getProfileImageKey()
-                )
+            new UserSummary(
+                follow.getFollower().getId(),
+                follow.getFollower().getName(),
+                followerImage
+            )
         );
     }
 }
