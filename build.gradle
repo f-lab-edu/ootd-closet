@@ -32,14 +32,6 @@ subprojects {
         }
     }
 
-    tasks.named('test') {
-        useJUnitPlatform()
-    }
-
-    tasks.named('jar') {
-        enabled = false
-    }
-
     dependencies {
         // lombok
         compileOnly 'org.projectlombok:lombok'
@@ -50,5 +42,14 @@ subprojects {
         // test
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         testImplementation 'org.springframework.security:spring-security-test'
+    }
+    tasks.named('jar') {
+        enabled = false
+    }
+    tasks.named('bootJar') {
+        enabled = false
+    }
+    tasks.named('test') {
+        useJUnitPlatform()
     }
 }
