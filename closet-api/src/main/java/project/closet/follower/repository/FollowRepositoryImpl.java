@@ -23,21 +23,21 @@ public class FollowRepositoryImpl implements FollowRepositoryCustom {
     ) {
         StringBuilder jpql = new StringBuilder(
                 "SELECT f FROM Follow f " +
-                        "JOIN FETCH f.followee fe " +
-                        "LEFT JOIN FETCH fe.profile p " +
-                        "WHERE f.follower.userId = :followerId "
+                        "JOIN FETCH f.follower fo " +
+                        "LEFT JOIN FETCH fo.profile p " +
+                        "WHERE fo.id = :followerId "
         );
 
         if (cursor != null && idAfter != null) {
             jpql.append(
-                    "AND (f.createdAt < :cursor OR (f.createdAt = :cursor AND f.userId < :idAfter)) ");
+                    "AND (f.createdAt < :cursor OR (f.createdAt = :cursor AND f.id < :idAfter)) ");
         }
 
         if (nameLike != null && !nameLike.isBlank()) {
             jpql.append("AND fe.name LIKE :nameLike ");
         }
 
-        jpql.append("ORDER BY f.createdAt DESC, f.userId DESC");
+        jpql.append("ORDER BY f.createdAt DESC, f.id DESC");
 
         TypedQuery<Follow> query = em.createQuery(jpql.toString(), Follow.class);
         query.setParameter("followerId", followerId);
@@ -60,21 +60,21 @@ public class FollowRepositoryImpl implements FollowRepositoryCustom {
             String nameLike, int limit) {
         StringBuilder jpql = new StringBuilder(
                 "SELECT f FROM Follow f " +
-                        "JOIN FETCH f.follower fo " +
-                        "LEFT JOIN FETCH fo.profile p " +
-                        "WHERE f.followee.userId = :followeeId "
+                        "JOIN FETCH f.followee fe " +
+                        "LEFT JOIN FETCH fe.profile p " +
+                        "WHERE fe.id = :followeeId "
         );
 
         if (cursor != null && idAfter != null) {
             jpql.append(
-                    "AND (f.createdAt < :cursor OR (f.createdAt = :cursor AND f.userId < :idAfter)) ");
+                    "AND (f.createdAt < :cursor OR (f.createdAt = :cursor AND f.id < :idAfter)) ");
         }
 
         if (nameLike != null && !nameLike.isBlank()) {
             jpql.append("AND fo.name LIKE :nameLike ");
         }
 
-        jpql.append("ORDER BY f.createdAt DESC, f.userId DESC");
+        jpql.append("ORDER BY f.createdAt DESC, f.id DESC");
 
         TypedQuery<Follow> query = em.createQuery(jpql.toString(), Follow.class);
         query.setParameter("followeeId", followeeId);
