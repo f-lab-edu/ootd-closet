@@ -2,7 +2,7 @@ package project.closet.dto.response;
 
 import java.time.Instant;
 import java.util.UUID;
-import project.closet.entity.feed.comment.FeedComment;
+import project.closet.feed.entity.FeedComment;
 
 public record CommentDto(
     UUID id,

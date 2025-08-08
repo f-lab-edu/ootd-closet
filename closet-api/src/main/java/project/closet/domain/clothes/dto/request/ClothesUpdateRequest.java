@@ -3,7 +3,7 @@ package project.closet.domain.clothes.dto.request;
 import jakarta.validation.Valid;
 import java.util.List;
 import project.closet.domain.clothes.dto.response.ClothesAttributeDto;
-import project.closet.entity.clothes.ClothesType;
+import project.closet.clothes.entity.ClothesType;
 
 public record ClothesUpdateRequest(
     String name,

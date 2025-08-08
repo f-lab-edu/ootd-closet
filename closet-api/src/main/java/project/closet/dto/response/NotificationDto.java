@@ -2,8 +2,8 @@ package project.closet.dto.response;
 
 import java.time.Instant;
 import java.util.UUID;
-import project.closet.entity.notification.Notification;
-import project.closet.entity.notification.NotificationLevel;
+import project.closet.notification.entity.Notification;
+import project.closet.notification.entity.NotificationLevel;
 
 public record NotificationDto(
     UUID id,

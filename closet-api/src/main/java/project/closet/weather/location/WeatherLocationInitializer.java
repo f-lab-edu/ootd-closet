@@ -16,6 +16,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
+import project.closet.weatherlocation.WeatherLocation;
+import project.closet.weatherlocation.WeatherLocationRepository;
 
 @Slf4j
 @Component

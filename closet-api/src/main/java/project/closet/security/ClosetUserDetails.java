@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import project.closet.entity.user.Role;
-import project.closet.entity.user.User;
+import project.closet.user.entity.Role;
+import project.closet.user.entity.User;
 import project.closet.security.jwt.JwtObject;
 
 /*

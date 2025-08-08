@@ -3,8 +3,8 @@ package project.closet.dto.response;
 import jakarta.annotation.Nullable;
 import java.time.Instant;
 import java.util.UUID;
-import project.closet.entity.weather.SkyStatus;
-import project.closet.entity.weather.Weather;
+import project.closet.weather.entity.SkyStatus;
+import project.closet.weather.entity.Weather;
 
 public record WeatherDto(
     UUID id,

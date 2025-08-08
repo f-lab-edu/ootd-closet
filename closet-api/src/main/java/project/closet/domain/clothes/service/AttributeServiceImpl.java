@@ -13,8 +13,8 @@ import project.closet.domain.clothes.dto.request.ClothesAttributeDefCreateReques
 import project.closet.domain.clothes.dto.request.ClothesAttributeDefUpdateRequest;
 import project.closet.domain.clothes.dto.response.ClothesAttributeDefDto;
 import project.closet.domain.clothes.dto.response.ClothesAttributeDefDtoCursorResponse;
-import project.closet.domain.clothes.repository.AttributeRepository;
-import project.closet.entity.attributes.Attribute;
+import project.closet.attributes.repository.AttributeRepository;
+import project.closet.attributes.entity.Attribute;
 import project.closet.event.ClothesAttributeCreatEvent;
 import project.closet.event.ClothesAttributeUpdateEvent;
 import project.closet.exception.clothes.attribute.AttributeDuplicateException;
@@ -52,7 +52,7 @@ public class AttributeServiceImpl implements AttributeService {
             UUID id,
             ClothesAttributeDefUpdateRequest req
     ) {
-        
+
         Attribute attribute = repo.findById(id)
                 .orElseThrow(() -> new AttributeNotFoundException(id.toString()));
 

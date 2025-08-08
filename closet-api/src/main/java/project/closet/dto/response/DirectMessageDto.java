@@ -2,7 +2,7 @@ package project.closet.dto.response;
 
 import java.time.Instant;
 import java.util.UUID;
-import project.closet.entity.dm.DirectMessage;
+import project.closet.dm.DirectMessage;
 
 public record DirectMessageDto(
     UUID id,

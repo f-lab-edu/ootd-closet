@@ -26,7 +26,7 @@ import project.closet.dto.request.UserRoleUpdateRequest;
 import project.closet.dto.response.ProfileDto;
 import project.closet.dto.response.UserDto;
 import project.closet.dto.response.UserDtoCursorResponse;
-import project.closet.entity.user.Role;
+import project.closet.user.entity.Role;
 import project.closet.user.controller.api.UserApi;
 import project.closet.user.service.UserService;
 

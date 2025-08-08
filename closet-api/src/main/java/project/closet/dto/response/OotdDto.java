@@ -3,8 +3,8 @@ package project.closet.dto.response;
 import java.util.List;
 import java.util.UUID;
 import project.closet.domain.clothes.dto.response.ClothesAttributeWithDefDto;
-import project.closet.entity.clothes.Clothes;
-import project.closet.entity.clothes.ClothesType;
+import project.closet.clothes.entity.Clothes;
+import project.closet.clothes.entity.ClothesType;
 
 public record OotdDto(
     UUID clothesId,

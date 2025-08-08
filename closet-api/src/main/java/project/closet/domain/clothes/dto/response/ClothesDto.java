@@ -2,7 +2,7 @@ package project.closet.domain.clothes.dto.response;
 
 import java.util.List;
 import java.util.UUID;
-import project.closet.entity.clothes.Clothes;
+import project.closet.clothes.entity.Clothes;
 
 
 public record ClothesDto(

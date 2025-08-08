@@ -21,7 +21,7 @@ import project.closet.domain.clothes.dto.response.ClothesDto;
 import project.closet.domain.clothes.dto.response.ClothesDtoCursorResponse;
 import project.closet.domain.clothes.service.ClothesExtractionService;
 import project.closet.domain.clothes.service.ClothesService;
-import project.closet.entity.clothes.ClothesType;
+import project.closet.clothes.entity.ClothesType;
 
 @RestController
 @RequestMapping("/api/clothes")

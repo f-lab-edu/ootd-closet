@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 import project.closet.dto.response.NotificationDtoCursorResponse;
-import project.closet.entity.notification.NotificationLevel;
+import project.closet.notification.entity.NotificationLevel;
 
 public interface NotificationService {
 

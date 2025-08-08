@@ -21,7 +21,7 @@ import project.closet.dto.request.UserRoleUpdateRequest;
 import project.closet.dto.response.ProfileDto;
 import project.closet.dto.response.UserDto;
 import project.closet.dto.response.UserDtoCursorResponse;
-import project.closet.entity.user.Role;
+import project.closet.user.entity.Role;
 import project.closet.exception.ErrorResponse;
 
 @Tag(name = "프로필 관리", description = "프로필 관리 API")

@@ -1,7 +1,7 @@
 package project.closet.dto.response;
 
-import project.closet.entity.weather.PrecipitationType;
-import project.closet.entity.weather.Weather;
+import project.closet.weather.entity.PrecipitationType;
+import project.closet.weather.entity.Weather;
 
 public record PrecipitationDto(
     PrecipitationType type,

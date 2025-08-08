@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.closet.entity.user.User;
+import project.closet.user.entity.User;
 import project.closet.exception.user.UserNotFoundException;
 import project.closet.user.repository.UserRepository;
 
