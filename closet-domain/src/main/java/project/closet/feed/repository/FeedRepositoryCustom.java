@@ -2,7 +2,7 @@ package project.closet.feed.repository;
 
 import java.util.List;
 import java.util.UUID;
-import org.hibernate.query.SortDirection;
+import project.closet.SortDirection;
 import project.closet.feed.entity.Feed;
 import project.closet.weather.entity.PrecipitationType;
 import project.closet.weather.entity.SkyStatus;

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.closet.SortDirection;
 import project.closet.domain.clothes.dto.request.ClothesAttributeDefCreateRequest;
 import project.closet.domain.clothes.dto.request.ClothesAttributeDefUpdateRequest;
 import project.closet.domain.clothes.dto.response.ClothesAttributeDefDto;
@@ -84,7 +85,7 @@ public class AttributeServiceImpl implements AttributeService {
             UUID idAfter,
             int limit,
             String sortBy,
-            String sortDirection,
+            SortDirection sortDirection,
             String keywordLike
     ) {
         String lastName = null;
@@ -134,7 +135,7 @@ public class AttributeServiceImpl implements AttributeService {
                 pageResult.hasNext(),
                 pageResult.getTotalElements(),
                 "definitionName",
-                "ASCENDING"
+            SortDirection.ASCENDING.name()
         );
     }
 }

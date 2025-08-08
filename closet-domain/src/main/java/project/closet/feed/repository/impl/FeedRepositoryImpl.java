@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.query.SortDirection;
+import project.closet.SortDirection;
 import project.closet.feed.entity.Feed;
+import project.closet.feed.repository.FeedRepositoryCustom;
 import project.closet.weather.entity.PrecipitationType;
 import project.closet.weather.entity.SkyStatus;
-import project.closet.feed.repository.FeedRepositoryCustom;
 
 @RequiredArgsConstructor
 public class FeedRepositoryImpl implements FeedRepositoryCustom {

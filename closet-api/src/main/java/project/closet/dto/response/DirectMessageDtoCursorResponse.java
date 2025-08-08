@@ -2,7 +2,6 @@ package project.closet.dto.response;
 
 import java.util.List;
 import java.util.UUID;
-import org.hibernate.query.SortDirection;
 
 public record DirectMessageDtoCursorResponse(
     List<DirectMessageDto> data,
@@ -11,7 +10,7 @@ public record DirectMessageDtoCursorResponse(
     boolean hasNext,
     long totalCount,
     String sortBy,
-    SortDirection sortDirection
+    project.closet.SortDirection sortDirection
 ) {
 
 }

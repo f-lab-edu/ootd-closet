@@ -2,7 +2,7 @@ package project.closet.feed.service;
 
 import java.time.Instant;
 import java.util.UUID;
-import org.hibernate.query.SortDirection;
+import project.closet.SortDirection;
 import project.closet.dto.request.CommentCreateRequest;
 import project.closet.dto.request.FeedCreateRequest;
 import project.closet.dto.request.FeedUpdateRequest;

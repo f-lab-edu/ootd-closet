@@ -6,21 +6,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.query.SortDirection;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.closet.SortDirection;
+import project.closet.dm.DirectMessage;
 import project.closet.dm.repository.DirectMessageRepository;
 import project.closet.dm.service.DirectMessageService;
 import project.closet.dto.request.DirectMessageCreateRequest;
 import project.closet.dto.response.DirectMessageDto;
 import project.closet.dto.response.DirectMessageDtoCursorResponse;
 import project.closet.dto.response.UserSummary;
-import project.closet.dm.DirectMessage;
-import project.closet.user.entity.User;
 import project.closet.event.DirectMessageSentEvent;
 import project.closet.exception.user.UserNotFoundException;
 import project.closet.storage.S3ContentStorage;
+import project.closet.user.entity.User;
 import project.closet.user.repository.UserRepository;
 
 @Service

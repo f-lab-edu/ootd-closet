@@ -2,7 +2,7 @@ package project.closet.user.repository;
 
 import java.util.List;
 import java.util.UUID;
-import org.hibernate.query.SortDirection;
+import project.closet.SortDirection;
 import project.closet.user.entity.Role;
 import project.closet.user.entity.User;
 
