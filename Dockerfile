@@ -9,6 +9,7 @@ COPY gradle/ gradle/
 COPY settings.gradle build.gradle ./
 
 COPY closet-api/ closet-api/
+COPY closet-domain/ closet-domain/
 
 RUN chmod +x gradlew
 RUN ./gradlew :closet-api:bootJar -x test --no-daemon
