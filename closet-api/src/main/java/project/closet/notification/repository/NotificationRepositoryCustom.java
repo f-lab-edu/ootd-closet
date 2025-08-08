@@ -3,7 +3,7 @@ package project.closet.notification.repository;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
-import project.closet.notification.entity.Notification;
+import project.closet.entity.notification.Notification;
 
 public interface NotificationRepositoryCustom {
 

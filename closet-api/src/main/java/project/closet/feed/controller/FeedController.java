@@ -25,11 +25,11 @@ import project.closet.dto.response.CommentDto;
 import project.closet.dto.response.CommentDtoCursorResponse;
 import project.closet.dto.response.FeedDto;
 import project.closet.dto.response.FeedDtoCursorResponse;
+import project.closet.entity.weather.PrecipitationType;
+import project.closet.entity.weather.SkyStatus;
 import project.closet.feed.controller.api.FeedApi;
 import project.closet.feed.service.FeedService;
 import project.closet.security.ClosetUserDetails;
-import project.closet.weather.entity.PrecipitationType;
-import project.closet.weather.entity.SkyStatus;
 
 @Slf4j
 @RestController
@@ -42,27 +42,27 @@ public class FeedController implements FeedApi {
     @GetMapping
     @Override
     public ResponseEntity<FeedDtoCursorResponse> getFeedList(
-            @RequestParam(name = "cursor", required = false) String cursor,
-            @RequestParam(name = "idAfter", required = false) UUID idAfter,
-            @RequestParam(name = "limit", defaultValue = "20") int limit,
-            @RequestParam(name = "sortBy") String sortBy,  // likeCount, createdAt
-            @RequestParam(name = "sortDirection") SortDirection sortDirection,
-            @RequestParam(name = "keywordLike", required = false) String keywordLike,
-            @RequestParam(name = "skyStatusEqual", required = false) SkyStatus skyStatusEqual,
-            @RequestParam(name = "precipitationType", required = false) PrecipitationType precipitationType,
-            @RequestParam(name = "authorIdEqual", required = false) UUID authorIdEqual,
-            @AuthenticationPrincipal ClosetUserDetails closetUserDetails
+        @RequestParam(name = "cursor", required = false) String cursor,
+        @RequestParam(name = "idAfter", required = false) UUID idAfter,
+        @RequestParam(name = "limit", defaultValue = "20") int limit,
+        @RequestParam(name = "sortBy") String sortBy,  // likeCount, createdAt
+        @RequestParam(name = "sortDirection") SortDirection sortDirection,
+        @RequestParam(name = "keywordLike", required = false) String keywordLike,
+        @RequestParam(name = "skyStatusEqual", required = false) SkyStatus skyStatusEqual,
+        @RequestParam(name = "precipitationType", required = false) PrecipitationType precipitationType,
+        @RequestParam(name = "authorIdEqual", required = false) UUID authorIdEqual,
+        @AuthenticationPrincipal ClosetUserDetails closetUserDetails
     ) {
         FeedDtoCursorResponse feedList = feedService.getFeedList(
-                cursor, idAfter, limit, sortBy, sortDirection, keywordLike,
-                skyStatusEqual, precipitationType, authorIdEqual, closetUserDetails.getUserId());
+            cursor, idAfter, limit, sortBy, sortDirection, keywordLike,
+            skyStatusEqual, precipitationType, authorIdEqual, closetUserDetails.getUserId());
         return ResponseEntity.ok(feedList);
     }
 
     @PostMapping
     @Override
     public ResponseEntity<FeedDto> createFeed(
-            @RequestBody @Valid FeedCreateRequest feedCreateRequest) {
+        @RequestBody @Valid FeedCreateRequest feedCreateRequest) {
         FeedDto feedDto = feedService.createFeed(feedCreateRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(feedDto);
     }
@@ -70,8 +70,8 @@ public class FeedController implements FeedApi {
     @PostMapping("{feedId}/like")
     @Override
     public ResponseEntity<Void> likeFeed(
-            @PathVariable("feedId") UUID feedId,
-            @AuthenticationPrincipal ClosetUserDetails closetUserDetails
+        @PathVariable("feedId") UUID feedId,
+        @AuthenticationPrincipal ClosetUserDetails closetUserDetails
     ) {
         UUID loginUserId = closetUserDetails.getUserId();
         feedService.likeFeed(feedId, loginUserId);
@@ -81,8 +81,8 @@ public class FeedController implements FeedApi {
     @DeleteMapping("{feedId}/like")
     @Override
     public ResponseEntity<Void> cancelFeed(
-            @PathVariable("feedId") UUID feedId,
-            @AuthenticationPrincipal ClosetUserDetails closetUserDetails
+        @PathVariable("feedId") UUID feedId,
+        @AuthenticationPrincipal ClosetUserDetails closetUserDetails
     ) {
         UUID userId = closetUserDetails.getUserId();
         feedService.cancelFeedLike(feedId, userId);
@@ -92,21 +92,21 @@ public class FeedController implements FeedApi {
     @GetMapping("/{feedId}/comments")
     @Override
     public ResponseEntity<CommentDtoCursorResponse> getFeedComments(
-            @PathVariable("feedId") UUID feedId,
-            @RequestParam(name = "cursor", required = false) Instant cursor,
-            @RequestParam(name = "idAfter", required = false) UUID idAfter,
-            @RequestParam(name = "limit", defaultValue = "20") int limit
+        @PathVariable("feedId") UUID feedId,
+        @RequestParam(name = "cursor", required = false) Instant cursor,
+        @RequestParam(name = "idAfter", required = false) UUID idAfter,
+        @RequestParam(name = "limit", defaultValue = "20") int limit
     ) {
         CommentDtoCursorResponse feedComments =
-                feedService.getFeedComments(feedId, cursor, idAfter, limit);
+            feedService.getFeedComments(feedId, cursor, idAfter, limit);
         return ResponseEntity.ok(feedComments);
     }
 
     @PostMapping("/{feedId}/comments")
     @Override
     public ResponseEntity<CommentDto> createFeedComment(
-            @PathVariable("feedId") UUID feedId,
-            @RequestBody @Valid CommentCreateRequest commentCreateRequest
+        @PathVariable("feedId") UUID feedId,
+        @RequestBody @Valid CommentCreateRequest commentCreateRequest
     ) {
         CommentDto commentDto = feedService.createComment(commentCreateRequest);
         return ResponseEntity.ok(commentDto);
@@ -122,12 +122,12 @@ public class FeedController implements FeedApi {
     @PatchMapping("/{feedId}")
     @Override
     public ResponseEntity<FeedDto> updateFeed(
-            @PathVariable("feedId") UUID feedId,
-            @RequestBody @Valid FeedUpdateRequest feedUpdateRequest,
-            @AuthenticationPrincipal ClosetUserDetails closetUserDetails
+        @PathVariable("feedId") UUID feedId,
+        @RequestBody @Valid FeedUpdateRequest feedUpdateRequest,
+        @AuthenticationPrincipal ClosetUserDetails closetUserDetails
     ) {
         FeedDto feedDto = feedService.updateFeed(feedId, feedUpdateRequest,
-                closetUserDetails.getUserId());
+            closetUserDetails.getUserId());
         return ResponseEntity.ok(feedDto);
     }
 }

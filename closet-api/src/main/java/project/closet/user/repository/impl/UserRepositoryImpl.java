@@ -9,8 +9,8 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.query.SortDirection;
 import org.springframework.util.StringUtils;
-import project.closet.user.entity.Role;
-import project.closet.user.entity.User;
+import project.closet.entity.user.Role;
+import project.closet.entity.user.User;
 import project.closet.user.repository.UserRepositoryCustom;
 
 @RequiredArgsConstructor
@@ -20,11 +20,11 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
     @Override
     public List<User> findUsersWithCursor(String cursor, UUID idAfter, int limit, String sortBy,
-            SortDirection direction, String emailLike, Role roleEqual, Boolean locked) {
+                                          SortDirection direction, String emailLike, Role roleEqual, Boolean locked) {
         StringBuilder jpql = new StringBuilder("""
-                SELECT u FROM User u
-                WHERE 1=1
-                """);
+            SELECT u FROM User u
+            WHERE 1=1
+            """);
 
         Map<String, Object> params = new HashMap<>();
 
@@ -43,16 +43,16 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
         if (cursor != null && idAfter != null) {
             jpql.append("AND (u.").append(sortBy).append(" < :cursor OR (u.").append(sortBy)
-                    .append(" = :cursor AND u.id > :idAfter)) ");
+                .append(" = :cursor AND u.id > :idAfter)) ");
             params.put("cursor", cursor);
         }
 
         jpql.append("ORDER BY u.").append(sortBy).append(" ")
-                .append(direction == SortDirection.ASCENDING ? "ASC" : "DESC")
-                .append(", u.id ").append(direction == SortDirection.ASCENDING ? "ASC" : "DESC");
+            .append(direction == SortDirection.ASCENDING ? "ASC" : "DESC")
+            .append(", u.id ").append(direction == SortDirection.ASCENDING ? "ASC" : "DESC");
 
         TypedQuery<User> query = em.createQuery(jpql.toString(), User.class)
-                .setMaxResults(limit + 1);
+            .setMaxResults(limit + 1);
         params.forEach(query::setParameter);
 
         return query.getResultList();
@@ -61,9 +61,9 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     @Override
     public long countAllUsers(String emailLike, Role roleEqual, Boolean locked) {
         StringBuilder jpql = new StringBuilder("""
-                SELECT COUNT(u) FROM User u
-                WHERE 1 = 1
-                """);
+            SELECT COUNT(u) FROM User u
+            WHERE 1 = 1
+            """);
 
         Map<String, Object> params = new HashMap<>();
 

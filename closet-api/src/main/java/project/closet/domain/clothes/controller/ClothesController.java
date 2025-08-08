@@ -1,12 +1,10 @@
 package project.closet.domain.clothes.controller;
 
 import jakarta.validation.Valid;
-
 import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -17,14 +15,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import project.closet.domain.clothes.dto.request.ClothesCreateRequest;
 import project.closet.domain.clothes.dto.request.ClothesUpdateRequest;
 import project.closet.domain.clothes.dto.response.ClothesDto;
 import project.closet.domain.clothes.dto.response.ClothesDtoCursorResponse;
-import project.closet.domain.clothes.entity.ClothesType;
 import project.closet.domain.clothes.service.ClothesExtractionService;
 import project.closet.domain.clothes.service.ClothesService;
+import project.closet.entity.clothes.ClothesType;
 
 @RestController
 @RequestMapping("/api/clothes")
@@ -96,4 +93,3 @@ public class ClothesController {
     }
 
 }
-

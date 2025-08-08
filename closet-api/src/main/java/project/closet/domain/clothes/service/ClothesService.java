@@ -1,14 +1,12 @@
 package project.closet.domain.clothes.service;
 
 import java.util.UUID;
-
 import org.springframework.web.multipart.MultipartFile;
-
 import project.closet.domain.clothes.dto.request.ClothesCreateRequest;
 import project.closet.domain.clothes.dto.request.ClothesUpdateRequest;
 import project.closet.domain.clothes.dto.response.ClothesDto;
 import project.closet.domain.clothes.dto.response.ClothesDtoCursorResponse;
-import project.closet.domain.clothes.entity.ClothesType;
+import project.closet.entity.clothes.ClothesType;
 
 public interface ClothesService {
 

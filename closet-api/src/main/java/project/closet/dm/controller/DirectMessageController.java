@@ -26,15 +26,15 @@ public class DirectMessageController implements DirectMessageApi {
     @GetMapping
     @Override
     public ResponseEntity<DirectMessageDtoCursorResponse> getDirectMessage(
-            @RequestParam(name = "userId") UUID userId,
-            @RequestParam(name = "cursor", required = false) Instant cursor,
-            @RequestParam(name = "idAfter", required = false) UUID idAfter,
-            @RequestParam(name = "limit", defaultValue = "15") int limit,
-            @AuthenticationPrincipal ClosetUserDetails closetUserDetails
+        @RequestParam(name = "userId") UUID userId,
+        @RequestParam(name = "cursor", required = false) Instant cursor,
+        @RequestParam(name = "idAfter", required = false) UUID idAfter,
+        @RequestParam(name = "limit", defaultValue = "15") int limit,
+        @AuthenticationPrincipal ClosetUserDetails closetUserDetails
     ) {
         UUID loginUserId = closetUserDetails.getUserId();
         DirectMessageDtoCursorResponse directMessages =
-                directMessageService.getDirectMessages(userId, cursor, idAfter, limit, loginUserId);
+            directMessageService.getDirectMessages(userId, cursor, idAfter, limit, loginUserId);
         return ResponseEntity.ok(directMessages);
     }
 }

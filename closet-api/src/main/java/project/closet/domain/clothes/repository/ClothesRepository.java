@@ -8,8 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import project.closet.domain.clothes.entity.Clothes;
-import project.closet.domain.clothes.entity.ClothesType;
+import project.closet.entity.clothes.Clothes;
+import project.closet.entity.clothes.ClothesType;
 
 public interface ClothesRepository extends JpaRepository<Clothes, UUID> {
 
@@ -50,7 +50,7 @@ public interface ClothesRepository extends JpaRepository<Clothes, UUID> {
     @Query("""
                 SELECT DISTINCT c FROM Clothes c
                 LEFT JOIN FETCH c.attributes a
-                LEFT JOIN FETCH a.definition
+                LEFT JOIN FETCH a.attribute
                 WHERE c.id IN :ids
             """)
     List<Clothes> findAllByIdInWithAttributes(@Param("ids") List<UUID> ids);

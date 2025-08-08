@@ -13,7 +13,8 @@ public class MDCLoggingInterceptor implements HandlerInterceptor {
     public static final String REQUEST_URI = "requestUri";
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+        throws Exception {
         String requestId = UUID.randomUUID().toString().replaceAll("-", "");
 
         MDC.put(REQUEST_ID, requestId);
@@ -23,7 +24,8 @@ public class MDCLoggingInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
+        throws Exception {
         MDC.clear();
     }
 }

@@ -3,19 +3,19 @@ package project.closet.dto.response;
 import jakarta.annotation.Nullable;
 import java.time.Instant;
 import java.util.UUID;
-import project.closet.weather.entity.SkyStatus;
-import project.closet.weather.entity.Weather;
+import project.closet.entity.weather.SkyStatus;
+import project.closet.entity.weather.Weather;
 
 public record WeatherDto(
-        UUID id,
-        Instant forecastedAt,
-        Instant forecastAt,
-        WeatherAPILocation location,
-        SkyStatus skyStatus,
-        PrecipitationDto precipitation,
-        Humidity humidity,
-        TemperatureDto temperature,
-        WindSpeedDto windSpeed
+    UUID id,
+    Instant forecastedAt,
+    Instant forecastAt,
+    WeatherAPILocation location,
+    SkyStatus skyStatus,
+    PrecipitationDto precipitation,
+    Humidity humidity,
+    TemperatureDto temperature,
+    WindSpeedDto windSpeed
 ) {
     public static WeatherDto from(Weather current, @Nullable Weather previousDay) {
         double temperatureDiff = 0.0;
@@ -27,31 +27,31 @@ public record WeatherDto(
         }
 
         return new WeatherDto(
-                current.getId(),
-                current.getForecastedAt(),
-                current.getForecastAt(),
-                new WeatherAPILocation(
-                        0.0, 0.0,
-                        current.getX(),
-                        current.getY(),
-                        null
-                ),
-                current.getSkyStatus(),
-                PrecipitationDto.from(current),
-                new Humidity(
-                        current.getHumidity(),
-                        humidityDiff
-                ),
-                new TemperatureDto(
-                        current.getCurrentTemperature(),
-                        temperatureDiff,
-                        current.getMinTemperature(),
-                        current.getMaxTemperature()
-                ),
-                new WindSpeedDto(
-                        current.getWindSpeed(),
-                        current.getAsWord()
-                )
+            current.getId(),
+            current.getForecastedAt(),
+            current.getForecastAt(),
+            new WeatherAPILocation(
+                0.0, 0.0,
+                current.getX(),
+                current.getY(),
+                null
+            ),
+            current.getSkyStatus(),
+            PrecipitationDto.from(current),
+            new Humidity(
+                current.getHumidity(),
+                humidityDiff
+            ),
+            new TemperatureDto(
+                current.getCurrentTemperature(),
+                temperatureDiff,
+                current.getMinTemperature(),
+                current.getMaxTemperature()
+            ),
+            new WindSpeedDto(
+                current.getWindSpeed(),
+                current.getAsWord()
+            )
         );
     }
 }

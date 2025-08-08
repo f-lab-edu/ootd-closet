@@ -2,9 +2,9 @@ package project.closet.feed.repository;
 
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
-import project.closet.feed.entity.Feed;
-import project.closet.feed.entity.FeedLike;
-import project.closet.user.entity.User;
+import project.closet.entity.feed.Feed;
+import project.closet.entity.feed.FeedLike;
+import project.closet.entity.user.User;
 
 public interface FeedLikeRepository extends JpaRepository<FeedLike, UUID> {
 

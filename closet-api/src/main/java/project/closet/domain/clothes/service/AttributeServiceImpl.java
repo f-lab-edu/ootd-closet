@@ -2,22 +2,19 @@ package project.closet.domain.clothes.service;
 
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import project.closet.domain.clothes.dto.request.ClothesAttributeDefCreateRequest;
 import project.closet.domain.clothes.dto.request.ClothesAttributeDefUpdateRequest;
 import project.closet.domain.clothes.dto.response.ClothesAttributeDefDto;
 import project.closet.domain.clothes.dto.response.ClothesAttributeDefDtoCursorResponse;
-import project.closet.domain.clothes.entity.Attribute;
 import project.closet.domain.clothes.repository.AttributeRepository;
+import project.closet.entity.attributes.Attribute;
 import project.closet.event.ClothesAttributeCreatEvent;
 import project.closet.event.ClothesAttributeUpdateEvent;
 import project.closet.exception.clothes.attribute.AttributeDuplicateException;
@@ -60,7 +57,7 @@ public class AttributeServiceImpl implements AttributeService {
                 .orElseThrow(() -> new AttributeNotFoundException(id.toString()));
 
         attribute.updateDefinitionName(req.name());
-        attribute.setSelectableValues(req.selectableValues());
+        attribute.addSelectableValues(req.selectableValues());
 
         // 의상 속성 수정 시 알림 생성 이벤트 발생.
         eventPublisher.publishEvent(new ClothesAttributeUpdateEvent(attribute.getDefinitionName()));

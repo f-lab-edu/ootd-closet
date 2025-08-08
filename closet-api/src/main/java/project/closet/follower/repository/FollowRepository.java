@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import project.closet.follower.entity.Follow;
+import project.closet.entity.follow.Follow;
 
 public interface FollowRepository extends JpaRepository<Follow, UUID>, FollowRepositoryCustom {
 

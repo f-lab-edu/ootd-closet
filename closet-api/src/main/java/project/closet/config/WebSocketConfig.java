@@ -14,8 +14,8 @@ import org.springframework.security.messaging.context.SecurityContextChannelInte
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import project.closet.entity.user.Role;
 import project.closet.security.jwt.JwtService;
-import project.closet.user.entity.Role;
 import project.closet.websocket.JwtAuthenticationChannelInterceptor;
 
 @Slf4j
@@ -36,24 +36,24 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOriginPatterns("*")
-                .withSockJS();
+            .setAllowedOriginPatterns("*")
+            .withSockJS();
     }
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         AuthorizationChannelInterceptor auth = new AuthorizationChannelInterceptor(
-                messageAuthorityAuthorizationManager()
+            messageAuthorityAuthorizationManager()
         );
         registration.interceptors(
-                new JwtAuthenticationChannelInterceptor(jwtService, roleHierarchy),
-                new SecurityContextChannelInterceptor()
+            new JwtAuthenticationChannelInterceptor(jwtService, roleHierarchy),
+            new SecurityContextChannelInterceptor()
         );
     }
 
     public AuthorizationManager<Message<?>> messageAuthorityAuthorizationManager() {
         return MessageMatcherDelegatingAuthorizationManager.builder()
-                .anyMessage().hasRole(Role.USER.name())
-                .build();
+            .anyMessage().hasRole(Role.USER.name())
+            .build();
     }
 }

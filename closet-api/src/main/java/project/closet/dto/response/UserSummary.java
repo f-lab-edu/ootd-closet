@@ -1,19 +1,19 @@
 package project.closet.dto.response;
 
 import java.util.UUID;
-import project.closet.user.entity.User;
+import project.closet.entity.user.User;
 
 public record UserSummary(
-        UUID userId,
-        String name,
-        String profileImageUrl
+    UUID userId,
+    String name,
+    String profileImageUrl
 ) {
 
     public static UserSummary from(User user, String presignedUrl) {
         return new UserSummary(
-                user.getId(),
-                user.getName(),
-                presignedUrl
+            user.getId(),
+            user.getName(),
+            presignedUrl
         );
     }
 }

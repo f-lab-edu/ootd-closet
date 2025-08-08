@@ -6,7 +6,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import project.closet.notification.entity.Notification;
+import project.closet.entity.notification.Notification;
 import project.closet.notification.repository.NotificationRepositoryCustom;
 
 @RequiredArgsConstructor

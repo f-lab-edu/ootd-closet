@@ -35,10 +35,10 @@ public class KakaoAddressResponse {
         }
         Document doc = documents.get(0);
         return List.of(
-                doc.getRegion_1depth_name(),
-                doc.getRegion_2depth_name(),
-                doc.getRegion_3depth_name(),
-                doc.getRegion_4depth_name()
+            doc.getRegion_1depth_name(),
+            doc.getRegion_2depth_name(),
+            doc.getRegion_3depth_name(),
+            doc.getRegion_4depth_name()
         );
     }
 }

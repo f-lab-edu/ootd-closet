@@ -32,11 +32,11 @@ public class SseMessage {
 
     public static SseMessage create(Collection<UUID> receiverIds, String eventName, Object eventData) {
         return new SseMessage(
-                UUID.randomUUID(),
-                new HashSet<>(receiverIds),
-                false,
-                eventName,
-                eventData
+            UUID.randomUUID(),
+            new HashSet<>(receiverIds),
+            false,
+            eventName,
+            eventData
         );
     }
 

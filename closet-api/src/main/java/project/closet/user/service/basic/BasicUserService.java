@@ -23,14 +23,14 @@ import project.closet.dto.response.ProfileDto;
 import project.closet.dto.response.UserDto;
 import project.closet.dto.response.UserDtoCursorResponse;
 import project.closet.dto.response.WeatherAPILocation;
+import project.closet.entity.user.Profile;
+import project.closet.entity.user.Role;
+import project.closet.entity.user.User;
 import project.closet.event.RoleChangeEvent;
 import project.closet.exception.user.UserAlreadyExistsException;
 import project.closet.exception.user.UserNotFoundException;
 import project.closet.security.jwt.JwtService;
 import project.closet.storage.S3ContentStorage;
-import project.closet.user.entity.Profile;
-import project.closet.user.entity.Role;
-import project.closet.user.entity.User;
 import project.closet.user.repository.UserRepository;
 import project.closet.user.service.UserService;
 import project.closet.weather.service.basic.GeoGridConverter;
@@ -74,7 +74,7 @@ public class BasicUserService implements UserService {
     @Override
     public ProfileDto getProfile(UUID userId) {
         User user = userRepository.findByIdWithProfile(userId)
-                .orElseThrow(() -> UserNotFoundException.withId(userId));
+            .orElseThrow(() -> UserNotFoundException.withId(userId));
 
         // TODO 사용자 위치 정보 Lazy Loading 리팩토링 필요함. -> 테이블 분리했는데, 비정규화 하기
         Hibernate.initialize(user.getProfile().getLocationNames());
@@ -88,25 +88,29 @@ public class BasicUserService implements UserService {
     @Transactional
     @Override
     public ProfileDto updateProfile(
-            UUID userId,
-            ProfileUpdateRequest profileUpdateRequest,
-            MultipartFile profileImage
+        UUID userId,
+        ProfileUpdateRequest request,
+        MultipartFile profileImage
     ) {
-        log.debug("사용자 프로필 업데이트 시작: userId={}, request={}", userId, profileUpdateRequest);
+        log.debug("사용자 프로필 업데이트 시작: userId={}, request={}", userId, request);
         User user = userRepository.findByIdWithProfile(userId)
-                .orElseThrow(() -> UserNotFoundException.withId(userId));
+            .orElseThrow(() -> UserNotFoundException.withId(userId));
         Hibernate.initialize(user.getProfile().getLocationNames());
 
-        user.updateProfile(profileUpdateRequest);
+        WeatherAPILocation location = request.location();
+        if (location != null) {
+            user.updateLocation(location.latitude(), location.longitude(), location.locationNames());
+        }
+        user.updateProfile(request.name(), request.gender(), request.birthDate(), request.temperatureSensitivity());
         Optional.ofNullable(profileImage)
-                .map(image -> {
-                    if (user.getProfile().getProfileImageKey() != null) {
-                        log.debug("기존 프로필 이미지 삭제: {}", user.getProfile().getProfileImageKey());
-                        s3ContentStorage.deleteByKey(user.getProfile().getProfileImageKey());
-                    }
-                    return s3ContentStorage.upload(image);
-                })
-                .ifPresent(user::updateProfileImageKey);
+            .map(image -> {
+                if (user.getProfile().getProfileImageKey() != null) {
+                    log.debug("기존 프로필 이미지 삭제: {}", user.getProfile().getProfileImageKey());
+                    s3ContentStorage.deleteByKey(user.getProfile().getProfileImageKey());
+                }
+                return s3ContentStorage.upload(image);
+            })
+            .ifPresent(user::updateProfileImageKey);
         return toProfileDto(user);
     }
 
@@ -117,15 +121,15 @@ public class BasicUserService implements UserService {
         if (profile.getLatitude() != null && profile.getLongitude() != null) {
             Grid grid = geoGridConverter.convert(profile.getLatitude(), profile.getLongitude());
             location = new WeatherAPILocation(
-                    profile.getLatitude(),
-                    profile.getLongitude(),
-                    grid.x(),
-                    grid.y(),
-                    profile.getLocationNames()
+                profile.getLatitude(),
+                profile.getLongitude(),
+                grid.x(),
+                grid.y(),
+                profile.getLocationNames()
             );
         }
         String profileImageUrl =
-                s3ContentStorage.getPresignedUrl(user.getProfile().getProfileImageKey());
+            s3ContentStorage.getPresignedUrl(user.getProfile().getProfileImageKey());
 
         return ProfileDto.of(user, location, profile, profileImageUrl);
     }
@@ -135,10 +139,10 @@ public class BasicUserService implements UserService {
     @Override
     public UserDto updateRole(UUID userId, UserRoleUpdateRequest request) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> UserNotFoundException.withId(userId));
+            .orElseThrow(() -> UserNotFoundException.withId(userId));
         Role oldRole = user.getRole();
         user.updateRole(request.role());
-        
+
         // Role 변경 이벤트 발생
         if (!oldRole.equals(request.role())) {
             eventPublisher.publishEvent(new RoleChangeEvent(user.getId(), oldRole, request.role()));
@@ -153,7 +157,7 @@ public class BasicUserService implements UserService {
     @Override
     public UUID updateLockStatus(UUID userId, UserLockUpdateRequest userLockUpdateRequest) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> UserNotFoundException.withId(userId));
+            .orElseThrow(() -> UserNotFoundException.withId(userId));
         user.updateLockStatus(userLockUpdateRequest.locked());
         return user.getId();
     }
@@ -162,27 +166,27 @@ public class BasicUserService implements UserService {
     @Transactional(readOnly = true)
     @Override
     public UserDtoCursorResponse findAll(
-            String cursor,
-            UUID idAfter,
-            int limit,
-            String sortBy,
-            SortDirection sortDirection,
-            String emailLike,
-            Role roleEqual,
-            Boolean locked
+        String cursor,
+        UUID idAfter,
+        int limit,
+        String sortBy,
+        SortDirection sortDirection,
+        String emailLike,
+        Role roleEqual,
+        Boolean locked
     ) {
         List<User> users =
-                userRepository.findUsersWithCursor(
-                        cursor, idAfter, limit, sortBy, sortDirection, emailLike, roleEqual, locked
-                );
+            userRepository.findUsersWithCursor(
+                cursor, idAfter, limit, sortBy, sortDirection, emailLike, roleEqual, locked
+            );
         boolean hasNext = users.size() > limit;
         if (hasNext) {
             users = users.subList(0, limit);
         }
 
         List<UserDto> userDtos = users.stream()
-                .map(UserDto::from)
-                .toList();
+            .map(UserDto::from)
+            .toList();
 
         String nextCursor = null;
         UUID nextIdAfter = null;
@@ -196,13 +200,13 @@ public class BasicUserService implements UserService {
         long totalCount = userRepository.countAllUsers(emailLike, roleEqual, locked);
 
         return new UserDtoCursorResponse(
-                userDtos,
-                nextCursor,
-                nextIdAfter,
-                hasNext,
-                totalCount,
-                sortBy,
-                sortDirection
+            userDtos,
+            nextCursor,
+            nextIdAfter,
+            hasNext,
+            totalCount,
+            sortBy,
+            sortDirection
         );
     }
 
@@ -218,11 +222,11 @@ public class BasicUserService implements UserService {
     @Transactional
     @Override
     public void changePassword(
-            UUID userId,
-            ChangePasswordRequest changePasswordRequest
+        UUID userId,
+        ChangePasswordRequest changePasswordRequest
     ) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> UserNotFoundException.withId(userId));
+            .orElseThrow(() -> UserNotFoundException.withId(userId));
 
         String encodePassword = passwordEncoder.encode(changePasswordRequest.password());
         user.updatePassword(encodePassword);

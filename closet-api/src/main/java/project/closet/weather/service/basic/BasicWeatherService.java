@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import project.closet.dto.response.KakaoAddressResponse;
 import project.closet.dto.response.WeatherAPILocation;
 import project.closet.dto.response.WeatherDto;
-import project.closet.weather.entity.Weather;
+import project.closet.entity.weather.Weather;
 import project.closet.weather.location.WeatherLocation;
 import project.closet.weather.location.WeatherLocationRepository;
 import project.closet.weather.repository.WeatherRepository;

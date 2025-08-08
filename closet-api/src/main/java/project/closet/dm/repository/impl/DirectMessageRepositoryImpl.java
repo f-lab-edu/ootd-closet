@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import project.closet.dm.entity.DirectMessage;
 import project.closet.dm.repository.DirectMessageRepositoryCustom;
+import project.closet.entity.dm.DirectMessage;
 
 @RequiredArgsConstructor
 public class DirectMessageRepositoryImpl implements DirectMessageRepositoryCustom {
@@ -17,20 +17,21 @@ public class DirectMessageRepositoryImpl implements DirectMessageRepositoryCusto
     private final EntityManager em;
 
     @Override
-    public List<DirectMessage> findDirectMessagesBetweenUsers(UUID targetUserId, UUID loginUserId, Instant cursor, UUID idAfter,
-            int limit) {
+    public List<DirectMessage> findDirectMessagesBetweenUsers(UUID targetUserId, UUID loginUserId, Instant cursor,
+                                                              UUID idAfter,
+                                                              int limit) {
         StringBuilder jpql = new StringBuilder("""
-                SELECT m FROM DirectMessage m
-                    JOIN FETCH m.sender s
-                    LEFT JOIN FETCH s.profile
-                    JOIN FETCH m.receiver r
-                    LEFT JOIN FETCH r.profile
-                WHERE (m.sender.id = :userA AND m.receiver.id = :userB)
-                OR (m.sender.id = :userB AND m.receiver.id = :userA)
-                """);
+            SELECT m FROM DirectMessage m
+                JOIN FETCH m.sender s
+                LEFT JOIN FETCH s.profile
+                JOIN FETCH m.receiver r
+                LEFT JOIN FETCH r.profile
+            WHERE (m.sender.id = :userA AND m.receiver.id = :userB)
+            OR (m.sender.id = :userB AND m.receiver.id = :userA)
+            """);
 
         Map<String, Object> params = new HashMap<>(
-                Map.of("userA", targetUserId, "userB", loginUserId)
+            Map.of("userA", targetUserId, "userB", loginUserId)
         );
 
         if (cursor != null) {
@@ -42,7 +43,7 @@ public class DirectMessageRepositoryImpl implements DirectMessageRepositoryCusto
         jpql.append("ORDER BY m.createdAt DESC, m.id DESC");
 
         TypedQuery<DirectMessage> query = em.createQuery(jpql.toString(), DirectMessage.class)
-                .setMaxResults(limit);
+            .setMaxResults(limit);
 
         params.forEach(query::setParameter);
         return query.getResultList();
@@ -51,14 +52,14 @@ public class DirectMessageRepositoryImpl implements DirectMessageRepositoryCusto
     @Override
     public long countDirectMessagesBetweenUsers(UUID targetUserId, UUID loginUserId) {
         String jpql = """
-                SELECT COUNT(m) FROM DirectMessage m
-                WHERE (m.sender.id = :loginUserId AND m.receiver.id = :targetUserId)
-                OR (m.sender.id = :targetUserId AND m.receiver.id = :loginUserId)
-                """;
+            SELECT COUNT(m) FROM DirectMessage m
+            WHERE (m.sender.id = :loginUserId AND m.receiver.id = :targetUserId)
+            OR (m.sender.id = :targetUserId AND m.receiver.id = :loginUserId)
+            """;
 
         return em.createQuery(jpql, Long.class)
-                .setParameter("loginUserId", loginUserId)
-                .setParameter("targetUserId", targetUserId)
-                .getSingleResult();
+            .setParameter("loginUserId", loginUserId)
+            .setParameter("targetUserId", targetUserId)
+            .getSingleResult();
     }
 }

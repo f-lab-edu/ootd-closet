@@ -13,14 +13,14 @@ import project.closet.dto.request.FollowCreateRequest;
 import project.closet.dto.response.FollowDto;
 import project.closet.dto.response.FollowListResponse;
 import project.closet.dto.response.FollowSummaryDto;
+import project.closet.entity.follow.Follow;
+import project.closet.entity.user.User;
 import project.closet.event.FollowCreateEvent;
 import project.closet.exception.follow.FollowNotFoundException;
 import project.closet.exception.user.UserNotFoundException;
-import project.closet.follower.entity.Follow;
 import project.closet.follower.repository.FollowRepository;
 import project.closet.follower.service.FollowService;
 import project.closet.storage.S3ContentStorage;
-import project.closet.user.entity.User;
 import project.closet.user.repository.UserRepository;
 
 @Slf4j

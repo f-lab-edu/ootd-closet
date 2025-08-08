@@ -10,8 +10,8 @@ import project.closet.dto.response.CommentDto;
 import project.closet.dto.response.CommentDtoCursorResponse;
 import project.closet.dto.response.FeedDto;
 import project.closet.dto.response.FeedDtoCursorResponse;
-import project.closet.weather.entity.PrecipitationType;
-import project.closet.weather.entity.SkyStatus;
+import project.closet.entity.weather.PrecipitationType;
+import project.closet.entity.weather.SkyStatus;
 
 public interface FeedService {
 
@@ -30,15 +30,15 @@ public interface FeedService {
     CommentDtoCursorResponse getFeedComments(UUID feedId, Instant cursor, UUID idAfter, int limit);
 
     FeedDtoCursorResponse getFeedList(
-            String cursor,
-            UUID idAfter,
-            int limit,
-            String sortBy,
-            SortDirection sortDirection,
-            String keywordLike,
-            SkyStatus skyStatusEqual,
-            PrecipitationType precipitationType,
-            UUID authorIdEqual,
-            UUID loginUserId
+        String cursor,
+        UUID idAfter,
+        int limit,
+        String sortBy,
+        SortDirection sortDirection,
+        String keywordLike,
+        SkyStatus skyStatusEqual,
+        PrecipitationType precipitationType,
+        UUID authorIdEqual,
+        UUID loginUserId
     );
 }
