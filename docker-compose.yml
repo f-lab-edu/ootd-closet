@@ -25,7 +25,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=prod
     volumes:
-      - ./logs:/app/.logs
+      - ./logs:/app/closet-api/.logs
     depends_on:
       - db
       - redis
