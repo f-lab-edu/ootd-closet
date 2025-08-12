@@ -2,10 +2,10 @@ package project.closet.feed.repository;
 
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
-import project.closet.feed.entity.FeedComment;
+import project.closet.entity.feed.comment.FeedComment;
 
 public interface FeedCommentRepository extends JpaRepository<FeedComment, UUID>,
-        FeedCommentRepositoryCustom {
+    FeedCommentRepositoryCustom {
 
     long countByFeedId(UUID feedId);
 }

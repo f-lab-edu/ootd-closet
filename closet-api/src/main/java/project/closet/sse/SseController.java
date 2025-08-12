@@ -20,8 +20,8 @@ public class SseController {
 
     @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter subscribe(
-            @AuthenticationPrincipal ClosetUserDetails userDetails,
-            @RequestParam(value = "LastEventId", required = false) UUID lastEventId
+        @AuthenticationPrincipal ClosetUserDetails userDetails,
+        @RequestParam(value = "LastEventId", required = false) UUID lastEventId
     ) {
         UUID userId = userDetails.getUserId();
 

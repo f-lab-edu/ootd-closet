@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
-import project.closet.weather.entity.Weather;
+import project.closet.entity.weather.Weather;
 
 public interface WeatherRepository extends JpaRepository<Weather, UUID> {
 

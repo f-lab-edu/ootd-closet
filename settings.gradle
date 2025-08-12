@@ -1,2 +1,4 @@
 rootProject.name = 'closet'
+
 include 'closet-api'
+include 'closet-domain'

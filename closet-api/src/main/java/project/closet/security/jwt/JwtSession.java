@@ -9,7 +9,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import project.closet.domain.base.BaseUpdatableEntity;
+import project.closet.entity.base.BaseUpdatableEntity;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

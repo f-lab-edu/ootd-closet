@@ -10,10 +10,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import project.closet.weather.entity.AsWord;
-import project.closet.weather.entity.PrecipitationType;
-import project.closet.weather.entity.SkyStatus;
-import project.closet.weather.entity.Weather;
+import project.closet.entity.weather.AsWord;
+import project.closet.entity.weather.PrecipitationType;
+import project.closet.entity.weather.SkyStatus;
+import project.closet.entity.weather.Weather;
 import project.closet.weather.kakaoresponse.WeatherApiResponse;
 import project.closet.weather.kakaoresponse.WeatherItem;
 

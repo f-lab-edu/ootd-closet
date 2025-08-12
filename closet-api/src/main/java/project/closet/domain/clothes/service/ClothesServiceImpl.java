@@ -6,27 +6,24 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import project.closet.domain.clothes.dto.request.ClothesCreateRequest;
 import project.closet.domain.clothes.dto.request.ClothesUpdateRequest;
 import project.closet.domain.clothes.dto.response.ClothesAttributeDto;
 import project.closet.domain.clothes.dto.response.ClothesDto;
 import project.closet.domain.clothes.dto.response.ClothesDtoCursorResponse;
-import project.closet.domain.clothes.entity.Attribute;
-import project.closet.domain.clothes.entity.Clothes;
-import project.closet.domain.clothes.entity.ClothesAttribute;
-import project.closet.domain.clothes.entity.ClothesType;
 import project.closet.domain.clothes.repository.AttributeRepository;
 import project.closet.domain.clothes.repository.ClothesRepository;
+import project.closet.entity.attributes.Attribute;
+import project.closet.entity.clothes.Clothes;
+import project.closet.entity.clothes.ClothesAttribute;
+import project.closet.entity.clothes.ClothesType;
 import project.closet.exception.clothes.ClothesNotFoundException;
 import project.closet.exception.clothes.attribute.AttributeNotFoundException;
 import project.closet.exception.user.UserNotFoundException;
@@ -198,7 +195,7 @@ public class ClothesServiceImpl implements ClothesService {
         // a) 기존 속성 맵(definitionId → ClothesAttribute)
         Map<UUID, ClothesAttribute> existing = clothes.getAttributes().stream()
                 .collect(Collectors.toMap(
-                        attr -> attr.getDefinition().getId(),
+                        attr -> attr.getAttribute().getId(),
                         attr -> attr
                 ));
 

@@ -1,7 +1,6 @@
 package project.closet.domain.clothes.service;
 
 import java.util.UUID;
-
 import project.closet.domain.clothes.dto.request.ClothesAttributeDefCreateRequest;
 import project.closet.domain.clothes.dto.request.ClothesAttributeDefUpdateRequest;
 import project.closet.domain.clothes.dto.response.ClothesAttributeDefDto;

@@ -19,19 +19,19 @@ public interface DirectMessageApi {
     // DM 목록 조회
     @Operation(summary = "DM 목록 조회", description = "DM 목록 조회 API")
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200", description = "DM 목록 조회 성공"
-            ),
-            @ApiResponse(
-                    responseCode = "400", description = "DM 목록 조회 실패",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))
-            )
+        @ApiResponse(
+            responseCode = "200", description = "DM 목록 조회 성공"
+        ),
+        @ApiResponse(
+            responseCode = "400", description = "DM 목록 조회 실패",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+        )
     })
     ResponseEntity<DirectMessageDtoCursorResponse> getDirectMessage(
-            UUID userId,
-            Instant cursor,
-            UUID idAfter,
-            int limit,
-            ClosetUserDetails closetUserDetails
+        UUID userId,
+        Instant cursor,
+        UUID idAfter,
+        int limit,
+        ClosetUserDetails closetUserDetails
     );
 }

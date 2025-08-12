@@ -6,7 +6,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import project.closet.follower.entity.Follow;
+import project.closet.entity.follow.Follow;
 
 @RequiredArgsConstructor
 public class FollowRepositoryImpl implements FollowRepositoryCustom {

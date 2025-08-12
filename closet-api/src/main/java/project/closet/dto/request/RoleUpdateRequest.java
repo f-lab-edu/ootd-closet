@@ -1,11 +1,11 @@
 package project.closet.dto.request;
 
 import java.util.UUID;
-import project.closet.user.entity.Role;
+import project.closet.entity.user.Role;
 
 public record RoleUpdateRequest(
-        UUID userId,
-        Role newRole
+    UUID userId,
+    Role newRole
 ) {
 
 }

@@ -3,7 +3,7 @@ package project.closet.follower.repository;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
-import project.closet.follower.entity.Follow;
+import project.closet.entity.follow.Follow;
 
 public interface FollowRepositoryCustom {
 

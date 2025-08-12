@@ -9,10 +9,10 @@ import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.query.SortDirection;
-import project.closet.feed.entity.Feed;
+import project.closet.entity.feed.Feed;
+import project.closet.entity.weather.PrecipitationType;
+import project.closet.entity.weather.SkyStatus;
 import project.closet.feed.repository.FeedRepositoryCustom;
-import project.closet.weather.entity.PrecipitationType;
-import project.closet.weather.entity.SkyStatus;
 
 @RequiredArgsConstructor
 public class FeedRepositoryImpl implements FeedRepositoryCustom {
@@ -21,22 +21,22 @@ public class FeedRepositoryImpl implements FeedRepositoryCustom {
 
     @Override
     public List<Feed> findAllWithCursorAndFilters(
-            String cursor,
-            UUID idAfter,
-            int limit,
-            String sortBy,
-            SortDirection sortDirection,
-            String keywordLike,
-            SkyStatus skyStatusEqual,
-            PrecipitationType precipitationType,
-            UUID authorIdEqual
+        String cursor,
+        UUID idAfter,
+        int limit,
+        String sortBy,
+        SortDirection sortDirection,
+        String keywordLike,
+        SkyStatus skyStatusEqual,
+        PrecipitationType precipitationType,
+        UUID authorIdEqual
     ) {
         StringBuilder jpql = new StringBuilder("""
-                SELECT f FROM Feed f
-                JOIN FETCH f.author a
-                JOIN FETCH f.weather w
-                WHERE 1 = 1
-                """);
+            SELECT f FROM Feed f
+            JOIN FETCH f.author a
+            JOIN FETCH f.weather w
+            WHERE 1 = 1
+            """);
 
         Map<String, Object> params = new HashMap<>();
 
@@ -62,9 +62,9 @@ public class FeedRepositoryImpl implements FeedRepositoryCustom {
                 case "createdAt" -> {
                     Instant parsed = Instant.parse(cursor);
                     jpql.append(
-                            sortDirection == SortDirection.DESCENDING ?
-                                    "AND (f.createdAt < :cursor OR (f.createdAt = :cursor AND f.id < :idAfter)) " :
-                                    "AND (f.createdAt > :cursor OR (f.createdAt = :cursor AND f.id > :idAfter)) "
+                        sortDirection == SortDirection.DESCENDING ?
+                            "AND (f.createdAt < :cursor OR (f.createdAt = :cursor AND f.id < :idAfter)) " :
+                            "AND (f.createdAt > :cursor OR (f.createdAt = :cursor AND f.id > :idAfter)) "
                     );
                     params.put("cursor", parsed);
                     params.put("idAfter", idAfter);
@@ -72,9 +72,9 @@ public class FeedRepositoryImpl implements FeedRepositoryCustom {
                 case "likeCount" -> {
                     Integer parsed = Integer.parseInt(cursor);
                     jpql.append(
-                            sortDirection == SortDirection.DESCENDING ?
-                                    "AND (f.likeCount < :cursor OR (f.likeCount = :cursor AND f.id < :idAfter)) " :
-                                    "AND (f.likeCount > :cursor OR (f.likeCount = :cursor AND f.id > :idAfter)) "
+                        sortDirection == SortDirection.DESCENDING ?
+                            "AND (f.likeCount < :cursor OR (f.likeCount = :cursor AND f.id < :idAfter)) " :
+                            "AND (f.likeCount > :cursor OR (f.likeCount = :cursor AND f.id > :idAfter)) "
                     );
                     params.put("cursor", parsed);
                     params.put("idAfter", idAfter);
@@ -85,8 +85,8 @@ public class FeedRepositoryImpl implements FeedRepositoryCustom {
 
         // 정렬 Order By
         jpql.append("ORDER BY f.")
-                .append(sortBy).append(" ").append(toJpaDirection(sortDirection))
-                .append(", f.id ").append(toJpaDirection(sortDirection));
+            .append(sortBy).append(" ").append(toJpaDirection(sortDirection))
+            .append(", f.id ").append(toJpaDirection(sortDirection));
 
         // 파라미터 매핑
         TypedQuery<Feed> query = em.createQuery(jpql.toString(), Feed.class);
@@ -98,13 +98,13 @@ public class FeedRepositoryImpl implements FeedRepositoryCustom {
 
     @Override
     public long countByFilters(String keywordLike, SkyStatus skyStatusEqual,
-            PrecipitationType precipitationType, UUID authorIdEqual) {
+                               PrecipitationType precipitationType, UUID authorIdEqual) {
         StringBuilder jpql = new StringBuilder("""
-                SELECT COUNT(f) FROM Feed f
-                JOIN f.weather w
-                JOIN f.author a
-                WHERE 1 = 1
-                """);
+            SELECT COUNT(f) FROM Feed f
+            JOIN f.weather w
+            JOIN f.author a
+            WHERE 1 = 1
+            """);
 
         Map<String, Object> params = new HashMap<>();
 

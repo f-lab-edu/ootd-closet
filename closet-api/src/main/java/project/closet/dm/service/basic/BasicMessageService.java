@@ -10,17 +10,17 @@ import org.hibernate.query.SortDirection;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.closet.dm.entity.DirectMessage;
 import project.closet.dm.repository.DirectMessageRepository;
 import project.closet.dm.service.DirectMessageService;
 import project.closet.dto.request.DirectMessageCreateRequest;
 import project.closet.dto.response.DirectMessageDto;
 import project.closet.dto.response.DirectMessageDtoCursorResponse;
 import project.closet.dto.response.UserSummary;
+import project.closet.entity.dm.DirectMessage;
+import project.closet.entity.user.User;
 import project.closet.event.DirectMessageSentEvent;
 import project.closet.exception.user.UserNotFoundException;
 import project.closet.storage.S3ContentStorage;
-import project.closet.user.entity.User;
 import project.closet.user.repository.UserRepository;
 
 @Service
@@ -37,39 +37,41 @@ public class BasicMessageService implements DirectMessageService {
     public DirectMessageDto sendMessage(DirectMessageCreateRequest directMessageCreateRequest) {
         UUID senderId = directMessageCreateRequest.senderId();
         User sender = userRepository.findByIdWithProfile(senderId)
-                .orElseThrow(() -> UserNotFoundException.withId(senderId));
+            .orElseThrow(() -> UserNotFoundException.withId(senderId));
         String senderProfileImageUrl = sender.getProfile().getProfileImageKey();
         UserSummary senderSummary = UserSummary.from(sender, s3ContentStorage.getPresignedUrl(senderProfileImageUrl));
 
         UUID receiverId = directMessageCreateRequest.receiverId();
         User receiver = userRepository.findByIdWithProfile(receiverId)
-                .orElseThrow(() -> UserNotFoundException.withId(receiverId));
+            .orElseThrow(() -> UserNotFoundException.withId(receiverId));
         String receiverProfileImageUrl = receiver.getProfile().getProfileImageKey();
-        UserSummary receiverSummary = UserSummary.from(receiver, s3ContentStorage.getPresignedUrl(receiverProfileImageUrl));
+        UserSummary receiverSummary = UserSummary.from(receiver,
+            s3ContentStorage.getPresignedUrl(receiverProfileImageUrl));
 
         // TODO 같은 유저 ID 로 메시지를 보내는 경우 예외 처리 추가
         String content = directMessageCreateRequest.content();
         DirectMessage directMessage = DirectMessage.builder()
-                .sender(sender)
-                .receiver(receiver)
-                .content(content)
-                .build();
+            .sender(sender)
+            .receiver(receiver)
+            .content(content)
+            .build();
         directMessageRepository.save(directMessage);
 
         // 알림 생성 -> 알림을 수신하는 쪽에 이벤트 발생 + sse
         eventPublisher.publishEvent(new DirectMessageSentEvent(receiverId, sender.getName(), content));
         return new DirectMessageDto(
-                directMessage,
-                senderSummary,
-                receiverSummary
+            directMessage,
+            senderSummary,
+            receiverSummary
         );
     }
 
     @Transactional(readOnly = true)
     @Override
-    public DirectMessageDtoCursorResponse getDirectMessages(UUID targetUserId, Instant cursor, UUID idAfter, int limit, UUID loginUserId) {
+    public DirectMessageDtoCursorResponse getDirectMessages(UUID targetUserId, Instant cursor, UUID idAfter, int limit,
+                                                            UUID loginUserId) {
         List<DirectMessage> messages = directMessageRepository.findDirectMessagesBetweenUsers(
-                targetUserId, loginUserId, cursor, idAfter, limit + 1
+            targetUserId, loginUserId, cursor, idAfter, limit + 1
         );
 
         boolean hasNext = messages.size() > limit;
@@ -89,36 +91,36 @@ public class BasicMessageService implements DirectMessageService {
         Map<UUID, String> userImageUrlCache = new HashMap<>();
 
         List<DirectMessageDto> dmDtos = messages.stream()
-                .map(directMessage -> {
-                    UUID senderId = directMessage.getSender().getId();
-                    UUID receiverId = directMessage.getReceiver().getId();
+            .map(directMessage -> {
+                UUID senderId = directMessage.getSender().getId();
+                UUID receiverId = directMessage.getReceiver().getId();
 
-                    String senderImageUrl = userImageUrlCache.computeIfAbsent(senderId, id -> {
-                        String imageKey = directMessage.getSender().getProfile().getProfileImageKey();
-                        return s3ContentStorage.getPresignedUrl(imageKey);
-                    });
+                String senderImageUrl = userImageUrlCache.computeIfAbsent(senderId, id -> {
+                    String imageKey = directMessage.getSender().getProfile().getProfileImageKey();
+                    return s3ContentStorage.getPresignedUrl(imageKey);
+                });
 
-                    String receiverImageUrl = userImageUrlCache.computeIfAbsent(receiverId, id -> {
-                        String imageKey = directMessage.getReceiver().getProfile().getProfileImageKey();
-                        return s3ContentStorage.getPresignedUrl(imageKey);
-                    });
+                String receiverImageUrl = userImageUrlCache.computeIfAbsent(receiverId, id -> {
+                    String imageKey = directMessage.getReceiver().getProfile().getProfileImageKey();
+                    return s3ContentStorage.getPresignedUrl(imageKey);
+                });
 
-                    UserSummary senderSummary = UserSummary.from(directMessage.getSender(), senderImageUrl);
-                    UserSummary receiverSummary = UserSummary.from(directMessage.getReceiver(), receiverImageUrl);
+                UserSummary senderSummary = UserSummary.from(directMessage.getSender(), senderImageUrl);
+                UserSummary receiverSummary = UserSummary.from(directMessage.getReceiver(), receiverImageUrl);
 
-                    return new DirectMessageDto(directMessage, senderSummary, receiverSummary);
-                }).toList();
+                return new DirectMessageDto(directMessage, senderSummary, receiverSummary);
+            }).toList();
 
         long totalCount = directMessageRepository.countDirectMessagesBetweenUsers(targetUserId, loginUserId);
 
         return new DirectMessageDtoCursorResponse(
-                dmDtos,
-                nextCursor,
-                nextIdAfter,
-                hasNext,
-                totalCount,
-                "createdAt",
-                SortDirection.DESCENDING
+            dmDtos,
+            nextCursor,
+            nextIdAfter,
+            hasNext,
+            totalCount,
+            "createdAt",
+            SortDirection.DESCENDING
         );
     }
 }

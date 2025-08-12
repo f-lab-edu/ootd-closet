@@ -6,31 +6,28 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import project.closet.domain.clothes.entity.Clothes;
-import project.closet.domain.clothes.entity.ClothesAttribute;
-import project.closet.domain.clothes.entity.ClothesType;
 import project.closet.domain.clothes.repository.ClothesRepository;
 import project.closet.domain.recommend.dto.responses.ClothesForRecommendDto;
 import project.closet.domain.recommend.dto.responses.RecommendationDto;
-import project.closet.domain.recommend.entity.CategoryAllowedDetailEntity;
-import project.closet.domain.recommend.entity.CategoryAllowedTypeEntity;
-import project.closet.domain.recommend.entity.TemperatureCategoryEntity;
 import project.closet.domain.recommend.repository.TemperatureCategoryRepository;
+import project.closet.entity.clothes.Clothes;
+import project.closet.entity.clothes.ClothesAttribute;
+import project.closet.entity.clothes.ClothesType;
+import project.closet.entity.recommend.CategoryAllowedDetailEntity;
+import project.closet.entity.recommend.CategoryAllowedTypeEntity;
+import project.closet.entity.recommend.TemperatureCategoryEntity;
+import project.closet.entity.user.User;
+import project.closet.entity.weather.Weather;
 import project.closet.exception.user.UserNotFoundException;
 import project.closet.exception.weather.WeatherNotFoundException;
 import project.closet.security.ClosetUserDetails;
 import project.closet.storage.S3ContentStorage;
-import project.closet.user.entity.User;
 import project.closet.user.repository.UserRepository;
-import project.closet.weather.entity.Weather;
 import project.closet.weather.repository.WeatherRepository;
 
 @Service
@@ -110,7 +107,7 @@ public class WeatherOutfitRecommendationServiceImpl implements WeatherOutfitReco
                         return true;
                     }
                     return c.getAttributes().stream()
-                            .filter(a -> a.getDefinition().getDefinitionName().startsWith("의상 상세 종류"))
+                            .filter(a -> a.getAttribute().getDefinitionName().startsWith("의상 상세 종류"))
                             .map(ClothesAttribute::getValue)
                             .anyMatch(allowedDetails::contains);
                 })

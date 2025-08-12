@@ -20,6 +20,13 @@ import project.closet.dto.response.FeedDtoCursorResponse;
 import project.closet.dto.response.OotdDto;
 import project.closet.dto.response.UserSummary;
 import project.closet.dto.response.WeatherSummaryDto;
+import project.closet.entity.feed.Feed;
+import project.closet.entity.feed.FeedLike;
+import project.closet.entity.feed.comment.FeedComment;
+import project.closet.entity.user.User;
+import project.closet.entity.weather.PrecipitationType;
+import project.closet.entity.weather.SkyStatus;
+import project.closet.entity.weather.Weather;
 import project.closet.event.FeedCommentCreateEvent;
 import project.closet.event.FeedCreatedEvent;
 import project.closet.event.FeedLikeCreateEvent;
@@ -27,20 +34,13 @@ import project.closet.exception.feed.FeedLikeAlreadyExistsException;
 import project.closet.exception.feed.FeedNotFoundException;
 import project.closet.exception.user.UserNotFoundException;
 import project.closet.exception.weather.WeatherNotFoundException;
-import project.closet.feed.entity.Feed;
-import project.closet.feed.entity.FeedComment;
-import project.closet.feed.entity.FeedLike;
 import project.closet.feed.repository.FeedCommentRepository;
 import project.closet.feed.repository.FeedLikeRepository;
 import project.closet.feed.repository.FeedRepository;
 import project.closet.feed.service.FeedService;
 import project.closet.follower.repository.FollowRepository;
 import project.closet.storage.S3ContentStorage;
-import project.closet.user.entity.User;
 import project.closet.user.repository.UserRepository;
-import project.closet.weather.entity.PrecipitationType;
-import project.closet.weather.entity.SkyStatus;
-import project.closet.weather.entity.Weather;
 import project.closet.weather.repository.WeatherRepository;
 
 @Slf4j
@@ -64,16 +64,16 @@ public class BasicFeedService implements FeedService {
     public FeedDto createFeed(FeedCreateRequest feedCreateRequest) {
         UUID authorId = feedCreateRequest.authorId();
         User author = userRepository.findByIdWithProfile(authorId)
-                .orElseThrow(() -> UserNotFoundException.withId(authorId));
+            .orElseThrow(() -> UserNotFoundException.withId(authorId));
 
         UUID weatherId = feedCreateRequest.weatherId();
         Weather weather = weatherRepository.findById(weatherId)
-                .orElseThrow(() -> WeatherNotFoundException.withId(weatherId));
+            .orElseThrow(() -> WeatherNotFoundException.withId(weatherId));
 
         Feed feed = new Feed(author, weather, feedCreateRequest.content());
 
         clothesRepository.findAllByIdInWithAttributes(feedCreateRequest.clothesIds())
-                .forEach(feed::addClothes);
+            .forEach(feed::addClothes);
 
         feedRepository.save(feed);
 
@@ -88,10 +88,10 @@ public class BasicFeedService implements FeedService {
     @Override
     public void likeFeed(UUID feedId, UUID loginUserId) {
         User loginUser = userRepository.findById(loginUserId)
-                .orElseThrow(() -> UserNotFoundException.withId(loginUserId));
+            .orElseThrow(() -> UserNotFoundException.withId(loginUserId));
 
         Feed feed = feedRepository.findByIdWithAuthor(feedId)
-                .orElseThrow(() -> FeedNotFoundException.withId(feedId));
+            .orElseThrow(() -> FeedNotFoundException.withId(feedId));
 
         // 중복 체크
         if (feedLikeRepository.existsByUserAndFeed(loginUser, feed)) {
@@ -99,7 +99,8 @@ public class BasicFeedService implements FeedService {
         }
         feed.incrementLikeCount();
 
-        eventPublisher.publishEvent(new FeedLikeCreateEvent(feed.getAuthor().getId(), loginUser.getName(), feed.getContent()));
+        eventPublisher.publishEvent(
+            new FeedLikeCreateEvent(feed.getAuthor().getId(), loginUser.getName(), feed.getContent()));
         feedLikeRepository.save(new FeedLike(feed, loginUser));
     }
 
@@ -107,10 +108,10 @@ public class BasicFeedService implements FeedService {
     @Override
     public void cancelFeedLike(UUID feedId, UUID userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> UserNotFoundException.withId(userId));
+            .orElseThrow(() -> UserNotFoundException.withId(userId));
 
         Feed feed = feedRepository.findById(feedId)
-                .orElseThrow(() -> FeedNotFoundException.withId(feedId));
+            .orElseThrow(() -> FeedNotFoundException.withId(feedId));
 
         int deletedCount = feedLikeRepository.deleteByUserAndFeed(user, feed);
         if (deletedCount > 0) {
@@ -125,14 +126,14 @@ public class BasicFeedService implements FeedService {
         UUID authorId = commentCreateRequest.authorId();
         String content = commentCreateRequest.content();
         User author = userRepository.findByIdWithProfile(authorId)
-                .orElseThrow(() -> UserNotFoundException.withId(authorId));
+            .orElseThrow(() -> UserNotFoundException.withId(authorId));
         Feed feed = feedRepository.findByIdWithAuthor(feedId)
-                .orElseThrow(() -> FeedNotFoundException.withId(feedId));
+            .orElseThrow(() -> FeedNotFoundException.withId(feedId));
 
         FeedComment feedComment = new FeedComment(feed, author, content);
         feedCommentRepository.save(feedComment);
         String presignedUrl =
-                s3ContentStorage.getPresignedUrl(author.getProfile().getProfileImageKey());
+            s3ContentStorage.getPresignedUrl(author.getProfile().getProfileImageKey());
 
         // 알림 생성 이벤트 발생
         eventPublisher.publishEvent(new FeedCommentCreateEvent(feed.getAuthor().getId(), author.getName(), content));
@@ -152,7 +153,7 @@ public class BasicFeedService implements FeedService {
     public FeedDto updateFeed(UUID feedId, FeedUpdateRequest feedUpdateRequest, UUID loginUserId) {
         // Feed -> User, Weather, Clothes fetch join을 통해서 유저 정보도 함께 가져와야함
         Feed feed = feedRepository.findByIdWithAll(feedId)
-                .orElseThrow(() -> FeedNotFoundException.withId(feedId));
+            .orElseThrow(() -> FeedNotFoundException.withId(feedId));
         feed.updateContent(feedUpdateRequest.content());
 
         boolean likedByMe = feedLikeRepository.existsByUserIdAndFeedId(loginUserId, feedId);
@@ -164,24 +165,24 @@ public class BasicFeedService implements FeedService {
     @Transactional(readOnly = true)
     @Override
     public CommentDtoCursorResponse getFeedComments(
-            UUID feedId,
-            Instant cursor,
-            UUID idAfter,
-            int limit
+        UUID feedId,
+        Instant cursor,
+        UUID idAfter,
+        int limit
     ) {
         if (!feedRepository.existsById(feedId)) {
             throw FeedNotFoundException.withId(feedId);
         }
 
         List<FeedComment> comments =
-                feedCommentRepository.findByFeedWithCursor(feedId, cursor, idAfter, limit + 1);
+            feedCommentRepository.findByFeedWithCursor(feedId, cursor, idAfter, limit + 1);
 
         long totalCount = feedCommentRepository.countByFeedId(feedId);
 
         boolean hasNext = comments.size() > limit;
         List<FeedComment> result = comments.stream()
-                .limit(limit)
-                .toList();
+            .limit(limit)
+            .toList();
 
         Instant nextCursor = null;
         UUID nextId = null;
@@ -192,41 +193,41 @@ public class BasicFeedService implements FeedService {
         }
 
         List<CommentDto> data = result.stream()
-                .map(feedComment -> {
-                    String presignedUrl =
-                            s3ContentStorage.getPresignedUrl(feedComment.getAuthor().getProfile().getProfileImageKey());
-                    return CommentDto.from(feedComment, presignedUrl);
-                })
-                .toList();
+            .map(feedComment -> {
+                String presignedUrl =
+                    s3ContentStorage.getPresignedUrl(feedComment.getAuthor().getProfile().getProfileImageKey());
+                return CommentDto.from(feedComment, presignedUrl);
+            })
+            .toList();
 
         return new CommentDtoCursorResponse(
-                data,
-                nextCursor,
-                nextId,
-                hasNext,
-                totalCount,
-                "createdAt",
-                SortDirection.ASCENDING
+            data,
+            nextCursor,
+            nextId,
+            hasNext,
+            totalCount,
+            "createdAt",
+            SortDirection.ASCENDING
         );
     }
 
     @Transactional(readOnly = true)
     @Override
     public FeedDtoCursorResponse getFeedList(
-            String cursor,
-            UUID idAfter,
-            int limit,
-            String sortBy,
-            SortDirection sortDirection,
-            String keywordLike,
-            SkyStatus skyStatusEqual,
-            PrecipitationType precipitationType,
-            UUID authorIdEqual,
-            UUID loginUserId
+        String cursor,
+        UUID idAfter,
+        int limit,
+        String sortBy,
+        SortDirection sortDirection,
+        String keywordLike,
+        SkyStatus skyStatusEqual,
+        PrecipitationType precipitationType,
+        UUID authorIdEqual,
+        UUID loginUserId
     ) {
         List<Feed> feeds = feedRepository.findAllWithCursorAndFilters(
-                cursor, idAfter, limit, sortBy, sortDirection,
-                keywordLike, skyStatusEqual, precipitationType, authorIdEqual
+            cursor, idAfter, limit, sortBy, sortDirection,
+            keywordLike, skyStatusEqual, precipitationType, authorIdEqual
         );
 
         boolean hasNext = feeds.size() > limit;
@@ -248,48 +249,48 @@ public class BasicFeedService implements FeedService {
         }
 
         List<FeedDto> feedDtos = feeds.stream()
-                .map(feed -> {
-                    long commentCount = feedCommentRepository.countByFeedId(feed.getId());
-                    boolean likedByMe =
-                            feedLikeRepository.existsByUserIdAndFeedId(loginUserId, feed.getId());
-                    return toFeedDto(feed, commentCount, likedByMe);
-                })
-                .toList();
+            .map(feed -> {
+                long commentCount = feedCommentRepository.countByFeedId(feed.getId());
+                boolean likedByMe =
+                    feedLikeRepository.existsByUserIdAndFeedId(loginUserId, feed.getId());
+                return toFeedDto(feed, commentCount, likedByMe);
+            })
+            .toList();
 
         long totalCount = feedRepository.countByFilters(
-                keywordLike, skyStatusEqual, precipitationType, authorIdEqual);
+            keywordLike, skyStatusEqual, precipitationType, authorIdEqual);
 
         return new FeedDtoCursorResponse(
-                feedDtos,
-                nextCursor,
-                nextIdAfter,
-                hasNext,
-                totalCount,
-                sortBy,
-                sortDirection
+            feedDtos,
+            nextCursor,
+            nextIdAfter,
+            hasNext,
+            totalCount,
+            sortBy,
+            sortDirection
         );
     }
 
     private FeedDto toFeedDto(Feed feed, long commentCount, boolean likedByMe) {
         List<OotdDto> ootdDtos = feed.getFeedClothesList().stream()
-                .map(feedClothes -> {
-                    String presignedUrl = s3ContentStorage.getPresignedUrl(feedClothes.getClothes().getImageKey());
-                    return OotdDto.from(feedClothes.getClothes(), presignedUrl);
-                })
-                .toList();
+            .map(feedClothes -> {
+                String presignedUrl = s3ContentStorage.getPresignedUrl(feedClothes.getClothes().getImageKey());
+                return OotdDto.from(feedClothes.getClothes(), presignedUrl);
+            })
+            .toList();
         String presignedUrl =
-                s3ContentStorage.getPresignedUrl(feed.getAuthor().getProfile().getProfileImageKey());
+            s3ContentStorage.getPresignedUrl(feed.getAuthor().getProfile().getProfileImageKey());
         return new FeedDto(
-                feed.getId(),
-                feed.getCreatedAt(),
-                feed.getUpdatedAt(),
-                UserSummary.from(feed.getAuthor(), presignedUrl),
-                WeatherSummaryDto.from(feed.getWeather()),
-                ootdDtos,
-                feed.getContent(),
-                feed.getLikeCount(),
-                commentCount,
-                likedByMe
+            feed.getId(),
+            feed.getCreatedAt(),
+            feed.getUpdatedAt(),
+            UserSummary.from(feed.getAuthor(), presignedUrl),
+            WeatherSummaryDto.from(feed.getWeather()),
+            ootdDtos,
+            feed.getContent(),
+            feed.getLikeCount(),
+            commentCount,
+            likedByMe
         );
     }
 }

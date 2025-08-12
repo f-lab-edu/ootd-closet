@@ -37,10 +37,10 @@ public class SseMessageRepository {
 
     public List<SseMessage> findAllByEventIdAfterAndReceiverId(UUID eventId, UUID receiverId) {
         return eventIdQueue.stream()
-                .dropWhile(data -> !data.equals(eventId))
-                .skip(1)
-                .map(messages::get)
-                .filter(sseMessage -> sseMessage.isReceivable(receiverId))
-                .toList();
+            .dropWhile(data -> !data.equals(eventId))
+            .skip(1)
+            .map(messages::get)
+            .filter(sseMessage -> sseMessage.isReceivable(receiverId))
+            .toList();
     }
 }

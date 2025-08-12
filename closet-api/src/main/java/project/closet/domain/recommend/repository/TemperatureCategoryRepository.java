@@ -3,7 +3,7 @@ package project.closet.domain.recommend.repository;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
-import project.closet.domain.recommend.entity.TemperatureCategoryEntity;
+import project.closet.entity.recommend.TemperatureCategoryEntity;
 
 public interface TemperatureCategoryRepository
         extends JpaRepository<TemperatureCategoryEntity, UUID> {

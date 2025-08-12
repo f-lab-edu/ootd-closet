@@ -22,11 +22,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.closet.entity.user.Role;
+import project.closet.entity.user.User;
 import project.closet.exception.ErrorCode;
 import project.closet.exception.user.UserNotFoundException;
 import project.closet.security.ClosetUserDetails;
-import project.closet.user.entity.Role;
-import project.closet.user.entity.User;
 import project.closet.user.repository.UserRepository;
 
 @Slf4j

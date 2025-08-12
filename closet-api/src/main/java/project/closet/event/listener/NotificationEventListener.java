@@ -8,6 +8,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
+import project.closet.entity.notification.NotificationLevel;
+import project.closet.entity.user.Role;
 import project.closet.event.ClothesAttributeCreatEvent;
 import project.closet.event.ClothesAttributeUpdateEvent;
 import project.closet.event.DirectMessageSentEvent;
@@ -16,9 +18,7 @@ import project.closet.event.FeedCreatedEvent;
 import project.closet.event.FeedLikeCreateEvent;
 import project.closet.event.FollowCreateEvent;
 import project.closet.event.RoleChangeEvent;
-import project.closet.notification.entity.NotificationLevel;
 import project.closet.notification.service.NotificationService;
-import project.closet.user.entity.Role;
 
 @Slf4j
 @Component
@@ -35,13 +35,13 @@ public class NotificationEventListener {
         Role previousRole = event.previousRole();
         Role newRole = event.newRole();
         log.info("권한 변경 알림 이벤트 처리 시작: userId={}, previousRoleName={}, newRoleName={}",
-                userId, previousRole.name(), newRole.name());
+            userId, previousRole.name(), newRole.name());
         try {
             notificationService.create(
-                    userId,
-                    String.format("권한 변경: %s -> %s", previousRole.name(), newRole.name()),
-                    String.format("관리자에 의해 권한이 '%s'(으)로 변경되었습니다.", newRole.name()),
-                    NotificationLevel.INFO
+                userId,
+                String.format("권한 변경: %s -> %s", previousRole.name(), newRole.name()),
+                String.format("관리자에 의해 권한이 '%s'(으)로 변경되었습니다.", newRole.name()),
+                NotificationLevel.INFO
             );
             log.info("권한 변경 알림 이벤트 처리 완료: receiverId={}", userId);
         } catch (Exception e) {
@@ -56,9 +56,9 @@ public class NotificationEventListener {
         log.info("새로운 의상 속성 추가 알림 이벤트 처리 시작: definitionName={}", event.definitionName());
         try {
             notificationService.createForAllUsers(
-                    "새로운 의상 속성이 추가되었어요.",
-                    String.format("내 의상에 '%s' 속성을 추가해보세요.", event.definitionName()),
-                    NotificationLevel.INFO
+                "새로운 의상 속성이 추가되었어요.",
+                String.format("내 의상에 '%s' 속성을 추가해보세요.", event.definitionName()),
+                NotificationLevel.INFO
             );
             log.info("새로운 의상 속성 추가 알림 이벤트 처리 완료");
         } catch (Exception e) {
@@ -73,9 +73,9 @@ public class NotificationEventListener {
         log.info("의상 속성 업데이트 알림 이벤트 처리 시작: definitionName={}", event.definitionName());
         try {
             notificationService.createForAllUsers(
-                    "의상 속성이 변경되었어요.",
-                    String.format("[%s] 속성을 확인해보세요.", event.definitionName()),
-                    NotificationLevel.INFO
+                "의상 속성이 변경되었어요.",
+                String.format("[%s] 속성을 확인해보세요.", event.definitionName()),
+                NotificationLevel.INFO
             );
             log.info("의상 속성 업데이트 알림 이벤트 처리 완료");
         } catch (Exception e) {
@@ -93,10 +93,10 @@ public class NotificationEventListener {
         log.info("피드 좋아요 알림 이벤트 처리 시작: receiverId ={}, name={}, content={}", receiverId, username, content);
         try {
             notificationService.create(
-                    receiverId,
-                    String.format("%s님이 내 피드를 좋아합니다.", username),
-                    content,
-                    NotificationLevel.INFO
+                receiverId,
+                String.format("%s님이 내 피드를 좋아합니다.", username),
+                content,
+                NotificationLevel.INFO
             );
         } catch (Exception e) {
             log.error("피드 좋아요 알림 이벤트 처리 실패: receiverId={}, error={}", receiverId, e.getMessage());
@@ -110,13 +110,14 @@ public class NotificationEventListener {
         UUID receiverId = event.feedAuthorId();
         String commenterUsername = event.commenterUsername();
         String commentText = event.commentText();
-        log.info("피드 댓글 알림 이벤트 처리 시작: receiverId={}, commenterUsername={}, commentText={}", receiverId, commenterUsername, commentText);
+        log.info("피드 댓글 알림 이벤트 처리 시작: receiverId={}, commenterUsername={}, commentText={}", receiverId,
+            commenterUsername, commentText);
         try {
             notificationService.create(
-                    receiverId,
-                    String.format("%s님이 댓글을 달았어요.", commenterUsername),
-                    commentText,
-                    NotificationLevel.INFO
+                receiverId,
+                String.format("%s님이 댓글을 달았어요.", commenterUsername),
+                commentText,
+                NotificationLevel.INFO
             );
         } catch (Exception e) {
             log.error("피드 댓글 알림 이벤트 처리 실패: receiverId={}, error={}", receiverId, e.getMessage());
@@ -132,10 +133,10 @@ public class NotificationEventListener {
         log.info("팔로우 알림 이벤트 처리 시작: receiverId={}, followerUsername={}", receiverId, followerUsername);
         try {
             notificationService.create(
-                    receiverId,
-                    String.format("%s님이 나를 팔로우했어요.", followerUsername),
-                    "",
-                    NotificationLevel.INFO
+                receiverId,
+                String.format("%s님이 나를 팔로우했어요.", followerUsername),
+                "",
+                NotificationLevel.INFO
             );
         } catch (Exception e) {
             log.error("팔로우 알림 이벤트 처리 실패: receiverId={}, error={}", receiverId, e.getMessage());
@@ -149,13 +150,14 @@ public class NotificationEventListener {
         UUID receiverId = event.receiverId();
         String senderUsername = event.senderUsername();
         String content = event.messageContent();
-        log.info("새로운 DM 알림 이벤트 처리 시작: receiverId={}, senderUsername={}, content={}", receiverId, senderUsername, content);
+        log.info("새로운 DM 알림 이벤트 처리 시작: receiverId={}, senderUsername={}, content={}", receiverId, senderUsername,
+            content);
         try {
             notificationService.create(
-                    receiverId,
-                    String.format("[DM] %s", senderUsername),
-                    content,
-                    NotificationLevel.INFO
+                receiverId,
+                String.format("[DM] %s", senderUsername),
+                content,
+                NotificationLevel.INFO
             );
         } catch (Exception e) {
             log.error("새로운 DM 알림 이벤트 처리 실패: receiverId={}, error={}", receiverId, e.getMessage());
@@ -171,10 +173,10 @@ public class NotificationEventListener {
         String feedContent = event.content();
         try {
             notificationService.createAll(
-                    receiverIds,
-                    String.format("%s님이 새로운 피드를 작성했어요.", authorUsername),
-                    feedContent,
-                    NotificationLevel.INFO
+                receiverIds,
+                String.format("%s님이 새로운 피드를 작성했어요.", authorUsername),
+                feedContent,
+                NotificationLevel.INFO
             );
         } catch (Exception e) {
             log.error("피드 생성 알림 이벤트 처리 실패: error={}", e.getMessage());

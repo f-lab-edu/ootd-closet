@@ -26,8 +26,8 @@ import project.closet.dto.request.UserRoleUpdateRequest;
 import project.closet.dto.response.ProfileDto;
 import project.closet.dto.response.UserDto;
 import project.closet.dto.response.UserDtoCursorResponse;
+import project.closet.entity.user.Role;
 import project.closet.user.controller.api.UserApi;
-import project.closet.user.entity.Role;
 import project.closet.user.service.UserService;
 
 @Slf4j
@@ -41,17 +41,17 @@ public class UserController implements UserApi {
     @GetMapping
     @Override
     public ResponseEntity<UserDtoCursorResponse> findAll(
-            @RequestParam(name = "cursor", required = false) String cursor,
-            @RequestParam(name = "idAfter", required = false) UUID idAfter,
-            @RequestParam(name = "limit") int limit,
-            @RequestParam(name = "sortBy") String sortBy,
-            @RequestParam(name = "sortDirection") SortDirection sortDirection,
-            @RequestParam(name = "emailLike", required = false) String emailLike,
-            @RequestParam(name = "roleEqual", required = false) Role roleEqual,
-            @RequestParam(name = "locked", required = false) Boolean locked
+        @RequestParam(name = "cursor", required = false) String cursor,
+        @RequestParam(name = "idAfter", required = false) UUID idAfter,
+        @RequestParam(name = "limit") int limit,
+        @RequestParam(name = "sortBy") String sortBy,
+        @RequestParam(name = "sortDirection") SortDirection sortDirection,
+        @RequestParam(name = "emailLike", required = false) String emailLike,
+        @RequestParam(name = "roleEqual", required = false) Role roleEqual,
+        @RequestParam(name = "locked", required = false) Boolean locked
     ) {
         UserDtoCursorResponse response = userService.findAll(
-                cursor, idAfter, limit, sortBy, sortDirection, emailLike, roleEqual, locked
+            cursor, idAfter, limit, sortBy, sortDirection, emailLike, roleEqual, locked
         );
         return ResponseEntity.ok(response);
     }
@@ -59,7 +59,7 @@ public class UserController implements UserApi {
     @PostMapping
     @Override
     public ResponseEntity<UserDto> create(
-            @RequestBody @Valid UserCreateRequest userCreateRequest
+        @RequestBody @Valid UserCreateRequest userCreateRequest
     ) {
         log.info("사용자 생성 요청: {}", userCreateRequest);
         UserDto createdUser = userService.create(userCreateRequest);
@@ -77,18 +77,18 @@ public class UserController implements UserApi {
     }
 
     @PatchMapping(
-            value = "/{userId}/profiles",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+        value = "/{userId}/profiles",
+        consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
     @Override
     public ResponseEntity<ProfileDto> updateProfile(
-            @PathVariable(value = "userId") UUID userId,
-            @RequestPart(value = "request") @Valid ProfileUpdateRequest profileUpdateRequest,
-            @RequestPart(value = "image", required = false) MultipartFile profile
+        @PathVariable(value = "userId") UUID userId,
+        @RequestPart(value = "request") @Valid ProfileUpdateRequest profileUpdateRequest,
+        @RequestPart(value = "image", required = false) MultipartFile profile
     ) {
         log.info("사용자 프로필 업데이트 요청: userId={}, request={}, image={}",
-                userId, profileUpdateRequest,
-                profile != null ? profile.getOriginalFilename() : "없음");
+            userId, profileUpdateRequest,
+            profile != null ? profile.getOriginalFilename() : "없음");
         ProfileDto profileDto = userService.updateProfile(userId, profileUpdateRequest, profile);
         log.debug("사용자 프로필 업데이트 응답: {}", profileDto);
         return ResponseEntity.ok(profileDto);
@@ -97,8 +97,8 @@ public class UserController implements UserApi {
     @PatchMapping("/{userId}/password")
     @Override
     public ResponseEntity<Void> changePassword(
-            @PathVariable("userId") UUID userId,
-            @RequestBody @Valid ChangePasswordRequest changePasswordRequest
+        @PathVariable("userId") UUID userId,
+        @RequestBody @Valid ChangePasswordRequest changePasswordRequest
     ) {
         log.info("사용자 비밀번호 변경 요청: userId={}", userId);
         userService.changePassword(userId, changePasswordRequest);
@@ -108,8 +108,8 @@ public class UserController implements UserApi {
     @PatchMapping("/{userId}/lock")
     @Override
     public ResponseEntity<UUID> changeAccountLockStatus(
-            @PathVariable("userId") UUID userId,
-            @RequestBody @Valid UserLockUpdateRequest request
+        @PathVariable("userId") UUID userId,
+        @RequestBody @Valid UserLockUpdateRequest request
     ) {
         log.info("사용자 잠금 상태 변경 요청: userId={}, locked={}", userId, request.locked());
         UUID updatedUserId = userService.updateLockStatus(userId, request);
@@ -120,8 +120,8 @@ public class UserController implements UserApi {
     @PatchMapping("/{userId}/role")
     @Override
     public ResponseEntity<UserDto> updateRole(
-            @PathVariable(value = "userId") UUID userId,
-            @RequestBody @Valid UserRoleUpdateRequest userRoleUpdateRequest
+        @PathVariable(value = "userId") UUID userId,
+        @RequestBody @Valid UserRoleUpdateRequest userRoleUpdateRequest
     ) {
         log.info("권한 수정 요청");
         UserDto userDto = userService.updateRole(userId, userRoleUpdateRequest);

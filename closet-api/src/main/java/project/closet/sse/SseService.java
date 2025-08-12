@@ -49,16 +49,16 @@ public class SseService {
             throw new RuntimeException(e);
         }
         Optional.ofNullable(lastEventId)
-                .ifPresent(uuid -> {
-                    sseMessageRepository.findAllByEventIdAfterAndReceiverId(uuid, receiverId)
-                            .forEach(sseMessage -> {
-                                try {
-                                    sseEmitter.send(sseMessage.toEvent());
-                                } catch (Exception e) {
-                                    log.error("Error sending SSE message: {}", e.getMessage(), e);
-                                }
-                            });
-                });
+            .ifPresent(uuid -> {
+                sseMessageRepository.findAllByEventIdAfterAndReceiverId(uuid, receiverId)
+                    .forEach(sseMessage -> {
+                        try {
+                            sseEmitter.send(sseMessage.toEvent());
+                        } catch (Exception e) {
+                            log.error("Error sending SSE message: {}", e.getMessage(), e);
+                        }
+                    });
+            });
 
         return sseEmitter;
     }
@@ -66,57 +66,57 @@ public class SseService {
     @Scheduled(cron = "0 */30 * * * *")
     public void cleanUp() {
         Set<DataWithMediaType> ping = SseEmitter.event()
-                .name("ping")
-                .build();
+            .name("ping")
+            .build();
         sseEmitterRepository.findAll()
-                .forEach(sseEmitter -> {
-                    try {
-                        sseEmitter.send(ping);
-                    } catch (Exception e) {
-                        log.error(e.getMessage(), e);
-                        sseEmitter.completeWithError(e);
-                    }
-                });
+            .forEach(sseEmitter -> {
+                try {
+                    sseEmitter.send(ping);
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                    sseEmitter.completeWithError(e);
+                }
+            });
     }
 
     public void send(UUID receiverId, String eventName, Object data) {
         sseEmitterRepository.findByReceiverId(receiverId)
-                .ifPresent(sseEmitters -> {
-                    SseMessage message = sseMessageRepository.save(
-                            SseMessage.create(receiverId, eventName, data));
-                    sseEmitters.forEach(sseEmitter -> {
-                        try {
-                            sseEmitter.send(message.toEvent());
-                        } catch (Exception e) {
-                            log.error("Error sending SSE message: {}", e.getMessage(), e);
-                        }
-                    });
+            .ifPresent(sseEmitters -> {
+                SseMessage message = sseMessageRepository.save(
+                    SseMessage.create(receiverId, eventName, data));
+                sseEmitters.forEach(sseEmitter -> {
+                    try {
+                        sseEmitter.send(message.toEvent());
+                    } catch (Exception e) {
+                        log.error("Error sending SSE message: {}", e.getMessage(), e);
+                    }
                 });
+            });
     }
 
     public void send(Collection<UUID> receiverIds, String eventName, Object data) {
         SseMessage message = sseMessageRepository.save(SseMessage.create(receiverIds, eventName, data));
         Set<DataWithMediaType> event = message.toEvent();
         sseEmitterRepository.findAllByReceiverIdsIn(receiverIds)
-                .forEach(sseEmitter -> {
-                    try {
-                        sseEmitter.send(event);
-                    } catch (IOException e) {
-                        log.error(e.getMessage(), e);
-                    }
-                });
+            .forEach(sseEmitter -> {
+                try {
+                    sseEmitter.send(event);
+                } catch (IOException e) {
+                    log.error(e.getMessage(), e);
+                }
+            });
     }
 
     public void broadcast(String eventName, Object data) {
         SseMessage message = sseMessageRepository.save(SseMessage.createBroadcast(eventName, data));
         Set<DataWithMediaType> event = message.toEvent();
         sseEmitterRepository.findAll()
-                .forEach(sseEmitter -> {
-                    try {
-                        sseEmitter.send(event);
-                    } catch (IOException e) {
-                        log.error(e.getMessage(), e);
-                    }
-                });
+            .forEach(sseEmitter -> {
+                try {
+                    sseEmitter.send(event);
+                } catch (IOException e) {
+                    log.error(e.getMessage(), e);
+                }
+            });
     }
 }

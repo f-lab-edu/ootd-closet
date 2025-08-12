@@ -28,6 +28,7 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import project.closet.entity.user.Role;
 import project.closet.security.CustomAccessDeniedHandler;
 import project.closet.security.CustomLoginFailureHandler;
 import project.closet.security.JsonUsernamePasswordAuthenticationFilter;
@@ -36,7 +37,6 @@ import project.closet.security.jwt.JwtAuthenticationFilter;
 import project.closet.security.jwt.JwtLoginSuccessHandler;
 import project.closet.security.jwt.JwtLogoutHandler;
 import project.closet.security.jwt.JwtService;
-import project.closet.user.entity.Role;
 
 @Slf4j
 @Configuration
@@ -46,47 +46,47 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(
-            HttpSecurity http,
-            ObjectMapper objectMapper,
-            DaoAuthenticationProvider daoAuthenticationProvider,
-            JwtService jwtService) throws Exception {
+        HttpSecurity http,
+        ObjectMapper objectMapper,
+        DaoAuthenticationProvider daoAuthenticationProvider,
+        JwtService jwtService) throws Exception {
         http
-                .authenticationProvider(daoAuthenticationProvider)
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(SecurityMatchers.PUBLIC_MATCHERS).permitAll()
-                        .dispatcherTypeMatchers(DispatcherType.ASYNC, DispatcherType.ERROR).permitAll()
-                        .anyRequest().hasRole(Role.USER.name())
-                )
-                .csrf(csrf ->
-                        csrf
-                                .ignoringRequestMatchers(SecurityMatchers.LOGOUT)
-                                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-                                .sessionAuthenticationStrategy(
-                                        new NullAuthenticatedSessionStrategy())
-                )
-                .logout(logout -> logout
-                        .logoutRequestMatcher(SecurityMatchers.LOGOUT)
-                        .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
-                        .addLogoutHandler(new JwtLogoutHandler(jwtService))
-                )
-                .with(new JsonUsernamePasswordAuthenticationFilter.Configurer(objectMapper),
-                        configurer ->
-                                configurer
-                                        .successHandler(new JwtLoginSuccessHandler(objectMapper,
-                                                jwtService))
-                                        .failureHandler(new CustomLoginFailureHandler(objectMapper))
-                )
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .addFilterBefore(
-                        new JwtAuthenticationFilter(jwtService, objectMapper),
-                        JsonUsernamePasswordAuthenticationFilter.class
-                )
-                .exceptionHandling(exception -> exception
-                        .accessDeniedHandler(new CustomAccessDeniedHandler(objectMapper))
-                )
+            .authenticationProvider(daoAuthenticationProvider)
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers(SecurityMatchers.PUBLIC_MATCHERS).permitAll()
+                .dispatcherTypeMatchers(DispatcherType.ASYNC, DispatcherType.ERROR).permitAll()
+                .anyRequest().hasRole(Role.USER.name())
+            )
+            .csrf(csrf ->
+                csrf
+                    .ignoringRequestMatchers(SecurityMatchers.LOGOUT)
+                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                    .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+                    .sessionAuthenticationStrategy(
+                        new NullAuthenticatedSessionStrategy())
+            )
+            .logout(logout -> logout
+                .logoutRequestMatcher(SecurityMatchers.LOGOUT)
+                .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
+                .addLogoutHandler(new JwtLogoutHandler(jwtService))
+            )
+            .with(new JsonUsernamePasswordAuthenticationFilter.Configurer(objectMapper),
+                configurer ->
+                    configurer
+                        .successHandler(new JwtLoginSuccessHandler(objectMapper,
+                            jwtService))
+                        .failureHandler(new CustomLoginFailureHandler(objectMapper))
+            )
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+            .addFilterBefore(
+                new JwtAuthenticationFilter(jwtService, objectMapper),
+                JsonUsernamePasswordAuthenticationFilter.class
+            )
+            .exceptionHandling(exception -> exception
+                .accessDeniedHandler(new CustomAccessDeniedHandler(objectMapper))
+            )
         ;
 
         return http.build();
@@ -97,9 +97,9 @@ public class SecurityConfig {
         log.debug("Debug Filter Chain...");
         int filterSize = filterChain.getFilters().size();
         IntStream.range(0, filterSize)
-                .forEach(idx -> {
-                    log.debug("[{}/{}] {}", idx + 1, filterSize, filterChain.getFilters().get(idx));
-                });
+            .forEach(idx -> {
+                log.debug("[{}/{}] {}", idx + 1, filterSize, filterChain.getFilters().get(idx));
+            });
         return "debugFilterChain";
     }
 
@@ -110,9 +110,9 @@ public class SecurityConfig {
 
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider(
-            UserDetailsService userDetailsService,
-            PasswordEncoder passwordEncoder,
-            RoleHierarchy roleHierarchy
+        UserDetailsService userDetailsService,
+        PasswordEncoder passwordEncoder,
+        RoleHierarchy roleHierarchy
     ) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
@@ -124,7 +124,7 @@ public class SecurityConfig {
     // Provider 를 이용하여 Manager 생성
     @Bean
     public AuthenticationManager authenticationManager(
-            List<AuthenticationProvider> authenticationProviders
+        List<AuthenticationProvider> authenticationProviders
     ) {
         return new ProviderManager(authenticationProviders);
     }
@@ -133,10 +133,10 @@ public class SecurityConfig {
     @Bean
     public RoleHierarchy roleHierarchy() {
         return RoleHierarchyImpl.withDefaultRolePrefix()
-                .role(Role.ADMIN.name())
-                .implies(Role.USER.name())
+            .role(Role.ADMIN.name())
+            .implies(Role.USER.name())
 
-                .build();
+            .build();
     }
 
     @Bean

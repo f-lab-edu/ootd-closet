@@ -2,26 +2,26 @@ package project.closet.dto.response;
 
 import java.time.Instant;
 import java.util.UUID;
-import project.closet.notification.entity.Notification;
-import project.closet.notification.entity.NotificationLevel;
+import project.closet.entity.notification.Notification;
+import project.closet.entity.notification.NotificationLevel;
 
 public record NotificationDto(
-        UUID id,
-        Instant createdAt,
-        UUID receiverId,
-        String title,
-        String content,
-        NotificationLevel level
+    UUID id,
+    Instant createdAt,
+    UUID receiverId,
+    String title,
+    String content,
+    NotificationLevel level
 ) {
 
     public NotificationDto(Notification notification) {
         this(
-                notification.getId(),
-                notification.getCreatedAt(),
-                notification.getReceiverId(),
-                notification.getTitle(),
-                notification.getContent(),
-                notification.getLevel()
+            notification.getId(),
+            notification.getCreatedAt(),
+            notification.getReceiverId(),
+            notification.getTitle(),
+            notification.getContent(),
+            notification.getLevel()
         );
     }
 }

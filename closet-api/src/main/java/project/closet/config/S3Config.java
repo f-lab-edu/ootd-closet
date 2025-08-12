@@ -17,9 +17,9 @@ public class S3Config {
     private final String region;
 
     public S3Config(
-            @Value("${closet.storage.s3.access-key}") String accessKey,
-            @Value("${closet.storage.s3.secret-key}") String secretKey,
-            @Value("${closet.storage.s3.region}") String region
+        @Value("${closet.storage.s3.access-key}") String accessKey,
+        @Value("${closet.storage.s3.secret-key}") String secretKey,
+        @Value("${closet.storage.s3.region}") String region
     ) {
         this.accessKey = accessKey;
         this.secretKey = secretKey;
@@ -29,25 +29,25 @@ public class S3Config {
     @Bean
     public S3Client s3Client() {
         return S3Client.builder()
-                .region(Region.of(region))
-                .credentialsProvider(
-                        StaticCredentialsProvider.create(
-                                AwsBasicCredentials.create(accessKey, secretKey)
-                        )
+            .region(Region.of(region))
+            .credentialsProvider(
+                StaticCredentialsProvider.create(
+                    AwsBasicCredentials.create(accessKey, secretKey)
                 )
-                .build();
+            )
+            .build();
     }
 
     @Bean
     public S3Presigner s3Presigner() {
         return S3Presigner.builder()
-                .region(Region.of(region))
-                .credentialsProvider(
-                        StaticCredentialsProvider.create(
-                                AwsBasicCredentials.create(accessKey, secretKey)
-                        )
+            .region(Region.of(region))
+            .credentialsProvider(
+                StaticCredentialsProvider.create(
+                    AwsBasicCredentials.create(accessKey, secretKey)
                 )
-                .build();
+            )
+            .build();
     }
 
 }

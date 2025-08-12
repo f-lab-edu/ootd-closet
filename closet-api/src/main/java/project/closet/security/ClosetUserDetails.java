@@ -8,9 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import project.closet.entity.user.Role;
+import project.closet.entity.user.User;
 import project.closet.security.jwt.JwtObject;
-import project.closet.user.entity.Role;
-import project.closet.user.entity.User;
 
 /*
     스프링 시큐리티에서 스프링 컨텍스트에서 핸들링하는 유저 정보를

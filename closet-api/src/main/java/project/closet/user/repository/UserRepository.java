@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import project.closet.user.entity.User;
+import project.closet.entity.user.User;
 
 public interface UserRepository extends JpaRepository<User, UUID>, UserRepositoryCustom {
 

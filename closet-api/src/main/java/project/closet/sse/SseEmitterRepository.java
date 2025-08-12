@@ -28,16 +28,16 @@ public class SseEmitterRepository {
 
     public List<SseEmitter> findAllByReceiverIdsIn(Collection<UUID> receiverIds) {
         return data.entrySet().stream()
-                .filter(entry -> receiverIds.contains(entry.getKey()))
-                .map(Map.Entry::getValue)
-                .flatMap(Collection::stream)
-                .toList();
+            .filter(entry -> receiverIds.contains(entry.getKey()))
+            .map(Map.Entry::getValue)
+            .flatMap(Collection::stream)
+            .toList();
     }
 
     public List<SseEmitter> findAll() {
         return data.values().stream()
-                .flatMap(Collection::stream)
-                .toList();
+            .flatMap(Collection::stream)
+            .toList();
     }
 
     public void delete(UUID receiverId, SseEmitter sseEmitter) {

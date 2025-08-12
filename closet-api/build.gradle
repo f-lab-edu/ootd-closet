@@ -1,6 +1,7 @@
 project(':closet-api') {
 
     dependencies {
+        implementation project(':closet-domain')
         implementation 'org.springframework.boot:spring-boot-starter-web'
         implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4'
         implementation 'org.springframework.boot:spring-boot-starter-validation'

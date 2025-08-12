@@ -3,28 +3,28 @@ package project.closet.dto.response;
 import java.util.List;
 import java.util.UUID;
 import project.closet.domain.clothes.dto.response.ClothesAttributeWithDefDto;
-import project.closet.domain.clothes.entity.Clothes;
-import project.closet.domain.clothes.entity.ClothesType;
+import project.closet.entity.clothes.Clothes;
+import project.closet.entity.clothes.ClothesType;
 
 public record OotdDto(
-        UUID clothesId,
-        String name,
-        String imageUrl,
-        ClothesType type,
-        List<ClothesAttributeWithDefDto> attributes
+    UUID clothesId,
+    String name,
+    String imageUrl,
+    ClothesType type,
+    List<ClothesAttributeWithDefDto> attributes
 ) {
 
     public static OotdDto from(Clothes clothes, String presignedUrl) {
 
         List<ClothesAttributeWithDefDto> attribute =
-                ClothesAttributeWithDefDto.fromClothes(clothes);
+            ClothesAttributeWithDefDto.fromClothes(clothes);
 
         return new OotdDto(
-                clothes.getId(),
-                clothes.getName(),
-                presignedUrl,
-                clothes.getType(),
-                attribute
+            clothes.getId(),
+            clothes.getName(),
+            presignedUrl,
+            clothes.getType(),
+            attribute
         );
     }
 }

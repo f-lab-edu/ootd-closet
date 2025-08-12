@@ -5,9 +5,9 @@ import java.util.Set;
 import java.util.UUID;
 
 public record FeedCreatedEvent(
-        Set<UUID> receiverIds,
-        String authorName,
-        String content
+    Set<UUID> receiverIds,
+    String authorName,
+    String content
 ) {
 
     public FeedCreatedEvent(List<UUID> receiverIds, String authorName, String content) {

@@ -36,7 +36,6 @@ CREATE TABLE weathers
     created_at          TIMESTAMP with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- 3. weather_locations
 CREATE TABLE weather_locations
 (
     id UUID    NOT NULL PRIMARY KEY,
@@ -45,7 +44,6 @@ CREATE TABLE weather_locations
     UNIQUE (x, y)
 );
 
--- 4. Profiles
 CREATE TABLE profiles
 (
     id                      UUID                     NOT NULL PRIMARY KEY,
@@ -61,7 +59,6 @@ CREATE TABLE profiles
     location_name           VARCHAR(50)
 );
 
--- 5. profile_location_names
 CREATE TABLE profile_location_names
 (
     profile_id    UUID NOT NULL,
@@ -69,7 +66,6 @@ CREATE TABLE profile_location_names
     CONSTRAINT fk_profile_location FOREIGN KEY (profile_id) REFERENCES profiles (id)
 );
 
--- 6. Feeds
 CREATE TABLE feeds
 (
     id         UUID                     NOT NULL PRIMARY KEY,
@@ -81,7 +77,6 @@ CREATE TABLE feeds
     like_count INTEGER                  NOT NULL DEFAULT 0
 );
 
--- 7. Feed Comments
 CREATE TABLE feed_comments
 (
     id         UUID                     NOT NULL PRIMARY KEY,
@@ -92,7 +87,6 @@ CREATE TABLE feed_comments
     content    TEXT                     NOT NULL
 );
 
--- 8. Clothes
 CREATE TABLE clothes
 (
     id         UUID                     NOT NULL PRIMARY KEY,
@@ -104,23 +98,34 @@ CREATE TABLE clothes
     type       VARCHAR(50)              NOT NULL
 );
 
--- 9. Attributes
 CREATE TABLE attributes
 (
-    id              UUID        NOT NULL PRIMARY KEY,
-    definition_name VARCHAR(50) NOT NULL UNIQUE
+    id              UUID                     NOT NULL PRIMARY KEY,
+    created_at      TIMESTAMP with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP with time zone          DEFAULT CURRENT_TIMESTAMP,
+    definition_name VARCHAR(50)              NOT NULL UNIQUE
 );
 
--- 10. Clothes Attributes
+-- TODO value 컬럼은 사실 필요 없음. 조인해서 값을 가져오면 됨.
 CREATE TABLE clothes_attributes
 (
-    id            UUID        NOT NULL PRIMARY KEY,
-    clothes_id    UUID        NOT NULL,
-    definition_id UUID        NOT NULL,
-    value         VARCHAR(50) NOT NULL
+    id           UUID                     NOT NULL PRIMARY KEY,
+    clothes_id   UUID                     NOT NULL,
+    attribute_id UUID                     NOT NULL,
+    created_at   TIMESTAMP with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    value        VARCHAR(50)              NOT NULL
+);
+--  TODO prod 서버 데이터베이스 컬럼명 변경 해야함 definition_id -> attributes_id
+
+CREATE TABLE attribute_selectable_value
+(
+    id           UUID                     NOT NULL PRIMARY KEY,
+    attribute_id UUID                     NOT NULL,
+    created_at   TIMESTAMP with time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at   TIMESTAMP with time zone          DEFAULT CURRENT_TIMESTAMP,
+    value        VARCHAR(100)             NOT NULL
 );
 
--- 11. Feed-Clothes Association
 CREATE TABLE feed_clothes
 (
     id         UUID NOT NULL PRIMARY KEY,
@@ -157,13 +162,6 @@ CREATE TABLE feed_likes
     CONSTRAINT uk_feed_like UNIQUE (user_id, feed_id)
 );
 
--- 15. Attribute Selectable Values
-CREATE TABLE attribute_selectable_value
-(
-    id            UUID         NOT NULL PRIMARY KEY,
-    definition_id UUID         NOT NULL,
-    value         VARCHAR(100) NOT NULL
-);
 
 -- 16. Direct Messages
 CREATE TABLE direct_messages
@@ -243,7 +241,7 @@ ALTER TABLE clothes
 
 ALTER TABLE clothes_attributes
     ADD CONSTRAINT fk_clothes_attributes_clothes FOREIGN KEY (clothes_id) REFERENCES clothes (id) ON DELETE CASCADE,
-    ADD CONSTRAINT fk_clothes_attributes_definition FOREIGN KEY (definition_id) REFERENCES attributes (id) ON
+    ADD CONSTRAINT fk_clothes_attributes_attributes FOREIGN KEY (attribute_id) REFERENCES attributes (id) ON
         DELETE
         CASCADE;
 
@@ -269,7 +267,7 @@ ALTER TABLE feed_likes
         CASCADE;
 
 ALTER TABLE attribute_selectable_value
-    ADD CONSTRAINT fk_attribute_selectable_value_definition FOREIGN KEY (definition_id) REFERENCES attributes (id) ON DELETE CASCADE;
+    ADD CONSTRAINT fk_attribute_selectable_value_definition FOREIGN KEY (attribute_id) REFERENCES attributes (id) ON DELETE CASCADE;
 
 ALTER TABLE direct_messages
     ADD CONSTRAINT fk_direct_messages_receiver FOREIGN KEY (receiver_id) REFERENCES users (id) ON DELETE CASCADE,

@@ -11,7 +11,7 @@ import project.closet.dto.request.UserRoleUpdateRequest;
 import project.closet.dto.response.ProfileDto;
 import project.closet.dto.response.UserDto;
 import project.closet.dto.response.UserDtoCursorResponse;
-import project.closet.user.entity.Role;
+import project.closet.entity.user.Role;
 
 public interface UserService {
 
@@ -23,7 +23,7 @@ public interface UserService {
 
     // 회원 정보 수정
     ProfileDto updateProfile(UUID userId, ProfileUpdateRequest profileUpdateRequest,
-            MultipartFile profileImage);
+                             MultipartFile profileImage);
 
     // 권한 수정
     UserDto updateRole(UUID userid, UserRoleUpdateRequest userRoleUpdateRequest);
@@ -33,14 +33,14 @@ public interface UserService {
 
     // 회원 조회
     UserDtoCursorResponse findAll(
-            String cursor,
-            UUID idAfter,
-            int limit,
-            String sortBy,
-            SortDirection sortDirection,
-            String emailLike,
-            Role roleEqual,
-            Boolean locked
+        String cursor,
+        UUID idAfter,
+        int limit,
+        String sortBy,
+        SortDirection sortDirection,
+        String emailLike,
+        Role roleEqual,
+        Boolean locked
     );
 
     // 유저 비밀번호 변경

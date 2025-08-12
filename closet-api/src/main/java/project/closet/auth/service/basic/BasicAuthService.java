@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.closet.auth.service.AuthService;
 import project.closet.dto.response.UserDto;
+import project.closet.entity.user.Profile;
+import project.closet.entity.user.Role;
+import project.closet.entity.user.User;
 import project.closet.exception.user.UserNotFoundException;
 import project.closet.mail.MailService;
 import project.closet.security.jwt.JwtService;
-import project.closet.user.entity.Profile;
-import project.closet.user.entity.Role;
-import project.closet.user.entity.User;
 import project.closet.user.repository.UserRepository;
 
 @Slf4j
@@ -22,10 +22,10 @@ import project.closet.user.repository.UserRepository;
 public class BasicAuthService implements AuthService {
 
     private static final char[] PASSWORD_CHARS = (
-            "1234567890" +
-                    "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-                    "abcdefghijklmnopqrstuvwxyz" +
-                    "!@#$%^&*()"
+        "1234567890" +
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+            "abcdefghijklmnopqrstuvwxyz" +
+            "!@#$%^&*()"
     ).toCharArray();
     private static final int TEMP_PASSWORD_LENGTH = 10;
 
@@ -63,7 +63,7 @@ public class BasicAuthService implements AuthService {
     public void resetPassword(String email) {
         // 1. User 엔티티 조회
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> UserNotFoundException.withEmail(email));
+            .orElseThrow(() -> UserNotFoundException.withEmail(email));
 
         // 2-1. 임시 비밀번호 생성
         String tempPassword = generateTempPassword();
@@ -75,9 +75,9 @@ public class BasicAuthService implements AuthService {
 
         // 초기화된 임시 비밀번호를 User email 로 발송해주기
         mailService.sendMimeMail(
-                email,
-                "[Closet] 임시 비밀번호 발급",
-                tempPassword
+            email,
+            "[Closet] 임시 비밀번호 발급",
+            tempPassword
         );
     }
 

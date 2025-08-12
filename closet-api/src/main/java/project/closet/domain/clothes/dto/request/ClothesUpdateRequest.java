@@ -1,19 +1,17 @@
 package project.closet.domain.clothes.dto.request;
 
 import jakarta.validation.Valid;
-
 import java.util.List;
-
 import project.closet.domain.clothes.dto.response.ClothesAttributeDto;
-import project.closet.domain.clothes.entity.ClothesType;
+import project.closet.entity.clothes.ClothesType;
 
 public record ClothesUpdateRequest(
-        String name,
+    String name,
 
-        ClothesType type,
+    ClothesType type,
 
-        @Valid
-        List<ClothesAttributeDto> attributes
+    @Valid
+    List<ClothesAttributeDto> attributes
 ) {
 
 }

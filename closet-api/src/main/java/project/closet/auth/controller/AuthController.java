@@ -41,7 +41,7 @@ public class AuthController implements AuthApi {
     @Override
     @GetMapping("/me")
     public ResponseEntity<String> me(
-            @CookieValue(value = JwtService.REFRESH_TOKEN_COOKIE_NAME, required = false) String refreshToken
+        @CookieValue(value = JwtService.REFRESH_TOKEN_COOKIE_NAME, required = false) String refreshToken
     ) {
         log.info("내 정보 조회 요청");
         if (refreshToken == null || refreshToken.isBlank()) {
@@ -54,14 +54,14 @@ public class AuthController implements AuthApi {
 
     @PostMapping("refresh")
     public ResponseEntity<String> refresh(
-            @CookieValue(JwtService.REFRESH_TOKEN_COOKIE_NAME) String refreshToken,
-            HttpServletResponse response
+        @CookieValue(JwtService.REFRESH_TOKEN_COOKIE_NAME) String refreshToken,
+        HttpServletResponse response
     ) {
         log.info("토큰 재발급 요청");
         JwtSession jwtSession = jwtService.refreshJwtSession(refreshToken);
 
         Cookie refreshTokenCookie = new Cookie(JwtService.REFRESH_TOKEN_COOKIE_NAME,
-                jwtSession.getRefreshToken());
+            jwtSession.getRefreshToken());
         refreshTokenCookie.setHttpOnly(true);
         response.addCookie(refreshTokenCookie);
 
@@ -71,7 +71,7 @@ public class AuthController implements AuthApi {
     @PostMapping("reset-password")
     @Override
     public ResponseEntity<Void> resetPassword(
-            @RequestBody @Valid ResetPasswordRequest resetPasswordRequest
+        @RequestBody @Valid ResetPasswordRequest resetPasswordRequest
     ) {
         authService.resetPassword(resetPasswordRequest.email());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

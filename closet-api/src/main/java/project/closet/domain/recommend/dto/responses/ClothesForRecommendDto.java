@@ -3,8 +3,8 @@ package project.closet.domain.recommend.dto.responses;
 import java.util.List;
 import java.util.UUID;
 import project.closet.domain.clothes.dto.response.ClothesAttributeWithDefDto;
-import project.closet.domain.clothes.entity.Clothes;
-import project.closet.domain.clothes.entity.ClothesType;
+import project.closet.entity.clothes.Clothes;
+import project.closet.entity.clothes.ClothesType;
 
 public record ClothesForRecommendDto(
         UUID clothesId,
