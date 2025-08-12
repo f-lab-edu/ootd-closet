@@ -1,85 +1,55 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.4.0'
-    id 'io.spring.dependency-management' version '1.1.6'
+    id 'org.springframework.boot' version '3.4.0' apply(false)
+    id 'io.spring.dependency-management' version '1.1.6' apply(false)
 }
 
-group = 'project'
-version = '0.0.1-SNAPSHOT'
+allprojects {
+    group = 'project.closet'
+    version = '0.0.1-SNAPSHOT'
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+    repositories {
+        mavenCentral()
+    }
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
     }
 }
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
+subprojects {
+    apply {
+        plugin('java')
+        plugin('org.springframework.boot')
+        plugin('io.spring.dependency-management')
     }
-}
 
-repositories {
-    mavenCentral()
-}
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
 
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.security:spring-security-messaging'
+    dependencies {
+        // lombok
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        testAnnotationProcessor 'org.projectlombok:lombok'
+        testCompileOnly 'org.projectlombok:lombok'
 
-    // Database
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    runtimeOnly 'org.postgresql:postgresql'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-
-    // JWT
-    implementation 'com.nimbusds:nimbus-jose-jwt:10.3'
-
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-
-    // 테스트 컨테이너
-    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
-    testImplementation 'org.testcontainers:postgresql'
-    testImplementation "org.testcontainers:junit-jupiter:1.20.6"
-
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
-    runtimeOnly 'com.h2database:h2'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-    // Excel 처리
-    implementation 'org.apache.poi:poi-ooxml:5.2.3'
-
-    // S3
-    implementation 'software.amazon.awssdk:s3:2.31.7'
-
-    // websocket
-    implementation 'org.springframework.boot:spring-boot-starter-websocket'
-
-    // mail
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
-    testImplementation 'org.subethamail:subethasmtp:3.1.7'
-
-    // Actuator
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
-
-    // Test 에서 롬복 사용 설정
-    testCompileOnly 'org.projectlombok:lombok'
-    testAnnotationProcessor 'org.projectlombok:lombok'
-
-    implementation 'org.jsoup:jsoup:1.15.4'
-}
-
-tasks.named('test') {
-    useJUnitPlatform()
-}
-
-tasks.named('jar') {
-    enabled = false
+        // test
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testImplementation 'org.springframework.security:spring-security-test'
+    }
+    tasks.named('jar') {
+        enabled = false
+    }
+    tasks.named('bootJar') {
+        enabled = false
+    }
+    tasks.named('test') {
+        useJUnitPlatform()
+    }
 }
