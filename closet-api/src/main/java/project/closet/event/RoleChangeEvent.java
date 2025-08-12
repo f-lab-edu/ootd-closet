@@ -1,7 +1,7 @@
 package project.closet.event;
 
 import java.util.UUID;
-import project.closet.entity.user.Role;
+import project.closet.user.entity.Role;
 
 public record RoleChangeEvent(
     UUID userId,

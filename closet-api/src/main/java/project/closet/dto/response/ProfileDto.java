@@ -2,9 +2,9 @@ package project.closet.dto.response;
 
 import java.time.LocalDate;
 import java.util.UUID;
-import project.closet.entity.user.Gender;
-import project.closet.entity.user.Profile;
-import project.closet.entity.user.User;
+import project.closet.user.entity.Gender;
+import project.closet.user.entity.Profile;
+import project.closet.user.entity.User;
 
 public record ProfileDto(
     UUID userId,

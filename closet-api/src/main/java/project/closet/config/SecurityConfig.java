@@ -28,7 +28,7 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
-import project.closet.entity.user.Role;
+import project.closet.user.entity.Role;
 import project.closet.security.CustomAccessDeniedHandler;
 import project.closet.security.CustomLoginFailureHandler;
 import project.closet.security.JsonUsernamePasswordAuthenticationFilter;

@@ -1,6 +1,6 @@
 package project.closet.dto.response;
 
-import project.closet.entity.weather.AsWord;
+import project.closet.weather.entity.AsWord;
 
 public record WindSpeedDto(
     Double speed,

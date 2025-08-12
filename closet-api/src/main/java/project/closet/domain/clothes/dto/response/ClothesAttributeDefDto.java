@@ -2,8 +2,8 @@ package project.closet.domain.clothes.dto.response;
 
 import java.util.List;
 import java.util.UUID;
-import project.closet.entity.attributes.Attribute;
-import project.closet.entity.attributes.AttributeSelectableValue;
+import project.closet.attributes.entity.Attribute;
+import project.closet.attributes.entity.AttributeSelectableValue;
 
 
 public record ClothesAttributeDefDto(

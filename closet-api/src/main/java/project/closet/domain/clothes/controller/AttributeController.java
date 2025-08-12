@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import project.closet.SortDirection;
 import project.closet.domain.clothes.dto.request.ClothesAttributeDefCreateRequest;
 import project.closet.domain.clothes.dto.request.ClothesAttributeDefUpdateRequest;
 import project.closet.domain.clothes.dto.response.ClothesAttributeDefDto;
@@ -61,7 +62,7 @@ public class AttributeController {
             @RequestParam(required = false) UUID idAfter,
             @RequestParam(name = "limit") int limit,
             @RequestParam(name = "sortBy",        defaultValue = "definitionName") String sortBy,
-            @RequestParam(name = "sortDirection", defaultValue = "ASCENDING") String sortDirection,
+            @RequestParam(name = "sortDirection") SortDirection sortDirection,
             @RequestParam(required = false) String keywordLike
     ) {
         return attributeService.findAll(

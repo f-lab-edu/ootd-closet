@@ -1,6 +1,7 @@
 package project.closet.domain.clothes.service;
 
 import java.util.UUID;
+import project.closet.SortDirection;
 import project.closet.domain.clothes.dto.request.ClothesAttributeDefCreateRequest;
 import project.closet.domain.clothes.dto.request.ClothesAttributeDefUpdateRequest;
 import project.closet.domain.clothes.dto.response.ClothesAttributeDefDto;
@@ -24,7 +25,7 @@ public interface AttributeService {
             UUID idAfter,
             int limit,
             String sortBy,
-            String sortDirection,
+            SortDirection sortDirection,
             String keywordLike
     );
 }

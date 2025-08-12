@@ -2,7 +2,7 @@ package project.closet.feed.service;
 
 import java.time.Instant;
 import java.util.UUID;
-import org.hibernate.query.SortDirection;
+import project.closet.SortDirection;
 import project.closet.dto.request.CommentCreateRequest;
 import project.closet.dto.request.FeedCreateRequest;
 import project.closet.dto.request.FeedUpdateRequest;
@@ -10,8 +10,8 @@ import project.closet.dto.response.CommentDto;
 import project.closet.dto.response.CommentDtoCursorResponse;
 import project.closet.dto.response.FeedDto;
 import project.closet.dto.response.FeedDtoCursorResponse;
-import project.closet.entity.weather.PrecipitationType;
-import project.closet.entity.weather.SkyStatus;
+import project.closet.weather.entity.PrecipitationType;
+import project.closet.weather.entity.SkyStatus;
 
 public interface FeedService {
 

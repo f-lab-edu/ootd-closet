@@ -1,8 +1,8 @@
 package project.closet.user.service;
 
 import java.util.UUID;
-import org.hibernate.query.SortDirection;
 import org.springframework.web.multipart.MultipartFile;
+import project.closet.SortDirection;
 import project.closet.dto.request.ChangePasswordRequest;
 import project.closet.dto.request.ProfileUpdateRequest;
 import project.closet.dto.request.UserCreateRequest;
@@ -11,7 +11,7 @@ import project.closet.dto.request.UserRoleUpdateRequest;
 import project.closet.dto.response.ProfileDto;
 import project.closet.dto.response.UserDto;
 import project.closet.dto.response.UserDtoCursorResponse;
-import project.closet.entity.user.Role;
+import project.closet.user.entity.Role;
 
 public interface UserService {
 

@@ -1,7 +1,7 @@
 package project.closet.dto.response;
 
 import java.util.UUID;
-import project.closet.entity.follow.Follow;
+import project.closet.follow.Follow;
 
 public record FollowDto(
     UUID id,

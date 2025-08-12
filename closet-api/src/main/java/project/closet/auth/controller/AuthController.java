@@ -20,7 +20,7 @@ import project.closet.dto.request.ResetPasswordRequest;
 import project.closet.exception.ErrorCode;
 import project.closet.security.jwt.JwtException;
 import project.closet.security.jwt.JwtService;
-import project.closet.security.jwt.JwtSession;
+import project.closet.jwtsession.JwtSession;
 
 @Slf4j
 @RequiredArgsConstructor

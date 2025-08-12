@@ -1,7 +1,7 @@
 package project.closet.dto.response;
 
 import java.util.UUID;
-import project.closet.entity.user.User;
+import project.closet.user.entity.User;
 
 public record UserSummary(
     UUID userId,

@@ -14,7 +14,7 @@ import org.springframework.security.messaging.context.SecurityContextChannelInte
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
-import project.closet.entity.user.Role;
+import project.closet.user.entity.Role;
 import project.closet.security.jwt.JwtService;
 import project.closet.websocket.JwtAuthenticationChannelInterceptor;
 

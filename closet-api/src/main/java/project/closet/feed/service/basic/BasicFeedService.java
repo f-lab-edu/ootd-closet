@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.query.SortDirection;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.closet.domain.clothes.repository.ClothesRepository;
+import project.closet.SortDirection;
+import project.closet.clothes.repository.ClothesRepository;
 import project.closet.dto.request.CommentCreateRequest;
 import project.closet.dto.request.FeedCreateRequest;
 import project.closet.dto.request.FeedUpdateRequest;
@@ -20,13 +20,6 @@ import project.closet.dto.response.FeedDtoCursorResponse;
 import project.closet.dto.response.OotdDto;
 import project.closet.dto.response.UserSummary;
 import project.closet.dto.response.WeatherSummaryDto;
-import project.closet.entity.feed.Feed;
-import project.closet.entity.feed.FeedLike;
-import project.closet.entity.feed.comment.FeedComment;
-import project.closet.entity.user.User;
-import project.closet.entity.weather.PrecipitationType;
-import project.closet.entity.weather.SkyStatus;
-import project.closet.entity.weather.Weather;
 import project.closet.event.FeedCommentCreateEvent;
 import project.closet.event.FeedCreatedEvent;
 import project.closet.event.FeedLikeCreateEvent;
@@ -34,13 +27,20 @@ import project.closet.exception.feed.FeedLikeAlreadyExistsException;
 import project.closet.exception.feed.FeedNotFoundException;
 import project.closet.exception.user.UserNotFoundException;
 import project.closet.exception.weather.WeatherNotFoundException;
+import project.closet.feed.entity.Feed;
+import project.closet.feed.entity.FeedComment;
+import project.closet.feed.entity.FeedLike;
 import project.closet.feed.repository.FeedCommentRepository;
 import project.closet.feed.repository.FeedLikeRepository;
 import project.closet.feed.repository.FeedRepository;
 import project.closet.feed.service.FeedService;
-import project.closet.follower.repository.FollowRepository;
+import project.closet.follow.repository.FollowRepository;
 import project.closet.storage.S3ContentStorage;
+import project.closet.user.entity.User;
 import project.closet.user.repository.UserRepository;
+import project.closet.weather.entity.PrecipitationType;
+import project.closet.weather.entity.SkyStatus;
+import project.closet.weather.entity.Weather;
 import project.closet.weather.repository.WeatherRepository;
 
 @Slf4j
@@ -218,7 +218,7 @@ public class BasicFeedService implements FeedService {
         UUID idAfter,
         int limit,
         String sortBy,
-        SortDirection sortDirection,
+        project.closet.SortDirection sortDirection,
         String keywordLike,
         SkyStatus skyStatusEqual,
         PrecipitationType precipitationType,

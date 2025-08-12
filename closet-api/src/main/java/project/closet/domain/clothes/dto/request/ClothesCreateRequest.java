@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 import project.closet.domain.clothes.dto.response.ClothesAttributeDto;
-import project.closet.entity.clothes.ClothesType;
+import project.closet.clothes.entity.ClothesType;
 
 public record ClothesCreateRequest(
     @NotNull(message = "ownerId는 필수입니다.")

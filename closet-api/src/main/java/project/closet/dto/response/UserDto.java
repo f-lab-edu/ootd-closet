@@ -3,8 +3,8 @@ package project.closet.dto.response;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
-import project.closet.entity.user.Role;
-import project.closet.entity.user.User;
+import project.closet.user.entity.Role;
+import project.closet.user.entity.User;
 
 public record UserDto(
     UUID id,

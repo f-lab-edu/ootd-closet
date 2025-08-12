@@ -2,9 +2,9 @@ package project.closet.domain.clothes.dto.response;
 
 import java.util.List;
 import java.util.UUID;
-import project.closet.entity.attributes.Attribute;
-import project.closet.entity.attributes.AttributeSelectableValue;
-import project.closet.entity.clothes.Clothes;
+import project.closet.attributes.entity.Attribute;
+import project.closet.attributes.entity.AttributeSelectableValue;
+import project.closet.clothes.entity.Clothes;
 
 public record ClothesAttributeWithDefDto(
     UUID definitionId,           // 속성 정의 ID
