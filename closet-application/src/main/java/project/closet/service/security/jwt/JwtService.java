@@ -24,11 +24,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.closet.jwtsession.JwtSession;
 import project.closet.jwtsession.JwtSessionRepository;
-import project.closet.user.entity.Role;
-import project.closet.user.entity.User;
+import project.closet.service.dto.response.JwtSessionDto;
 import project.closet.service.exception.ErrorCode;
 import project.closet.service.exception.user.UserNotFoundException;
 import project.closet.service.security.ClosetUserDetails;
+import project.closet.user.entity.Role;
+import project.closet.user.entity.User;
 import project.closet.user.repository.UserRepository;
 
 @Slf4j
@@ -52,26 +53,26 @@ public class JwtService {
     @Transactional
     public JwtSession registerJwtSession(ClosetUserDetails userDetails) {
         JwtObject accessJwtObject = generateJwtObject(
-                userDetails.getUserId(),
-                userDetails.getName(),
-                userDetails.getEmail(),
-                userDetails.getRole(),
-                accessTokenValiditySeconds
+            userDetails.getUserId(),
+            userDetails.getName(),
+            userDetails.getEmail(),
+            userDetails.getRole(),
+            accessTokenValiditySeconds
         );
         JwtObject refreshJwtObject = generateJwtObject(
-                userDetails.getUserId(),
-                userDetails.getName(),
-                userDetails.getEmail(),
-                userDetails.getRole(),
-                refreshTokenValiditySeconds
+            userDetails.getUserId(),
+            userDetails.getName(),
+            userDetails.getEmail(),
+            userDetails.getRole(),
+            refreshTokenValiditySeconds
         );
 
         JwtSession jwtSession = JwtSession.builder()
-                .userId(userDetails.getUserId())
-                .accessToken(accessJwtObject.token())
-                .refreshToken(refreshJwtObject.token())
-                .expirationTime(accessJwtObject.expirationTime())
-                .build();
+            .userId(userDetails.getUserId())
+            .accessToken(accessJwtObject.token())
+            .refreshToken(refreshJwtObject.token())
+            .expirationTime(accessJwtObject.expirationTime())
+            .build();
         jwtSessionRepository.save(jwtSession);
 
         return jwtSession;
@@ -103,13 +104,13 @@ public class JwtService {
             Payload payload = jwsObject.getPayload();
             Map<String, Object> jsonObject = payload.toJSONObject();
             return new JwtObject(
-                    objectMapper.convertValue(jsonObject.get("iat"), Instant.class),
-                    objectMapper.convertValue(jsonObject.get("exp"), Instant.class),
-                    objectMapper.convertValue(jsonObject.get("userId"), UUID.class),
-                    objectMapper.convertValue(jsonObject.get("name"), String.class),
-                    objectMapper.convertValue(jsonObject.get("email"), String.class),
-                    objectMapper.convertValue(jsonObject.get("role"), Role.class),
-                    token
+                objectMapper.convertValue(jsonObject.get("iat"), Instant.class),
+                objectMapper.convertValue(jsonObject.get("exp"), Instant.class),
+                objectMapper.convertValue(jsonObject.get("userId"), UUID.class),
+                objectMapper.convertValue(jsonObject.get("name"), String.class),
+                objectMapper.convertValue(jsonObject.get("email"), String.class),
+                objectMapper.convertValue(jsonObject.get("role"), Role.class),
+                token
             );
         } catch (ParseException e) {
             log.error(e.getMessage());
@@ -118,40 +119,40 @@ public class JwtService {
     }
 
     @Transactional
-    public JwtSession refreshJwtSession(String refreshToken) {
+    public JwtSessionDto refreshJwtSession(String refreshToken) {
         if (!validate(refreshToken)) {
             throw new JwtException(ErrorCode.INVALID_TOKEN,
-                    Map.of("refreshToken", refreshToken));
+                Map.of("refreshToken", refreshToken));
         }
         JwtSession session = jwtSessionRepository.findByRefreshToken(refreshToken)
-                .orElseThrow(() -> new JwtException(ErrorCode.TOKEN_NOT_FOUND,
-                        Map.of("refreshToken", refreshToken)));
+            .orElseThrow(() -> new JwtException(ErrorCode.TOKEN_NOT_FOUND,
+                Map.of("refreshToken", refreshToken)));
 
         UUID userId = parse(refreshToken).userId();
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> UserNotFoundException.withId(userId));
+            .orElseThrow(() -> UserNotFoundException.withId(userId));
         JwtObject accessJwtObject = generateJwtObject(
-                user.getId(),
-                user.getName(),
-                user.getEmail(),
-                user.getRole(),
-                accessTokenValiditySeconds
+            user.getId(),
+            user.getName(),
+            user.getEmail(),
+            user.getRole(),
+            accessTokenValiditySeconds
         );
         JwtObject refreshJwtObject = generateJwtObject(
-                user.getId(),
-                user.getName(),
-                user.getEmail(),
-                user.getRole(),
-                refreshTokenValiditySeconds
+            user.getId(),
+            user.getName(),
+            user.getEmail(),
+            user.getRole(),
+            refreshTokenValiditySeconds
         );
 
         session.update(
-                accessJwtObject.token(),
-                refreshJwtObject.token(),
-                accessJwtObject.expirationTime()
+            accessJwtObject.token(),
+            refreshJwtObject.token(),
+            accessJwtObject.expirationTime()
         );
 
-        return session;
+        return JwtSessionDto.of(session);
     }
 
     @Transactional
@@ -165,24 +166,24 @@ public class JwtService {
     }
 
     private JwtObject generateJwtObject(
-            UUID userId,
-            String name,
-            String email,
-            Role role,
-            long tokenValiditySeconds
+        UUID userId,
+        String name,
+        String email,
+        Role role,
+        long tokenValiditySeconds
     ) {
         Instant issueTime = Instant.now();
         Instant expirationTime = issueTime.plus(Duration.ofSeconds(tokenValiditySeconds));
 
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                .subject(email)
-                .claim("userId", userId.toString())
-                .claim("role", role)
-                .claim("name", name)
-                .claim("email", email)
-                .issueTime(new Date(issueTime.toEpochMilli()))
-                .expirationTime(new Date(expirationTime.toEpochMilli()))
-                .build();
+            .subject(email)
+            .claim("userId", userId.toString())
+            .claim("role", role)
+            .claim("name", name)
+            .claim("email", email)
+            .issueTime(new Date(issueTime.toEpochMilli()))
+            .expirationTime(new Date(expirationTime.toEpochMilli()))
+            .build();
 
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS256);
         SignedJWT signedJWT = new SignedJWT(header, claimsSet);
@@ -197,19 +198,20 @@ public class JwtService {
         String token = signedJWT.serialize();
 
         return new JwtObject(
-                issueTime,
-                expirationTime,
-                userId,
-                name,
-                email,
-                role,
-                token
+            issueTime,
+            expirationTime,
+            userId,
+            name,
+            email,
+            role,
+            token
         );
     }
 
-    public JwtSession getJwtSession(String refreshToken) {
+    public JwtSessionDto getJwtSession(String refreshToken) {
         return jwtSessionRepository.findByRefreshToken(refreshToken)
-                .orElseThrow(() -> new JwtException(ErrorCode.TOKEN_NOT_FOUND,
-                        Map.of("refreshToken", refreshToken)));
+            .map(JwtSessionDto::of)
+            .orElseThrow(() -> new JwtException(ErrorCode.TOKEN_NOT_FOUND,
+                Map.of("refreshToken", refreshToken)));
     }
 }

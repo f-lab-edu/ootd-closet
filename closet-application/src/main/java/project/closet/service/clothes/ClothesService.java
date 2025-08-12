@@ -6,7 +6,6 @@ import project.closet.service.dto.request.ClothesCreateRequest;
 import project.closet.service.dto.request.ClothesUpdateRequest;
 import project.closet.service.dto.response.ClothesDto;
 import project.closet.service.dto.response.ClothesDtoCursorResponse;
-import project.closet.clothes.entity.ClothesType;
 
 public interface ClothesService {
 
@@ -19,7 +18,7 @@ public interface ClothesService {
             String cursor,
             UUID idAfter,
             int limit,
-            ClothesType typeEqual,
+            ClothesTypeCode typeEqual,
             UUID ownerId
     );
 

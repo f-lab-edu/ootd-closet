@@ -3,6 +3,8 @@ package project.closet.service.dto.response;
 import java.util.List;
 import java.util.UUID;
 import project.closet.clothes.entity.Clothes;
+import project.closet.service.clothes.ClothesTypeCode;
+import project.closet.service.mapper.ClothesTypeMapper;
 
 
 public record ClothesDto(
@@ -10,7 +12,7 @@ public record ClothesDto(
     UUID ownerId,
     String name,
     String imageUrl,
-    String type,
+    ClothesTypeCode type,
     List<ClothesAttributeWithDefDto> attributes // 의상 속성
 ) {
     public static ClothesDto fromEntity(Clothes c, String imageUrl) {
@@ -22,7 +24,7 @@ public record ClothesDto(
             c.getOwner().getId(),
             c.getName(),
             imageUrl,
-            c.getType().name(),
+            ClothesTypeMapper.toCode(c.getType()),
             attrs
         );
     }

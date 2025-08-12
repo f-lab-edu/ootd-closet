@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import project.closet.SortDirection;
+import project.closet.feed.controller.api.FeedApi;
 import project.closet.service.dto.request.CommentCreateRequest;
 import project.closet.service.dto.request.FeedCreateRequest;
 import project.closet.service.dto.request.FeedUpdateRequest;
@@ -25,10 +26,9 @@ import project.closet.service.dto.response.CommentDto;
 import project.closet.service.dto.response.CommentDtoCursorResponse;
 import project.closet.service.dto.response.FeedDto;
 import project.closet.service.dto.response.FeedDtoCursorResponse;
-import project.closet.weather.entity.PrecipitationType;
-import project.closet.weather.entity.SkyStatus;
-import project.closet.feed.controller.api.FeedApi;
 import project.closet.service.feed.FeedService;
+import project.closet.service.feed.PrecipitationTypeCode;
+import project.closet.service.feed.SkyStatusCode;
 import project.closet.service.security.ClosetUserDetails;
 
 @Slf4j
@@ -48,14 +48,14 @@ public class FeedController implements FeedApi {
         @RequestParam(name = "sortBy") String sortBy,  // likeCount, createdAt
         @RequestParam(name = "sortDirection") SortDirection sortDirection,
         @RequestParam(name = "keywordLike", required = false) String keywordLike,
-        @RequestParam(name = "skyStatusEqual", required = false) SkyStatus skyStatusEqual,
-        @RequestParam(name = "precipitationType", required = false) PrecipitationType precipitationType,
+        @RequestParam(name = "skyStatusEqual", required = false) SkyStatusCode skyStatusEqual,
+        @RequestParam(name = "precipitationTypeEqual", required = false) PrecipitationTypeCode precipitationTypeEqual,
         @RequestParam(name = "authorIdEqual", required = false) UUID authorIdEqual,
         @AuthenticationPrincipal ClosetUserDetails closetUserDetails
     ) {
         FeedDtoCursorResponse feedList = feedService.getFeedList(
             cursor, idAfter, limit, sortBy, sortDirection, keywordLike,
-            skyStatusEqual, precipitationType, authorIdEqual, closetUserDetails.getUserId());
+            skyStatusEqual, precipitationTypeEqual, authorIdEqual, closetUserDetails.getUserId());
         return ResponseEntity.ok(feedList);
     }
 

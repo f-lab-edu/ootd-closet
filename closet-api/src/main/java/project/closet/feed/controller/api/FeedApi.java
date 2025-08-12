@@ -18,9 +18,9 @@ import project.closet.service.dto.response.CommentDto;
 import project.closet.service.dto.response.CommentDtoCursorResponse;
 import project.closet.service.dto.response.FeedDto;
 import project.closet.service.dto.response.FeedDtoCursorResponse;
-import project.closet.weather.entity.PrecipitationType;
-import project.closet.weather.entity.SkyStatus;
 import project.closet.service.exception.ErrorResponse;
+import project.closet.service.feed.PrecipitationTypeCode;
+import project.closet.service.feed.SkyStatusCode;
 import project.closet.service.security.ClosetUserDetails;
 
 @Tag(name = "피드 관리", description = "피드 관련 API")
@@ -44,8 +44,8 @@ public interface FeedApi {
         String sortBy,
         SortDirection sortDirection,
         String keywordLike,
-        SkyStatus skyStatusEqual,
-        PrecipitationType precipitationTypeEqual,
+        SkyStatusCode skyStatusEqual,
+        PrecipitationTypeCode precipitationTypeEqual,
         UUID authorIdEqual,
         @Parameter(hidden = true) ClosetUserDetails closetUserDetails
     );

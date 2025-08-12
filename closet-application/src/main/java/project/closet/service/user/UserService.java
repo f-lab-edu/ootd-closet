@@ -11,7 +11,6 @@ import project.closet.service.dto.request.UserRoleUpdateRequest;
 import project.closet.service.dto.response.ProfileDto;
 import project.closet.service.dto.response.UserDto;
 import project.closet.service.dto.response.UserDtoCursorResponse;
-import project.closet.user.entity.Role;
 
 public interface UserService {
 
@@ -39,7 +38,7 @@ public interface UserService {
         String sortBy,
         SortDirection sortDirection,
         String emailLike,
-        Role roleEqual,
+        RoleCode roleEqual,
         Boolean locked
     );
 

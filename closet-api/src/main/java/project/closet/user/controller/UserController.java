@@ -26,7 +26,7 @@ import project.closet.service.dto.request.UserRoleUpdateRequest;
 import project.closet.service.dto.response.ProfileDto;
 import project.closet.service.dto.response.UserDto;
 import project.closet.service.dto.response.UserDtoCursorResponse;
-import project.closet.user.entity.Role;
+import project.closet.service.user.RoleCode;
 import project.closet.user.controller.api.UserApi;
 import project.closet.service.user.UserService;
 
@@ -47,7 +47,7 @@ public class UserController implements UserApi {
         @RequestParam(name = "sortBy") String sortBy,
         @RequestParam(name = "sortDirection") SortDirection sortDirection,
         @RequestParam(name = "emailLike", required = false) String emailLike,
-        @RequestParam(name = "roleEqual", required = false) Role roleEqual,
+        @RequestParam(name = "roleEqual", required = false) RoleCode roleEqual,
         @RequestParam(name = "locked", required = false) Boolean locked
     ) {
         UserDtoCursorResponse response = userService.findAll(

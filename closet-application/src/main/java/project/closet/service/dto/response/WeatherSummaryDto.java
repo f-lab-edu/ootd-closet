@@ -1,12 +1,14 @@
 package project.closet.service.dto.response;
 
 import java.util.UUID;
+import project.closet.service.feed.SkyStatusCode;
+import project.closet.service.mapper.SkyStatusMapper;
 import project.closet.weather.entity.SkyStatus;
 import project.closet.weather.entity.Weather;
 
 public record WeatherSummaryDto(
     UUID weatherId,
-    SkyStatus skyStatus,
+    SkyStatusCode skyStatus,
     PrecipitationDto precipitation,
     TemperatureDto temperature
 ) {
@@ -14,7 +16,7 @@ public record WeatherSummaryDto(
     public static WeatherSummaryDto from(Weather weather) {
         return new WeatherSummaryDto(
             weather.getId(),
-            weather.getSkyStatus(),
+            SkyStatusMapper.toCode(weather.getSkyStatus()),
             PrecipitationDto.from(weather),
             new TemperatureDto(
                 weather.getCurrentTemperature(),

@@ -25,8 +25,10 @@ import project.closet.service.dto.response.WeatherAPILocation;
 import project.closet.service.event.RoleChangeEvent;
 import project.closet.service.exception.user.UserAlreadyExistsException;
 import project.closet.service.exception.user.UserNotFoundException;
+import project.closet.service.mapper.RoleMapper;
 import project.closet.service.security.jwt.JwtService;
 import project.closet.service.storage.S3ContentStorage;
+import project.closet.service.user.RoleCode;
 import project.closet.user.entity.Profile;
 import project.closet.user.entity.Role;
 import project.closet.user.entity.User;
@@ -171,12 +173,13 @@ public class BasicUserService implements UserService {
         String sortBy,
         SortDirection sortDirection,
         String emailLike,
-        Role roleEqual,
+        RoleCode roleEqual,
         Boolean locked
     ) {
+        // null 안전
         List<User> users =
             userRepository.findUsersWithCursor(
-                cursor, idAfter, limit, sortBy, sortDirection, emailLike, roleEqual, locked
+                cursor, idAfter, limit, sortBy, sortDirection, emailLike, RoleMapper.toDomain(roleEqual), locked
             );
         boolean hasNext = users.size() > limit;
         if (hasNext) {
@@ -196,7 +199,7 @@ public class BasicUserService implements UserService {
             nextIdAfter = lastUser.getId();
         }
 
-        long totalCount = userRepository.countAllUsers(emailLike, roleEqual, locked);
+        long totalCount = userRepository.countAllUsers(emailLike, Role.valueOf(roleEqual.name()), locked);
 
         return new UserDtoCursorResponse(
             userDtos,

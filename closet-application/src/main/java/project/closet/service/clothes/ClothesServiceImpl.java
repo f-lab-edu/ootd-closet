@@ -13,20 +13,21 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import project.closet.attributes.entity.Attribute;
+import project.closet.attributes.repository.AttributeRepository;
+import project.closet.clothes.entity.Clothes;
+import project.closet.clothes.entity.ClothesAttribute;
+import project.closet.clothes.entity.ClothesType;
+import project.closet.clothes.repository.ClothesRepository;
 import project.closet.service.dto.request.ClothesCreateRequest;
 import project.closet.service.dto.request.ClothesUpdateRequest;
 import project.closet.service.dto.response.ClothesAttributeDto;
 import project.closet.service.dto.response.ClothesDto;
 import project.closet.service.dto.response.ClothesDtoCursorResponse;
-import project.closet.attributes.repository.AttributeRepository;
-import project.closet.clothes.repository.ClothesRepository;
-import project.closet.attributes.entity.Attribute;
-import project.closet.clothes.entity.Clothes;
-import project.closet.clothes.entity.ClothesAttribute;
-import project.closet.clothes.entity.ClothesType;
 import project.closet.service.exception.clothes.ClothesNotFoundException;
 import project.closet.service.exception.clothes.attribute.AttributeNotFoundException;
 import project.closet.service.exception.user.UserNotFoundException;
+import project.closet.service.mapper.ClothesTypeMapper;
 import project.closet.service.storage.S3ContentStorage;
 import project.closet.user.repository.UserRepository;
 
@@ -81,9 +82,10 @@ public class ClothesServiceImpl implements ClothesService {
             String cursor,
             UUID idAfter,
             int limit,
-            ClothesType typeEqual,
+            ClothesTypeCode typeEqual,
             UUID ownerId
     ) {
+        ClothesType clothesType = ClothesTypeMapper.toDomain(typeEqual);
         // 1) 커서 디코딩 (다음 페이지 요청용)
         Instant lastCreatedAt = null;
         UUID    lastId        = null;
@@ -105,11 +107,11 @@ public class ClothesServiceImpl implements ClothesService {
         Page<Clothes> page;
         if (lastCreatedAt == null) {
             // 첫 페이지
-            page = clothesRepository.findByOwnerIdAndType(ownerId, typeEqual, pageable);
+            page = clothesRepository.findByOwnerIdAndType(ownerId, clothesType, pageable);
         } else {
             // 다음 페이지
             page = clothesRepository.findByOwnerAndTypeAfterCursor(
-                    ownerId, typeEqual, lastCreatedAt, lastId, pageable
+                    ownerId, clothesType, lastCreatedAt, lastId, pageable
             );
         }
 

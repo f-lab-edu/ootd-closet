@@ -35,6 +35,10 @@ import project.closet.feed.repository.FeedLikeRepository;
 import project.closet.feed.repository.FeedRepository;
 import project.closet.service.feed.FeedService;
 import project.closet.follow.repository.FollowRepository;
+import project.closet.service.feed.PrecipitationTypeCode;
+import project.closet.service.feed.SkyStatusCode;
+import project.closet.service.mapper.PrecipitationTypeMapper;
+import project.closet.service.mapper.SkyStatusMapper;
 import project.closet.service.storage.S3ContentStorage;
 import project.closet.user.entity.User;
 import project.closet.user.repository.UserRepository;
@@ -220,14 +224,17 @@ public class BasicFeedService implements FeedService {
         String sortBy,
         project.closet.SortDirection sortDirection,
         String keywordLike,
-        SkyStatus skyStatusEqual,
-        PrecipitationType precipitationType,
+        SkyStatusCode skyStatusEqual,
+        PrecipitationTypeCode precipitationTypeEqual,
         UUID authorIdEqual,
         UUID loginUserId
     ) {
+
+        SkyStatus skyStatus = SkyStatusMapper.toDomain(skyStatusEqual);
+        PrecipitationType precipitationType = PrecipitationTypeMapper.toDomain(precipitationTypeEqual);
         List<Feed> feeds = feedRepository.findAllWithCursorAndFilters(
             cursor, idAfter, limit, sortBy, sortDirection,
-            keywordLike, skyStatusEqual, precipitationType, authorIdEqual
+            keywordLike, skyStatus, precipitationType, authorIdEqual
         );
 
         boolean hasNext = feeds.size() > limit;
@@ -258,7 +265,7 @@ public class BasicFeedService implements FeedService {
             .toList();
 
         long totalCount = feedRepository.countByFilters(
-            keywordLike, skyStatusEqual, precipitationType, authorIdEqual);
+            keywordLike, skyStatus, precipitationType, authorIdEqual);
 
         return new FeedDtoCursorResponse(
             feedDtos,

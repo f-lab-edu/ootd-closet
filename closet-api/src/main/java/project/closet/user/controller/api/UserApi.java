@@ -21,8 +21,8 @@ import project.closet.service.dto.request.UserRoleUpdateRequest;
 import project.closet.service.dto.response.ProfileDto;
 import project.closet.service.dto.response.UserDto;
 import project.closet.service.dto.response.UserDtoCursorResponse;
-import project.closet.user.entity.Role;
 import project.closet.service.exception.ErrorResponse;
+import project.closet.service.user.RoleCode;
 
 @Tag(name = "프로필 관리", description = "프로필 관리 API")
 public interface UserApi {
@@ -44,7 +44,7 @@ public interface UserApi {
         String sortBy,
         SortDirection sortDirection,
         String emailLike,
-        Role roleEqual,
+        RoleCode roleEqual,
         Boolean locked
     );
 

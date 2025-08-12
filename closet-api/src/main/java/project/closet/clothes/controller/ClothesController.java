@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import project.closet.service.clothes.ClothesExtractionService;
+import project.closet.service.clothes.ClothesService;
+import project.closet.service.clothes.ClothesTypeCode;
 import project.closet.service.dto.request.ClothesCreateRequest;
 import project.closet.service.dto.request.ClothesUpdateRequest;
 import project.closet.service.dto.response.ClothesDto;
 import project.closet.service.dto.response.ClothesDtoCursorResponse;
-import project.closet.service.clothes.ClothesExtractionService;
-import project.closet.service.clothes.ClothesService;
-import project.closet.clothes.entity.ClothesType;
 
 @RestController
 @RequestMapping("/api/clothes")
@@ -52,7 +52,7 @@ public class ClothesController {
             @RequestParam(name = "cursor", required = false, defaultValue = "") String cursor,
             @RequestParam(name = "idAfter", required = false) UUID idAfter,
             @RequestParam(name = "limit") int limit,
-            @RequestParam(name = "typeEqual", required = false) ClothesType typeEqual,
+            @RequestParam(name = "typeEqual", required = false) ClothesTypeCode typeEqual,
             @RequestParam(name = "ownerId") UUID ownerId
     ) {
         ClothesDtoCursorResponse resp = clothesService.findAll(

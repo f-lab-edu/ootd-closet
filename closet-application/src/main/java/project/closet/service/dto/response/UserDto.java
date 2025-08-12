@@ -3,6 +3,8 @@ package project.closet.service.dto.response;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+import project.closet.service.mapper.RoleMapper;
+import project.closet.service.user.RoleCode;
 import project.closet.user.entity.Role;
 import project.closet.user.entity.User;
 
@@ -11,7 +13,7 @@ public record UserDto(
     Instant createdAt,
     String email,
     String name,
-    Role role,
+    RoleCode role,
     List<String> linkedOAuthProviders,
     boolean locked
 ) {
@@ -22,7 +24,7 @@ public record UserDto(
             user.getCreatedAt(),
             user.getEmail(),
             user.getName(),
-            user.getRole(),
+            RoleMapper.toCode(user.getRole()),
             List.of(),
             user.isLocked()
         );
