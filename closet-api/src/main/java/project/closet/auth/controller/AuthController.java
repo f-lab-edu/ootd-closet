@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.closet.auth.controller.api.AuthApi;
-import project.closet.auth.service.AuthService;
-import project.closet.dto.request.ResetPasswordRequest;
-import project.closet.exception.ErrorCode;
-import project.closet.security.jwt.JwtException;
-import project.closet.security.jwt.JwtService;
-import project.closet.jwtsession.JwtSession;
+import project.closet.service.auth.AuthService;
+import project.closet.service.dto.request.ResetPasswordRequest;
+import project.closet.service.dto.response.JwtSessionDto;
+import project.closet.service.exception.ErrorCode;
+import project.closet.service.security.jwt.JwtException;
+import project.closet.service.security.jwt.JwtService;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -48,8 +48,8 @@ public class AuthController implements AuthApi {
             throw new JwtException(ErrorCode.TOKEN_NOT_FOUND);
         }
 
-        JwtSession jwtSession = jwtService.getJwtSession(refreshToken);
-        return ResponseEntity.ok(jwtSession.getAccessToken());
+        JwtSessionDto jwtSession = jwtService.getJwtSession(refreshToken);
+        return ResponseEntity.ok(jwtSession.accessToken());
     }
 
     @PostMapping("refresh")
@@ -58,14 +58,14 @@ public class AuthController implements AuthApi {
         HttpServletResponse response
     ) {
         log.info("토큰 재발급 요청");
-        JwtSession jwtSession = jwtService.refreshJwtSession(refreshToken);
+        JwtSessionDto jwtSession = jwtService.refreshJwtSession(refreshToken);
 
-        Cookie refreshTokenCookie = new Cookie(JwtService.REFRESH_TOKEN_COOKIE_NAME,
-            jwtSession.getRefreshToken());
+        Cookie refreshTokenCookie =
+            new Cookie(JwtService.REFRESH_TOKEN_COOKIE_NAME, jwtSession.refreshToken());
         refreshTokenCookie.setHttpOnly(true);
         response.addCookie(refreshTokenCookie);
 
-        return ResponseEntity.ok(jwtSession.getAccessToken());
+        return ResponseEntity.ok(jwtSession.accessToken());
     }
 
     @PostMapping("reset-password")

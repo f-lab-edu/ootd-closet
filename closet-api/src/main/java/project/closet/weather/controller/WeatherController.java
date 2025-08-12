@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import project.closet.dto.response.WeatherAPILocation;
-import project.closet.dto.response.WeatherDto;
+import project.closet.service.dto.response.WeatherAPILocation;
+import project.closet.service.dto.response.WeatherDto;
 import project.closet.weather.controller.api.WeatherApi;
-import project.closet.weather.service.WeatherService;
-import project.closet.weather.service.basic.WeatherAPIClient;
+import project.closet.service.waether.WeatherService;
+import project.closet.service.waether.basic.WeatherAPIClient;
 
 @Slf4j
 @RequiredArgsConstructor

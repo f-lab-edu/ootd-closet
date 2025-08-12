@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import project.closet.dto.request.FollowCreateRequest;
-import project.closet.dto.response.FollowDto;
-import project.closet.dto.response.FollowListResponse;
-import project.closet.dto.response.FollowSummaryDto;
+import project.closet.service.dto.request.FollowCreateRequest;
+import project.closet.service.dto.response.FollowDto;
+import project.closet.service.dto.response.FollowListResponse;
+import project.closet.service.dto.response.FollowSummaryDto;
 import project.closet.follower.controller.api.FollowApi;
-import project.closet.follower.service.FollowService;
-import project.closet.security.ClosetUserDetails;
+import project.closet.service.follow.FollowService;
+import project.closet.service.security.ClosetUserDetails;
 
 @Slf4j
 @RequiredArgsConstructor

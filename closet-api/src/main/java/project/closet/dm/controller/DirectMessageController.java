@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import project.closet.dm.controller.api.DirectMessageApi;
-import project.closet.dm.service.DirectMessageService;
-import project.closet.dto.response.DirectMessageDtoCursorResponse;
-import project.closet.security.ClosetUserDetails;
+import project.closet.service.dm.DirectMessageService;
+import project.closet.service.dto.response.DirectMessageDtoCursorResponse;
+import project.closet.service.security.ClosetUserDetails;
 
 @Slf4j
 @RequiredArgsConstructor

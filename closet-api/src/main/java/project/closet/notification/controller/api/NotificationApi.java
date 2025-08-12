@@ -9,9 +9,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.Instant;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
-import project.closet.dto.response.NotificationDtoCursorResponse;
-import project.closet.exception.ErrorResponse;
-import project.closet.security.ClosetUserDetails;
+import project.closet.service.dto.response.NotificationDtoCursorResponse;
+import project.closet.service.exception.ErrorResponse;
+import project.closet.service.security.ClosetUserDetails;
 
 @Tag(name = "알림", description = "알림 API")
 public interface NotificationApi {

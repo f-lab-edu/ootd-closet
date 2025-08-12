@@ -9,9 +9,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.Instant;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
-import project.closet.dto.response.DirectMessageDtoCursorResponse;
-import project.closet.exception.ErrorResponse;
-import project.closet.security.ClosetUserDetails;
+import project.closet.service.dto.response.DirectMessageDtoCursorResponse;
+import project.closet.service.exception.ErrorResponse;
+import project.closet.service.security.ClosetUserDetails;
 
 @Tag(name = "DirectMessage", description = "DirectMessage API")
 public interface DirectMessageApi {

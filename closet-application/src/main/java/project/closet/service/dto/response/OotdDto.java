@@ -1,0 +1,29 @@
+package project.closet.service.dto.response;
+
+import java.util.List;
+import java.util.UUID;
+import project.closet.clothes.entity.Clothes;
+import project.closet.clothes.entity.ClothesType;
+
+public record OotdDto(
+    UUID clothesId,
+    String name,
+    String imageUrl,
+    ClothesType type,
+    List<ClothesAttributeWithDefDto> attributes
+) {
+
+    public static OotdDto from(Clothes clothes, String presignedUrl) {
+
+        List<ClothesAttributeWithDefDto> attribute =
+            ClothesAttributeWithDefDto.fromClothes(clothes);
+
+        return new OotdDto(
+            clothes.getId(),
+            clothes.getName(),
+            presignedUrl,
+            clothes.getType(),
+            attribute
+        );
+    }
+}

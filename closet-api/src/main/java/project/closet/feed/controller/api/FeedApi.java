@@ -11,17 +11,17 @@ import java.time.Instant;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import project.closet.SortDirection;
-import project.closet.dto.request.CommentCreateRequest;
-import project.closet.dto.request.FeedCreateRequest;
-import project.closet.dto.request.FeedUpdateRequest;
-import project.closet.dto.response.CommentDto;
-import project.closet.dto.response.CommentDtoCursorResponse;
-import project.closet.dto.response.FeedDto;
-import project.closet.dto.response.FeedDtoCursorResponse;
-import project.closet.weather.entity.PrecipitationType;
-import project.closet.weather.entity.SkyStatus;
-import project.closet.exception.ErrorResponse;
-import project.closet.security.ClosetUserDetails;
+import project.closet.service.dto.request.CommentCreateRequest;
+import project.closet.service.dto.request.FeedCreateRequest;
+import project.closet.service.dto.request.FeedUpdateRequest;
+import project.closet.service.dto.response.CommentDto;
+import project.closet.service.dto.response.CommentDtoCursorResponse;
+import project.closet.service.dto.response.FeedDto;
+import project.closet.service.dto.response.FeedDtoCursorResponse;
+import project.closet.service.exception.ErrorResponse;
+import project.closet.service.feed.PrecipitationTypeCode;
+import project.closet.service.feed.SkyStatusCode;
+import project.closet.service.security.ClosetUserDetails;
 
 @Tag(name = "피드 관리", description = "피드 관련 API")
 public interface FeedApi {
@@ -44,8 +44,8 @@ public interface FeedApi {
         String sortBy,
         SortDirection sortDirection,
         String keywordLike,
-        SkyStatus skyStatusEqual,
-        PrecipitationType precipitationTypeEqual,
+        SkyStatusCode skyStatusEqual,
+        PrecipitationTypeCode precipitationTypeEqual,
         UUID authorIdEqual,
         @Parameter(hidden = true) ClosetUserDetails closetUserDetails
     );
