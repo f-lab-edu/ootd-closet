@@ -10,8 +10,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.csrf.CsrfToken;
-import project.closet.dto.request.ResetPasswordRequest;
-import project.closet.exception.ErrorResponse;
+import project.closet.service.dto.request.ResetPasswordRequest;
+import project.closet.service.exception.ErrorResponse;
 
 @Tag(name = "인증 관리", description = "인증 관련 API")
 public interface AuthApi {

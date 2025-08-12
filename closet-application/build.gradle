@@ -10,6 +10,22 @@ project(':closet-application') {
         implementation project(':closet-domain')
         implementation project(':closet-common')
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'software.amazon.awssdk:s3:2.31.7'
+        implementation 'com.nimbusds:nimbus-jose-jwt:10.3'
+        implementation 'org.springframework.boot:spring-boot-starter-security'
+        implementation 'org.springframework.security:spring-security-messaging'
 
+        // mail
+        implementation 'org.springframework.boot:spring-boot-starter-mail'
+        testImplementation 'org.subethamail:subethasmtp:3.1.7'
+
+        // websocket
+        implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+        implementation 'org.jsoup:jsoup:1.15.4'
+        // Excel 처리
+        implementation 'org.apache.poi:poi-ooxml:5.2.3'
     }
 }

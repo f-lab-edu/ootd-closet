@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import project.closet.auth.controller.api.AuthApi;
-import project.closet.auth.service.AuthService;
-import project.closet.dto.request.ResetPasswordRequest;
-import project.closet.exception.ErrorCode;
-import project.closet.security.jwt.JwtException;
-import project.closet.security.jwt.JwtService;
 import project.closet.jwtsession.JwtSession;
+import project.closet.service.auth.AuthService;
+import project.closet.service.dto.request.ResetPasswordRequest;
+import project.closet.service.exception.ErrorCode;
+import project.closet.service.security.jwt.JwtException;
+import project.closet.service.security.jwt.JwtService;
 
 @Slf4j
 @RequiredArgsConstructor

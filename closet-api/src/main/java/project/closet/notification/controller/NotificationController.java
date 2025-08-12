@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import project.closet.dto.response.NotificationDtoCursorResponse;
+import project.closet.service.dto.response.NotificationDtoCursorResponse;
 import project.closet.notification.controller.api.NotificationApi;
-import project.closet.notification.service.NotificationService;
-import project.closet.security.ClosetUserDetails;
+import project.closet.service.notification.NotificationService;
+import project.closet.service.security.ClosetUserDetails;
 
 @Slf4j
 @RequiredArgsConstructor

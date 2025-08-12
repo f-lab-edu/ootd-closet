@@ -9,9 +9,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
-import project.closet.dto.response.WeatherAPILocation;
-import project.closet.dto.response.WeatherDto;
-import project.closet.exception.ErrorResponse;
+import project.closet.service.dto.response.WeatherAPILocation;
+import project.closet.service.dto.response.WeatherDto;
+import project.closet.service.exception.ErrorResponse;
 
 @Tag(name = "날씨 관리", description = "날씨 관련 API")
 public interface WeatherApi {

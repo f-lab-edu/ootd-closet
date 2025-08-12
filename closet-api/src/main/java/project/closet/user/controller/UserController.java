@@ -18,17 +18,17 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import project.closet.SortDirection;
-import project.closet.dto.request.ChangePasswordRequest;
-import project.closet.dto.request.ProfileUpdateRequest;
-import project.closet.dto.request.UserCreateRequest;
-import project.closet.dto.request.UserLockUpdateRequest;
-import project.closet.dto.request.UserRoleUpdateRequest;
-import project.closet.dto.response.ProfileDto;
-import project.closet.dto.response.UserDto;
-import project.closet.dto.response.UserDtoCursorResponse;
+import project.closet.service.dto.request.ChangePasswordRequest;
+import project.closet.service.dto.request.ProfileUpdateRequest;
+import project.closet.service.dto.request.UserCreateRequest;
+import project.closet.service.dto.request.UserLockUpdateRequest;
+import project.closet.service.dto.request.UserRoleUpdateRequest;
+import project.closet.service.dto.response.ProfileDto;
+import project.closet.service.dto.response.UserDto;
+import project.closet.service.dto.response.UserDtoCursorResponse;
 import project.closet.user.entity.Role;
 import project.closet.user.controller.api.UserApi;
-import project.closet.user.service.UserService;
+import project.closet.service.user.UserService;
 
 @Slf4j
 @RequiredArgsConstructor

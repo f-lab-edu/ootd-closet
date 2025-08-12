@@ -18,18 +18,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import project.closet.SortDirection;
-import project.closet.dto.request.CommentCreateRequest;
-import project.closet.dto.request.FeedCreateRequest;
-import project.closet.dto.request.FeedUpdateRequest;
-import project.closet.dto.response.CommentDto;
-import project.closet.dto.response.CommentDtoCursorResponse;
-import project.closet.dto.response.FeedDto;
-import project.closet.dto.response.FeedDtoCursorResponse;
+import project.closet.service.dto.request.CommentCreateRequest;
+import project.closet.service.dto.request.FeedCreateRequest;
+import project.closet.service.dto.request.FeedUpdateRequest;
+import project.closet.service.dto.response.CommentDto;
+import project.closet.service.dto.response.CommentDtoCursorResponse;
+import project.closet.service.dto.response.FeedDto;
+import project.closet.service.dto.response.FeedDtoCursorResponse;
 import project.closet.weather.entity.PrecipitationType;
 import project.closet.weather.entity.SkyStatus;
 import project.closet.feed.controller.api.FeedApi;
-import project.closet.feed.service.FeedService;
-import project.closet.security.ClosetUserDetails;
+import project.closet.service.feed.FeedService;
+import project.closet.service.security.ClosetUserDetails;
 
 @Slf4j
 @RestController
