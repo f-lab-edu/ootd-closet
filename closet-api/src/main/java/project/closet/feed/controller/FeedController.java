@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import project.closet.SortDirection;
+import project.closet.service.common.SortDirection;
 import project.closet.feed.controller.api.FeedApi;
 import project.closet.service.dto.request.CommentCreateRequest;
 import project.closet.service.dto.request.FeedCreateRequest;

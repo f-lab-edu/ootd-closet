@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import project.closet.SortDirection;
+import project.closet.service.common.SortDirection;
 import project.closet.service.dto.request.ClothesAttributeDefCreateRequest;
 import project.closet.service.dto.request.ClothesAttributeDefUpdateRequest;
 import project.closet.service.dto.response.ClothesAttributeDefDto;

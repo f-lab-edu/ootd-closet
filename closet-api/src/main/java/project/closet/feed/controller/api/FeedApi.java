@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.Instant;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
-import project.closet.SortDirection;
+import project.closet.service.common.SortDirection;
 import project.closet.service.dto.request.CommentCreateRequest;
 import project.closet.service.dto.request.FeedCreateRequest;
 import project.closet.service.dto.request.FeedUpdateRequest;

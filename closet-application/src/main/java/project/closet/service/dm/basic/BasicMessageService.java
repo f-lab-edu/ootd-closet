@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.closet.SortDirection;
+import project.closet.service.common.SortDirection;
 import project.closet.dm.DirectMessage;
 import project.closet.dm.repository.DirectMessageRepository;
 import project.closet.service.dm.DirectMessageService;

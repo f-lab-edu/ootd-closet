@@ -2,7 +2,7 @@ package project.closet.service.user;
 
 import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
-import project.closet.SortDirection;
+import project.closet.service.common.SortDirection;
 import project.closet.service.dto.request.ChangePasswordRequest;
 import project.closet.service.dto.request.ProfileUpdateRequest;
 import project.closet.service.dto.request.UserCreateRequest;

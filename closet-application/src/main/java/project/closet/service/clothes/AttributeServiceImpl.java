@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.closet.SortDirection;
+import project.closet.service.common.SortDirection;
 import project.closet.service.dto.request.ClothesAttributeDefCreateRequest;
 import project.closet.service.dto.request.ClothesAttributeDefUpdateRequest;
 import project.closet.service.dto.response.ClothesAttributeDefDto;

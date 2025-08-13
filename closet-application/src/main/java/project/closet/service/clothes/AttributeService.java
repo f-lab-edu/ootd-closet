@@ -1,7 +1,7 @@
 package project.closet.service.clothes;
 
 import java.util.UUID;
-import project.closet.SortDirection;
+import project.closet.service.common.SortDirection;
 import project.closet.service.dto.request.ClothesAttributeDefCreateRequest;
 import project.closet.service.dto.request.ClothesAttributeDefUpdateRequest;
 import project.closet.service.dto.response.ClothesAttributeDefDto;

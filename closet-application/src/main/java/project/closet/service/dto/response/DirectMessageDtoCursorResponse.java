@@ -2,6 +2,7 @@ package project.closet.service.dto.response;
 
 import java.util.List;
 import java.util.UUID;
+import project.closet.service.common.SortDirection;
 
 public record DirectMessageDtoCursorResponse(
     List<DirectMessageDto> data,
@@ -10,7 +11,7 @@ public record DirectMessageDtoCursorResponse(
     boolean hasNext,
     long totalCount,
     String sortBy,
-    project.closet.SortDirection sortDirection
+    SortDirection sortDirection
 ) {
 
 }
