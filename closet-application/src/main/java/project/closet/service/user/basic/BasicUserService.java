@@ -12,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import project.closet.SortDirection;
+import project.closet.service.common.SortDirection;
 import project.closet.service.dto.request.ChangePasswordRequest;
 import project.closet.service.dto.request.ProfileUpdateRequest;
 import project.closet.service.dto.request.UserCreateRequest;
@@ -176,10 +176,12 @@ public class BasicUserService implements UserService {
         RoleCode roleEqual,
         Boolean locked
     ) {
+        org.hibernate.query.SortDirection direction =
+            org.hibernate.query.SortDirection.valueOf(sortDirection.name());
         // null 안전
         List<User> users =
             userRepository.findUsersWithCursor(
-                cursor, idAfter, limit, sortBy, sortDirection, emailLike, RoleMapper.toDomain(roleEqual), locked
+                cursor, idAfter, limit, sortBy, direction, emailLike, RoleMapper.toDomain(roleEqual), locked
             );
         boolean hasNext = users.size() > limit;
         if (hasNext) {

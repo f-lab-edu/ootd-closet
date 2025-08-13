@@ -3,7 +3,7 @@ package project.closet.service.dto.response;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
-import project.closet.SortDirection;
+import project.closet.service.common.SortDirection;
 
 public record CommentDtoCursorResponse(
     List<CommentDto> data,

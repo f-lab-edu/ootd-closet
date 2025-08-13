@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.closet.SortDirection;
+import project.closet.service.common.SortDirection;
 import project.closet.clothes.repository.ClothesRepository;
 import project.closet.service.dto.request.CommentCreateRequest;
 import project.closet.service.dto.request.FeedCreateRequest;
@@ -222,7 +222,7 @@ public class BasicFeedService implements FeedService {
         UUID idAfter,
         int limit,
         String sortBy,
-        project.closet.SortDirection sortDirection,
+        SortDirection sortDirection,
         String keywordLike,
         SkyStatusCode skyStatusEqual,
         PrecipitationTypeCode precipitationTypeEqual,
@@ -232,8 +232,10 @@ public class BasicFeedService implements FeedService {
 
         SkyStatus skyStatus = SkyStatusMapper.toDomain(skyStatusEqual);
         PrecipitationType precipitationType = PrecipitationTypeMapper.toDomain(precipitationTypeEqual);
+        org.hibernate.query.SortDirection direction =
+            org.hibernate.query.SortDirection.valueOf(sortDirection.name());
         List<Feed> feeds = feedRepository.findAllWithCursorAndFilters(
-            cursor, idAfter, limit, sortBy, sortDirection,
+            cursor, idAfter, limit, sortBy, direction,
             keywordLike, skyStatus, precipitationType, authorIdEqual
         );
 

@@ -1,4 +1,4 @@
-package project.closet;
+package project.closet.service.common;
 
 public enum SortDirection {
     ASCENDING,

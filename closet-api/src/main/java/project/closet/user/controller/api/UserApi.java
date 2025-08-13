@@ -12,7 +12,7 @@ import java.util.UUID;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
-import project.closet.SortDirection;
+import project.closet.service.common.SortDirection;
 import project.closet.service.dto.request.ChangePasswordRequest;
 import project.closet.service.dto.request.ProfileUpdateRequest;
 import project.closet.service.dto.request.UserCreateRequest;

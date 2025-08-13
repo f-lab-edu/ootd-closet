@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.closet.SortDirection;
+import project.closet.service.common.SortDirection;
 import project.closet.service.dto.response.NotificationDto;
 import project.closet.service.dto.response.NotificationDtoCursorResponse;
 import project.closet.service.event.NotificationCreatedEvent;
