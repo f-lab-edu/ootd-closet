@@ -1,4 +1,4 @@
-package project.closet.service.waether.basic;
+package project.closet.weather;
 
 import org.springframework.stereotype.Component;
 
