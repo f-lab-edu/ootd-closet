@@ -1,4 +1,4 @@
-package project.closet.service.waether.basic;
+package project.closet.api;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import project.closet.service.waether.kakaoresponse.WeatherApiResponse;
+import project.closet.api.response.WeatherApiResponse;
 
 @Slf4j
 @Component

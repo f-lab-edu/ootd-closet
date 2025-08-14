@@ -1,4 +1,4 @@
-package project.closet.service.dto.response;
+package project.closet.api.response;
 
 import java.util.List;
 import lombok.Getter;
