@@ -1,4 +1,4 @@
-package project.closet.service.waether.basic;
+package project.closet.weather;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -10,8 +10,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import project.closet.service.waether.kakaoresponse.WeatherApiResponse;
-import project.closet.service.waether.kakaoresponse.WeatherItem;
 import project.closet.weather.entity.AsWord;
 import project.closet.weather.entity.PrecipitationType;
 import project.closet.weather.entity.SkyStatus;
@@ -24,20 +22,16 @@ public class WeatherDataParser {
     private static final ZoneId ZONE_ID = ZoneId.of("Asia/Seoul");
 
     public List<Weather> parseToWeatherEntities(
-            WeatherApiResponse response,
+            List<WeatherData> items,
             Instant forecastedAt,
             int x,
             int y
     ) {
 
-        if (response == null || response.response() == null
-                || response.response().body() == null
-                || response.response().body().items() == null) {
+        if (items == null ||  items.isEmpty()) {
             log.warn("⛔ 잘못된 날씨 응답 데이터입니다.");
             return List.of();
         }
-
-        List<WeatherItem> items = response.response().body().items().item();
 
         // ✅ TMN (최저기온, 06:00) 및 TMX (최고기온, 15:00) 데이터 매핑
         Map<LocalDate, Double> minTempMap = extractTemperatureMap(items, "TMN", "0600");
@@ -49,16 +43,16 @@ public class WeatherDataParser {
         Map<LocalDate, Double> windSpeedMap = computeAverageWindSpeedByDate(items);
 
         // 00시 데이터만 필터링 → 날짜별 그룹화
-        Map<LocalDate, List<WeatherItem>> grouped = items.stream()
+        Map<LocalDate, List<WeatherData>> grouped = items.stream()
                 .filter(item -> "0000".equals(item.fcstTime()))
                 .collect(Collectors.groupingBy(
                         i -> LocalDate.parse(i.fcstDate(), DateTimeFormatter.BASIC_ISO_DATE)));
 
         // 날짜별 Weather 생성
         List<Weather> weathers = new ArrayList<>();
-        for (Map.Entry<LocalDate, List<WeatherItem>> entry : grouped.entrySet()) {
+        for (Map.Entry<LocalDate, List<WeatherData>> entry : grouped.entrySet()) {
             LocalDate date = entry.getKey();
-            List<WeatherItem> dailyItems = entry.getValue();
+            List<WeatherData> dailyItems = entry.getValue();
 
             // ⚠️ TMN/TMX 데이터 없는 날짜 제외
             if (!minTempMap.containsKey(date) || !maxTempMap.containsKey(date)) {
@@ -94,7 +88,7 @@ public class WeatherDataParser {
     }
 
     private Map<LocalDate, Double> extractTemperatureMap(
-            List<WeatherItem> items,
+            List<WeatherData> items,
             String category,
             String fcstTime
     ) {
@@ -118,10 +112,10 @@ public class WeatherDataParser {
     }
 
     // 하늘 상태를 SKY 카테고리에서 가져와서 SkyStatus로 매핑
-    private SkyStatus mapSky(List<WeatherItem> items) {
+    private SkyStatus mapSky(List<WeatherData> items) {
         return items.stream()
                 .filter(item -> "SKY".equals(item.category()))
-                .map(WeatherItem::fcstValue)
+                .map(WeatherData::fcstValue)
                 .findFirst()
                 .map(value -> {
                     return switch (value) {
@@ -135,10 +129,10 @@ public class WeatherDataParser {
     }
 
     // 강수 형태를 PTY 카테고리에서 가져와서 precipitationType 으로 매핑
-    private PrecipitationType mapPty(List<WeatherItem> items) {
+    private PrecipitationType mapPty(List<WeatherData> items) {
         return items.stream()
                 .filter(item -> "PTY".equals(item.category()))
-                .map(WeatherItem::fcstValue)
+                .map(WeatherData::fcstValue)
                 .findFirst()
                 .map(value -> {
                     return switch (value) {
@@ -153,10 +147,10 @@ public class WeatherDataParser {
                 .orElse(PrecipitationType.UNKNOWN);
     }
 
-    private Double mapPcp(List<WeatherItem> items) {
+    private Double mapPcp(List<WeatherData> items) {
         return items.stream()
                 .filter(item -> "PCP".equals(item.category()))
-                .map(WeatherItem::fcstValue)
+                .map(WeatherData::fcstValue)
                 .findFirst()
                 .map(this::parsePrecipitation)
                 .orElse(0.0); // 해당 카테고리가 없을 경우 0으로 처리
@@ -215,17 +209,17 @@ public class WeatherDataParser {
         return AsWord.STRONG; // 14.0 이상은 STRONG 처리
     }
 
-    private double mapDoubleValue(List<WeatherItem> items, String category) {
+    private double mapDoubleValue(List<WeatherData> items, String category) {
         return items.stream()
                 .filter(i -> category.equals(i.category()))
-                .map(WeatherItem::fcstValue)
+                .map(WeatherData::fcstValue)
                 .findFirst()
                 .map(Double::parseDouble)
                 .orElse(0.0);
     }
 
     // 습도 평균 구하는 메소드
-    private Map<LocalDate, Double> computeAverageHumidityByDate(List<WeatherItem> items) {
+    private Map<LocalDate, Double> computeAverageHumidityByDate(List<WeatherData> items) {
         return items.stream()
                 .filter(item -> "REH".equals(item.category()))
                 .collect(Collectors.groupingBy(
@@ -242,7 +236,7 @@ public class WeatherDataParser {
 
     // 강수 확률 평균
     private Map<LocalDate, Double> computeAveragePrecipitationProbabilityByDate(
-            List<WeatherItem> items) {
+            List<WeatherData> items) {
         return items.stream()
                 .filter(item -> "POP".equals(item.category()))
                 .collect(Collectors.groupingBy(
@@ -257,7 +251,7 @@ public class WeatherDataParser {
                 ));
     }
 
-    private Map<LocalDate, Double> computeAverageWindSpeedByDate(List<WeatherItem> items) {
+    private Map<LocalDate, Double> computeAverageWindSpeedByDate(List<WeatherData> items) {
         return items.stream()
                 .filter(item -> "WSD".equals(item.category()))
                 .collect(Collectors.groupingBy(

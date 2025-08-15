@@ -8,11 +8,17 @@ project(':closet-application') {
 
     dependencies {
         implementation project(':closet-domain')
-        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-        implementation 'org.springframework.boot:spring-boot-starter-validation'
+        implementation project(':closet-infra')
+
         implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
         implementation 'software.amazon.awssdk:s3:2.31.7'
+
         implementation 'com.nimbusds:nimbus-jose-jwt:10.3'
+
         implementation 'org.springframework.boot:spring-boot-starter-security'
         implementation 'org.springframework.security:spring-security-messaging'
 
@@ -24,6 +30,7 @@ project(':closet-application') {
         implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
         implementation 'org.jsoup:jsoup:1.15.4'
+
         // Excel 처리
         implementation 'org.apache.poi:poi-ooxml:5.2.3'
     }

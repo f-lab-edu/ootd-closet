@@ -1,4 +1,4 @@
-package project.closet.service.waether.kakaoresponse;
+package project.closet.api.response;
 
 public record Header(String resultCode, String resultMsg) {
 

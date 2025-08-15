@@ -1,3 +1,4 @@
+/*
 package project.closet.config;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -37,3 +38,4 @@ public class RedisConfig {
         return redisTemplate;
     }
 }
+*/
