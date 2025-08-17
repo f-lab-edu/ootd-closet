@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: ${SPRING_APP_NAME:closet-batch}
+    time-zone: "Asia/Seoul"
+
+  main:
+    web-application-type: none
+
+  config:
+    import: optional:file:.env[.properties]
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/closet
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+#  jpa:
+#    hibernate:
+#      ddl-auto: validate
+#    properties:
+#      hibernate:
+#        format_sql: true
+#        show_sql: true
+#        jdbc.hibernate.jdbc.batch_size: 100
+#    open-in-view: false
+
+  batch:
+    job:
+      name: COORDINATE_READ_JOB
+      enabled: true
+    jdbc:
+      initialize-schema: always
+
+closet:
+  kakao:
+    api:
+      key: ${KAKAO_API_KEY}
+  weather:
+    api:
+      key: ${WEATHER_API_KEY}
+
+# Logging
+logging:
+  level:
+    root: info
+    project.closet.batch: info
+    # JdbcTemplate가 실행하는 SQL을 찍음
+#    org.springframework.jdbc.core: DEBUG
+#    # 바인딩 값(PreparedStatement.setXxx ...)까지 보고 싶으면 TRACE
+#    org.springframework.jdbc.core.StatementCreatorUtils: TRACE
+#    # (선택) 배치 JDBC 관련 추가 로그
+#    org.springframework.batch.item.database: DEBUG
