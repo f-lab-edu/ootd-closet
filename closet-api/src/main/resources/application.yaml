@@ -21,10 +21,6 @@ spring:
         jdbc.hibernate.jdbc.batch_size: 100
     open-in-view: false
 
-  batch:
-    jdbc:
-      initialize-schema: never
-
   # 임시 비밀번호 메일 전송
   mail:
     host: smtp.gmail.com
@@ -41,12 +37,12 @@ spring:
         from: ${MAIL_FROM:noreply@closet.com}
     default-encoding: UTF-8
 
-  data:
-    redis:
-      host: ${REDIS_HOST:localhost}
-      port: ${REDIS_PORT:6379}
-      repositories:
-        enabled: off
+#  data:
+#    redis:
+#      host: ${REDIS_HOST:localhost}
+#      port: ${REDIS_PORT:6379}
+#      repositories:
+#        enabled: off
 
 closet:
   admin:
