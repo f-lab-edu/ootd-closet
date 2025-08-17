@@ -1,4 +1,4 @@
-package project.closet.api.response;
+package project.closet.batch.api.response;
 
 public record Response(Header header, Body body) {
 

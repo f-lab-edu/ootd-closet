@@ -1,4 +1,4 @@
-package project.closet.api.response;
+package project.closet.batch.api.response;
 
 public record WeatherApiResponse(Response response) {
 

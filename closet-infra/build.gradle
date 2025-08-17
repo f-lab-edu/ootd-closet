@@ -7,7 +7,9 @@ project(':closet-infra') {
     }
 
     dependencies {
+        implementation project(':closet-domain')
         implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.retry:spring-retry'
 
     }
 }

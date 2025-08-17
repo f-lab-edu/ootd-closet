@@ -1,4 +1,4 @@
-package project.closet.api.response;
+package project.closet.batch.api.response;
 
 public record Body(String dataType, Items items, int pageNo, int numOfRows, int totalCount) {
 

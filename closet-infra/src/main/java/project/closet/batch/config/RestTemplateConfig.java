@@ -1,4 +1,4 @@
-package project.closet.config;
+package project.closet.batch.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
