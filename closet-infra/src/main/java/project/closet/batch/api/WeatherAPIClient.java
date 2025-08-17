@@ -28,6 +28,11 @@ public class WeatherAPIClient {
 
     private final RestTemplate restTemplate;
 
+    @Retryable(
+        value = RestClientException.class,
+        maxAttempts = 3,
+        backoff = @Backoff(delay = 1000, multiplier = 2)
+    )
     public WeatherApiResponse getWeatherRawData(int x, int y, LocalDate baseDate,
                                                 LocalTime baseTime) {
         String formattedDate = baseDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
@@ -39,12 +44,6 @@ public class WeatherAPIClient {
     }
 
     @Async("weatherExecutor")
-    @Retryable(
-        value = RestClientException.class,
-        recover = "recover",
-        maxAttempts = 3,
-        backoff = @Backoff(delay = 1000, multiplier = 2)
-    )
     public CompletableFuture<WeatherApiResponse> fetchWeatherAsync(
         int x,
         int y,
@@ -73,8 +72,8 @@ public class WeatherAPIClient {
 
     @Recover
     public WeatherApiResponse recover(RestClientException e, int x, int y, LocalDate baseDate, LocalTime baseTime) {
-        log.error("[API-RECOVER] give up after retries: x={}, y={}, baseDate={}, baseTime={}, cause={}",
+        log.warn("[API-RECOVER] give up after retries: x={}, y={}, baseDate={}, baseTime={}, cause={}",
             x, y, baseDate, baseTime, e.toString());
-        return null; // 여기서 null 반환 → 이후 배치에서 스킵/필터 처리 가능
+        return WeatherApiResponse.empty();
     }
 }
