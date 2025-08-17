@@ -27,7 +27,7 @@ public class WeatherDataParser {
     ) {
 
         if (items == null ||  items.isEmpty()) {
-            log.warn("⛔ 잘못된 날씨 응답 데이터입니다.");
+            log.warn("⛔ 기상청 API 데이터를 가지고 오는데 실패했습니다.");
             return List.of();
         }
 
