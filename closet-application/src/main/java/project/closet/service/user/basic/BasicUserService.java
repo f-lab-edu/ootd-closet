@@ -34,8 +34,8 @@ import project.closet.user.entity.Role;
 import project.closet.user.entity.User;
 import project.closet.user.repository.UserRepository;
 import project.closet.service.user.UserService;
-import project.closet.service.waether.basic.GeoGridConverter;
-import project.closet.service.waether.basic.GeoGridConverter.Grid;
+import project.closet.weather.GeoGridConverter;
+import project.closet.weather.GeoGridConverter.Grid;
 
 @Slf4j
 @Service
