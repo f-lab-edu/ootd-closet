@@ -56,15 +56,15 @@ public class CoordinateReadJobConfig {
         TaskExecutor weatherExecutor
     ) {
         AsyncItemProcessor<WeatherLocation, List<Weather>> processor = new AsyncItemProcessor<>();
-        processor.setDelegate(delegate);        // 기존 Processor 그대로 사용
-        processor.setTaskExecutor(weatherExecutor); // 병렬 실행
+        processor.setDelegate(delegate);
+        processor.setTaskExecutor(weatherExecutor);
         return processor;
     }
 
     @Bean
     public AsyncItemWriter<List<Weather>> asyncWriter(ItemWriter<List<Weather>> delegate) {
         AsyncItemWriter<List<Weather>> writer = new AsyncItemWriter<>();
-        writer.setDelegate(loggingWriter());   // 기존 Writer 그대로 사용
+        writer.setDelegate(loggingWriter());
         return writer;
     }
 
