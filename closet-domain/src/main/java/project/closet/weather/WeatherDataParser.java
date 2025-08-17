@@ -23,9 +23,7 @@ public class WeatherDataParser {
 
     public List<Weather> parseToWeatherEntities(
             List<WeatherData> items,
-            Instant forecastedAt,
-            int x,
-            int y
+            Instant forecastedAt
     ) {
 
         if (items == null ||  items.isEmpty()) {
@@ -77,8 +75,8 @@ public class WeatherDataParser {
                     .currentTemperature(mapDoubleValue(dailyItems, "TMP"))
                     .minTemperature(minTempMap.get(date))
                     .maxTemperature(maxTempMap.get(date))
-                    .x(x)
-                    .y(y)
+                    .x(dailyItems.getFirst().nx())
+                    .y(dailyItems.getFirst().ny())
                     .build();
 
             weathers.add(weather);
