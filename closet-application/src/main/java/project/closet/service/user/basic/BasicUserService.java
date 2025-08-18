@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -78,7 +79,7 @@ public class BasicUserService implements UserService {
             .orElseThrow(() -> UserNotFoundException.withId(userId));
 
         // TODO 사용자 위치 정보 Lazy Loading 리팩토링 필요함. -> 테이블 분리했는데, 비정규화 하기
-//        Hibernate.initialize(user.getProfile().getLocationNames());
+        Hibernate.initialize(user.getProfile().getLocationNames());
         log.debug("사용자 위치 정보 지역 조회: {}", user.getProfile().getLocationNames());
 
         // User -> ProfileDto 변환
@@ -96,7 +97,7 @@ public class BasicUserService implements UserService {
         log.debug("사용자 프로필 업데이트 시작: userId={}, request={}", userId, request);
         User user = userRepository.findByIdWithProfile(userId)
             .orElseThrow(() -> UserNotFoundException.withId(userId));
-//        Hibernate.initialize(user.getProfile().getLocationNames());
+        Hibernate.initialize(user.getProfile().getLocationNames());
 
         WeatherAPILocation location = request.location();
         if (location != null) {
