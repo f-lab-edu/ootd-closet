@@ -75,8 +75,8 @@ public class WeatherDataParser {
                     .currentTemperature(mapDoubleValue(dailyItems, "TMP"))
                     .minTemperature(minTempMap.get(date))
                     .maxTemperature(maxTempMap.get(date))
-                    .x(dailyItems.getFirst().nx())
-                    .y(dailyItems.getFirst().ny())
+                    .x(dailyItems.get(0).nx())
+                    .y(dailyItems.get(0).ny())
                     .build();
 
             weathers.add(weather);
