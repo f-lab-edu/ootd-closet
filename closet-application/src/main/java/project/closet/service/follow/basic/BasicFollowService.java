@@ -20,7 +20,7 @@ import project.closet.service.exception.follow.FollowNotFoundException;
 import project.closet.service.exception.user.UserNotFoundException;
 import project.closet.follow.repository.FollowRepository;
 import project.closet.service.follow.FollowService;
-import project.closet.batch.storage.S3ContentStorage;
+import project.closet.storage.S3ContentStorage;
 import project.closet.user.repository.UserRepository;
 
 @Slf4j

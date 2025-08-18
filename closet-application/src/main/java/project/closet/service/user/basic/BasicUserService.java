@@ -27,7 +27,7 @@ import project.closet.service.exception.user.UserAlreadyExistsException;
 import project.closet.service.exception.user.UserNotFoundException;
 import project.closet.service.mapper.RoleMapper;
 import project.closet.service.security.jwt.JwtService;
-import project.closet.batch.storage.S3ContentStorage;
+import project.closet.storage.S3ContentStorage;
 import project.closet.service.user.RoleCode;
 import project.closet.user.entity.Profile;
 import project.closet.user.entity.Role;

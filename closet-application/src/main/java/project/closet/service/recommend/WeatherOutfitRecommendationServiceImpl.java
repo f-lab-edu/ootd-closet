@@ -26,7 +26,7 @@ import project.closet.weather.entity.Weather;
 import project.closet.service.exception.user.UserNotFoundException;
 import project.closet.service.exception.weather.WeatherNotFoundException;
 import project.closet.service.security.ClosetUserDetails;
-import project.closet.batch.storage.S3ContentStorage;
+import project.closet.storage.S3ContentStorage;
 import project.closet.user.repository.UserRepository;
 import project.closet.weather.repository.WeatherRepository;
 
