@@ -27,7 +27,7 @@ spring:
   batch:
     job:
       name: COORDINATE_READ_JOB
-      enabled: true
+      enabled: false
     jdbc:
       initialize-schema: always
 
@@ -43,10 +43,10 @@ closet:
 logging:
   level:
     root: info
-    project.closet.batch: info
+    project.closet.batch: debug
     # JdbcTemplate가 실행하는 SQL을 찍음
-#    org.springframework.jdbc.core: DEBUG
+    org.springframework.jdbc.core: DEBUG
 #    # 바인딩 값(PreparedStatement.setXxx ...)까지 보고 싶으면 TRACE
-#    org.springframework.jdbc.core.StatementCreatorUtils: TRACE
+    org.springframework.jdbc.core.StatementCreatorUtils: TRACE
 #    # (선택) 배치 JDBC 관련 추가 로그
-#    org.springframework.batch.item.database: DEBUG
+    org.springframework.batch.item.database: DEBUG

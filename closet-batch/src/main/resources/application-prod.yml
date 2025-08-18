@@ -1,8 +1,15 @@
 server:
   port: 8090
+aws:
+  secretsmanager:
+    region: ap-northeast-2
 
 spring:
+  config:
+    import: 'aws-secretsmanager:/secret/closet'
   batch:
+    job:
+      enabled: false
     jdbc:
       initialize-schema: never
 
@@ -11,3 +18,8 @@ spring:
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
+
+logging:
+  level:
+    root: info
+    project.closet.batch: info

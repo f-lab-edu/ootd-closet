@@ -1,7 +1,12 @@
 server:
     port: 8080
+aws:
+  secretsmanager:
+    region: ap-northeast-2
 
 spring:
+  config:
+    import: 'aws-secretsmanager:/secret/closet'
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
