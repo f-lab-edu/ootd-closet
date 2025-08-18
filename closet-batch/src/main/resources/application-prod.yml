@@ -1,5 +1,5 @@
 server:
-    port: 8080
+  port: 8090
 aws:
   secretsmanager:
     region: ap-northeast-2
@@ -7,6 +7,12 @@ aws:
 spring:
   config:
     import: 'aws-secretsmanager:/secret/closet'
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: never
+
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
@@ -16,3 +22,4 @@ spring:
 logging:
   level:
     root: info
+    project.closet.batch: info

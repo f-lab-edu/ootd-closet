@@ -1,4 +1,4 @@
-package project.closet.service.config;
+package project.closet.batch.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

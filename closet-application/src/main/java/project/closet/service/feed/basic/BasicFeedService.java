@@ -39,7 +39,7 @@ import project.closet.service.feed.PrecipitationTypeCode;
 import project.closet.service.feed.SkyStatusCode;
 import project.closet.service.mapper.PrecipitationTypeMapper;
 import project.closet.service.mapper.SkyStatusMapper;
-import project.closet.service.storage.S3ContentStorage;
+import project.closet.batch.storage.S3ContentStorage;
 import project.closet.user.entity.User;
 import project.closet.user.repository.UserRepository;
 import project.closet.weather.entity.PrecipitationType;

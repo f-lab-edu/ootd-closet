@@ -1,4 +1,4 @@
-package project.closet.service.waether.basic;
+package project.closet.batch.api;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -8,11 +8,15 @@ import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import project.closet.service.waether.kakaoresponse.WeatherApiResponse;
+import project.closet.batch.api.response.WeatherApiResponse;
 
 @Slf4j
 @Component
@@ -24,6 +28,11 @@ public class WeatherAPIClient {
 
     private final RestTemplate restTemplate;
 
+    @Retryable(
+        value = RestClientException.class,
+        maxAttempts = 3,
+        backoff = @Backoff(delay = 1000, multiplier = 2)
+    )
     public WeatherApiResponse getWeatherRawData(int x, int y, LocalDate baseDate,
                                                 LocalTime baseTime) {
         String formattedDate = baseDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
@@ -36,28 +45,35 @@ public class WeatherAPIClient {
 
     @Async("weatherExecutor")
     public CompletableFuture<WeatherApiResponse> fetchWeatherAsync(
-            int x,
-            int y,
-            LocalDate baseDate,
-            LocalTime baseTime
+        int x,
+        int y,
+        LocalDate baseDate,
+        LocalTime baseTime
     ) {
         return CompletableFuture.completedFuture(
-                getWeatherRawData(x, y, baseDate, baseTime)
+            getWeatherRawData(x, y, baseDate, baseTime)
         );
     }
 
     public URI buildUri(int x, int y, String baseDate, String baseTime) {
         return UriComponentsBuilder.fromUriString(
-                        "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst")
-                .queryParam("ServiceKey", apiKey)
-                .queryParam("pageNo", 1)
-                .queryParam("numOfRows", 2000)
-                .queryParam("dataType", "JSON")
-                .queryParam("base_date", baseDate)
-                .queryParam("base_time", baseTime)
-                .queryParam("nx", x)
-                .queryParam("ny", y)
-                .build(true) // true면 인코딩 처리
-                .toUri();
+                "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst")
+            .queryParam("ServiceKey", apiKey)
+            .queryParam("pageNo", 1)
+            .queryParam("numOfRows", 2000)
+            .queryParam("dataType", "JSON")
+            .queryParam("base_date", baseDate)
+            .queryParam("base_time", baseTime)
+            .queryParam("nx", x)
+            .queryParam("ny", y)
+            .build(true) // true면 인코딩 처리
+            .toUri();
+    }
+
+    @Recover
+    public WeatherApiResponse recover(RestClientException e, int x, int y, LocalDate baseDate, LocalTime baseTime) {
+        log.warn("[API-RECOVER] give up after retries: x={}, y={}, baseDate={}, baseTime={}, cause={}",
+            x, y, baseDate, baseTime, e.toString());
+        return WeatherApiResponse.empty();
     }
 }

@@ -1,0 +1,17 @@
+project(':closet-infra') {
+    tasks.bootJar {
+        enabled = false
+    }
+    tasks.jar {
+        enabled = true
+    }
+
+    dependencies {
+        implementation project(':closet-domain')
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.retry:spring-retry'
+        implementation 'software.amazon.awssdk:s3:2.31.7'
+
+        implementation 'io.awspring.cloud:spring-cloud-aws-starter-secrets-manager:3.4.0'
+    }
+}

@@ -1,4 +1,4 @@
-package project.closet.service.waether.basic;
+package project.closet.batch.api;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -10,9 +10,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import project.closet.service.dto.response.KakaoAddressResponse;
-import project.closet.service.dto.response.KakaoAddressResponse.Document;
-import project.closet.service.waether.AddressClient;
+import project.closet.batch.api.response.KakaoAddressResponse;
+import project.closet.batch.api.response.KakaoAddressResponse.Document;
 
 @Slf4j
 @Component

@@ -28,7 +28,7 @@ import project.closet.service.exception.clothes.ClothesNotFoundException;
 import project.closet.service.exception.clothes.attribute.AttributeNotFoundException;
 import project.closet.service.exception.user.UserNotFoundException;
 import project.closet.service.mapper.ClothesTypeMapper;
-import project.closet.service.storage.S3ContentStorage;
+import project.closet.batch.storage.S3ContentStorage;
 import project.closet.user.repository.UserRepository;
 
 @Service

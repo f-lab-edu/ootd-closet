@@ -16,16 +16,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.closet.service.dto.response.KakaoAddressResponse;
+import project.closet.batch.api.WeatherAPIClient;
+import project.closet.batch.api.WeatherApiResponseConverter;
+import project.closet.batch.api.response.KakaoAddressResponse;
 import project.closet.service.dto.response.WeatherAPILocation;
 import project.closet.service.dto.response.WeatherDto;
+import project.closet.batch.api.AddressClient;
+import project.closet.service.waether.WeatherService;
+import project.closet.weather.GeoGridConverter;
+import project.closet.weather.GeoGridConverter.Grid;
+import project.closet.weather.WeatherDataParser;
 import project.closet.weather.entity.Weather;
+import project.closet.weather.repository.WeatherRepository;
 import project.closet.weatherlocation.WeatherLocation;
 import project.closet.weatherlocation.WeatherLocationRepository;
-import project.closet.weather.repository.WeatherRepository;
-import project.closet.service.waether.AddressClient;
-import project.closet.service.waether.WeatherService;
-import project.closet.service.waether.basic.GeoGridConverter.Grid;
 
 @Slf4j
 @Service
@@ -46,14 +50,14 @@ public class BasicWeatherService implements WeatherService {
     public WeatherAPILocation getLocation(Double longitude, Double latitude) {
         log.info("위도 경도로 행정구역 반환 요청: longitude={}, latitude={}", longitude, latitude);
         KakaoAddressResponse kakaoAddressResponse =
-                addressClient.requestAddressFromKakao(longitude, latitude);
+            addressClient.requestAddressFromKakao(longitude, latitude);
         Grid grid = geoGridConverter.convert(latitude, longitude);
         return new WeatherAPILocation(
-                latitude,
-                longitude,
-                grid.x(),
-                grid.y(),
-                kakaoAddressResponse.getLocationNames()
+            latitude,
+            longitude,
+            grid.x(),
+            grid.y(),
+            kakaoAddressResponse.getLocationNames()
         );
     }
 
@@ -63,8 +67,8 @@ public class BasicWeatherService implements WeatherService {
         LocalDate forecastBaseDate = LocalDate.now();
         LocalTime forecastTime = LocalTime.of(23, 0);
         Instant forecastedAt = LocalDateTime.of(forecastBaseDate, forecastTime)
-                .atZone(SEOUL)
-                .toInstant();
+            .atZone(SEOUL)
+            .toInstant();
 
         fetchAndSave(forecastBaseDate, forecastTime, forecastedAt);
     }
@@ -81,21 +85,26 @@ public class BasicWeatherService implements WeatherService {
             log.info("🚀 {}~{}번째 지역 날씨 요청 시작", i + 1, Math.min(i + batchSize, locations.size()));
 
             List<CompletableFuture<List<Weather>>> futures = batch.stream()
-                    .map(location -> weatherAPIClient.fetchWeatherAsync(location.getX(), location.getY(), baseDate, forecastTime)
-                            .thenApply(response ->
-                                    weatherDataParser.parseToWeatherEntities(response, forecastedAt, location.getX(), location.getY())
-                            )
-                            .exceptionally(ex -> {
-                                log.warn("❌ 날씨 요청 실패 (x={}, y={}): {}", location.getX(), location.getY(), ex.getMessage());
-                                return Collections.emptyList();
-                            })
-                    ).toList();
+                .map(
+                    location -> weatherAPIClient.fetchWeatherAsync(
+                            location.getX(), location.getY(), baseDate, forecastTime
+                        )
+                        .thenApply(WeatherApiResponseConverter::parseToWeatherDataList)
+                        .thenApply(response ->
+                            weatherDataParser.parseToWeatherEntities(response, forecastedAt)
+                        )
+                        .exceptionally(ex -> {
+                            log.warn("❌ 날씨 요청 실패 (x={}, y={}): {}", location.getX(), location.getY(),
+                                ex.getMessage());
+                            return Collections.emptyList();
+                        })
+                ).toList();
 
             // 이 batch가 완료될 때까지 기다림
             List<Weather> parsedWeather = futures.stream()
-                    .map(CompletableFuture::join)
-                    .flatMap(List::stream)
-                    .collect(Collectors.toList());
+                .map(CompletableFuture::join)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
 
             if (!parsedWeather.isEmpty()) {
                 weatherRepository.saveAll(parsedWeather);
@@ -126,22 +135,23 @@ public class BasicWeatherService implements WeatherService {
         LocalDate forecastDate = LocalDate.now().minusDays(1);
         LocalTime forecastTime = LocalTime.of(23, 0);
         Instant baseForecastedAt = LocalDateTime.of(forecastDate, forecastTime)
-                .atZone(SEOUL)
-                .toInstant();
+            .atZone(SEOUL)
+            .toInstant();
         // 3. 날씨 정보 가공 후 반환
         List<Weather> weathers =
-                weatherRepository.findAllByXAndYAndForecastedAtOrderByForecastAtAsc(grid.x(),
-                        grid.y(), baseForecastedAt);
+            weatherRepository.findAllByXAndYAndForecastedAtOrderByForecastAtAsc(grid.x(),
+                grid.y(), baseForecastedAt);
 
+        // TODO 날씨 차이 로직 변경하기
         Map<Instant, Weather> weatherMapByForecastAt = weathers.stream()
-                .collect(Collectors.toMap(Weather::getForecastAt, w -> w));
+            .collect(Collectors.toMap(Weather::getForecastAt, w -> w));
 
         return weathers.stream()
-                .map(weather -> {
-                    Weather yesterday = weatherMapByForecastAt.get(
-                            weather.getForecastAt().minus(1, ChronoUnit.DAYS));
-                    return WeatherDto.from(weather, yesterday);
-                })
-                .toList();
+            .map(weather -> {
+                Weather yesterday = weatherMapByForecastAt.get(
+                    weather.getForecastAt().minus(1, ChronoUnit.DAYS));
+                return WeatherDto.from(weather, yesterday);
+            })
+            .toList();
     }
 }

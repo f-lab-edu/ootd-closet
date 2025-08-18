@@ -19,7 +19,7 @@ import project.closet.service.dto.response.DirectMessageDtoCursorResponse;
 import project.closet.service.dto.response.UserSummary;
 import project.closet.service.event.DirectMessageSentEvent;
 import project.closet.service.exception.user.UserNotFoundException;
-import project.closet.service.storage.S3ContentStorage;
+import project.closet.batch.storage.S3ContentStorage;
 import project.closet.user.entity.User;
 import project.closet.user.repository.UserRepository;
 
