@@ -4,14 +4,9 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Recover;
-import org.springframework.retry.annotation.Retryable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -28,11 +23,6 @@ public class WeatherAPIClient {
 
     private final RestTemplate restTemplate;
 
-    @Retryable(
-        value = RestClientException.class,
-        maxAttempts = 3,
-        backoff = @Backoff(delay = 1000, multiplier = 2)
-    )
     public WeatherApiResponse getWeatherRawData(int x, int y, LocalDate baseDate,
                                                 LocalTime baseTime) {
         String formattedDate = baseDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
@@ -40,19 +30,13 @@ public class WeatherAPIClient {
         URI uri = buildUri(x, y, formattedDate, formattedTime);
 
         log.debug("Weather API 호출 URI: {}", uri);
-        return restTemplate.getForObject(uri, WeatherApiResponse.class);
-    }
-
-    @Async("weatherExecutor")
-    public CompletableFuture<WeatherApiResponse> fetchWeatherAsync(
-        int x,
-        int y,
-        LocalDate baseDate,
-        LocalTime baseTime
-    ) {
-        return CompletableFuture.completedFuture(
-            getWeatherRawData(x, y, baseDate, baseTime)
-        );
+        // TODO 실패 시 에러 감싸서 throw
+        try {
+            return restTemplate.getForObject(uri, WeatherApiResponse.class);
+        } catch (RestClientException exception) {
+            log.error("날씨 API 호출에 실패했습니다. URI : {}", uri, exception);
+            throw new WeatherApiCallFailedException(exception.getMessage(), exception);
+        }
     }
 
     public URI buildUri(int x, int y, String baseDate, String baseTime) {
@@ -70,10 +54,4 @@ public class WeatherAPIClient {
             .toUri();
     }
 
-    @Recover
-    public WeatherApiResponse recover(RestClientException e, int x, int y, LocalDate baseDate, LocalTime baseTime) {
-        log.warn("[API-RECOVER] give up after retries: x={}, y={}, baseDate={}, baseTime={}, cause={}",
-            x, y, baseDate, baseTime, e.toString());
-        return WeatherApiResponse.empty();
-    }
 }
