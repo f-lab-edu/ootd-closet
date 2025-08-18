@@ -14,8 +14,8 @@ public class RestTemplateConfig {
     public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
         ClientHttpRequestFactorySettings clientHttpRequestFactorySettings =
             ClientHttpRequestFactorySettings.defaults()
-                .withConnectTimeout(Duration.ofSeconds(5))
-                .withReadTimeout(Duration.ofSeconds(5));
+                .withConnectTimeout(Duration.ofSeconds(10))
+                .withReadTimeout(Duration.ofSeconds(10));
 
         return restTemplateBuilder
             .requestFactorySettings(clientHttpRequestFactorySettings)

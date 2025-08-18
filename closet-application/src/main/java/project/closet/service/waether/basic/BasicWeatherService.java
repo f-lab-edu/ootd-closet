@@ -142,6 +142,7 @@ public class BasicWeatherService implements WeatherService {
             weatherRepository.findAllByXAndYAndForecastedAtOrderByForecastAtAsc(grid.x(),
                 grid.y(), baseForecastedAt);
 
+        // TODO 날씨 차이 로직 변경하기
         Map<Instant, Weather> weatherMapByForecastAt = weathers.stream()
             .collect(Collectors.toMap(Weather::getForecastAt, w -> w));
 

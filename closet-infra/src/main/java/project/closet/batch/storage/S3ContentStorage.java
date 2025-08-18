@@ -1,4 +1,4 @@
-package project.closet.service.storage;
+package project.closet.batch.storage;
 
 import java.io.IOException;
 import java.time.Duration;
