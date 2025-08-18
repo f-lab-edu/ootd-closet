@@ -34,7 +34,7 @@ public class WeatherApiItemProcessor implements ItemProcessor<WeatherLocation, L
             .atZone(ZoneId.of("Asia/Seoul"))
             .toInstant();
 
-        // api 호출
+        // RestTemplate 호출
         WeatherApiResponse apiResponse = weatherAPIClient.getWeatherRawData(
             weatherLocation.getX(),
             weatherLocation.getY(),

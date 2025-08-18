@@ -24,8 +24,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.transaction.PlatformTransactionManager;
+import project.closet.batch.api.WeatherApiCallFailedException;
 import project.closet.weather.entity.Weather;
-import project.closet.weather.repository.WeatherRepository;
 import project.closet.weatherlocation.WeatherLocation;
 import project.closet.weatherlocation.WeatherLocationRepository;
 
@@ -34,14 +34,17 @@ import project.closet.weatherlocation.WeatherLocationRepository;
 @Slf4j
 public class CoordinateReadJobConfig {
 
-    public static final String ID = "id";
-    public static final int CHUNK_SIZE = 100;
+    private static final int CHUNK_SIZE = 50;
     public static final String COORDINATE_READ_JOB = "COORDINATE_READ_JOB";
 
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
+
     private final WeatherLocationRepository weatherLocationRepository;
-    private final WeatherRepository weatherRepository;
+
+    private final ItemProcessor<WeatherLocation, List<Weather>> itemProcessor;
+    private final ItemWriter<List<Weather>> weatherDataWriter;
+    private final TaskExecutor weatherExecutor;
 
     @Bean
     public Job coordinateJob(Step coordinateReadStep) {
@@ -51,53 +54,19 @@ public class CoordinateReadJobConfig {
     }
 
     @Bean
-    public AsyncItemProcessor<WeatherLocation, List<Weather>> asyncProcessor(
-        ItemProcessor<WeatherLocation, List<Weather>> delegate,
-        TaskExecutor weatherExecutor
-    ) {
-        AsyncItemProcessor<WeatherLocation, List<Weather>> processor = new AsyncItemProcessor<>();
-        processor.setDelegate(delegate);
-        processor.setTaskExecutor(weatherExecutor);
-        return processor;
-    }
-
-    @Bean
-    public AsyncItemWriter<List<Weather>> asyncWriter(ItemWriter<List<Weather>> delegate) {
-        AsyncItemWriter<List<Weather>> writer = new AsyncItemWriter<>();
-        writer.setDelegate(loggingWriter());
-        return writer;
-    }
-
-    @Bean
     @JobScope
-    public Step coordinateReadStep(
-        ItemReader<WeatherLocation> weatherLocationReader,
-        AsyncItemProcessor<WeatherLocation, List<Weather>> asyncProcessor,
-        AsyncItemWriter<List<Weather>> asyncWriter
-    ) {
+    public Step coordinateReadStep(ItemReader<WeatherLocation> weatherLocationReader) {
         return new StepBuilder("coordinateReadStep", jobRepository)
             .<WeatherLocation, Future<List<Weather>>>chunk(CHUNK_SIZE, transactionManager)
             .reader(weatherLocationReader)
-            .processor(asyncProcessor)
-            .writer(asyncWriter)
+            .processor(asyncItemProcessor()) // 일반 ItemProcessor 사용
+            .writer(asyncItemWriter())
+            .faultTolerant()    // 여기서 재시도, 예외, 스킵 등하자.
+            .skipLimit(10)
+            .skip(WeatherApiCallFailedException.class)
             .build();
     }
 
-    @Bean
-    @StepScope
-    public ItemWriter<List<Weather>> loggingWriter() {
-        return items -> {
-            List<Weather> flattened = items.getItems().stream()
-                .flatMap(List::stream)   // List<List<Weather>> → List<Weather>
-                .toList();
-            if (flattened.isEmpty()) {
-                log.debug("coordinate is null");
-                return;
-            } else {
-                weatherRepository.saveAll(flattened);
-            }
-        };
-    }
 
     @Bean
     @StepScope
@@ -108,7 +77,22 @@ public class CoordinateReadJobConfig {
             .methodName("findAll")
             .pageSize(CHUNK_SIZE)
             .arguments(Collections.emptyList())
-            .sorts(Collections.singletonMap(ID, Direction.DESC))
+            .sorts(Collections.singletonMap("id", Direction.DESC))
             .build();
+    }
+
+    @Bean
+    public AsyncItemProcessor<WeatherLocation, List<Weather>> asyncItemProcessor() {
+        AsyncItemProcessor<WeatherLocation, List<Weather>> asyncProcessor = new AsyncItemProcessor<>();
+        asyncProcessor.setDelegate(itemProcessor);
+        asyncProcessor.setTaskExecutor(weatherExecutor);
+        return asyncProcessor;
+    }
+
+    @Bean
+    public AsyncItemWriter<List<Weather>> asyncItemWriter() {
+        AsyncItemWriter<List<Weather>> asyncItemWriter = new AsyncItemWriter<>();
+        asyncItemWriter.setDelegate(weatherDataWriter);
+        return asyncItemWriter;
     }
 }

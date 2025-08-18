@@ -6,7 +6,8 @@ aws:
 
 spring:
   config:
-    import: 'aws-secretsmanager:/secret/closet'
+    import:
+      - 'aws-secretsmanager:/secret/closet'
   batch:
     job:
       enabled: false
