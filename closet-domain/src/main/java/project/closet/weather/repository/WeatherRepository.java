@@ -11,5 +11,4 @@ public interface WeatherRepository extends JpaRepository<Weather, UUID> {
     List<Weather> findAllByXAndYAndForecastedAtOrderByForecastAtAsc(Integer x, Integer y,
             Instant forecastedAt);
 
-    boolean existsByForecastedAt(Instant forecastedAt);
 }

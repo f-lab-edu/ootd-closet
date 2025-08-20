@@ -24,6 +24,7 @@ public class WeatherApiItemProcessor implements ItemProcessor<WeatherLocation, L
 
     private final WeatherAPIClient weatherAPIClient;
     private final WeatherDataParser weatherDataParser;
+    private final WeatherApiResponseConverter weatherApiResponseConverter;
 
     @Override
     public List<Weather> process(WeatherLocation weatherLocation) throws Exception {
@@ -42,7 +43,7 @@ public class WeatherApiItemProcessor implements ItemProcessor<WeatherLocation, L
             forecastTime
         );
         // api 응답을 시스템이 가지는 스펙으로 컨버터
-        List<WeatherData> weatherData = WeatherApiResponseConverter.parseToWeatherDataList(apiResponse);
+        List<WeatherData> weatherData = weatherApiResponseConverter.parseToWeatherDataList(apiResponse);
 
         // 도메인 엔티티로 변경 -> 하나의 좌표에 여러 개의 날씨 시간 데이터
         return weatherDataParser.parseToWeatherEntities(weatherData, forecastedAt);
