@@ -6,29 +6,22 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.closet.batch.api.WeatherAPIClient;
-import project.closet.batch.api.WeatherApiResponseConverter;
-import project.closet.batch.api.response.KakaoAddressResponse;
+import project.closet.api.response.KakaoAddressResponse;
 import project.closet.service.dto.response.WeatherAPILocation;
 import project.closet.service.dto.response.WeatherDto;
-import project.closet.batch.api.AddressClient;
+import project.closet.api.AddressClient;
 import project.closet.service.waether.WeatherService;
 import project.closet.weather.GeoGridConverter;
 import project.closet.weather.GeoGridConverter.Grid;
-import project.closet.weather.WeatherDataParser;
 import project.closet.weather.entity.Weather;
 import project.closet.weather.repository.WeatherRepository;
-import project.closet.weatherlocation.WeatherLocation;
 import project.closet.weatherlocation.WeatherLocationRepository;
 
 @Slf4j
@@ -42,8 +35,6 @@ public class BasicWeatherService implements WeatherService {
     private final WeatherLocationRepository weatherLocationRepository;
 
     private final GeoGridConverter geoGridConverter;
-    private final WeatherAPIClient weatherAPIClient;
-    private final WeatherDataParser weatherDataParser;
 
     @Transactional(readOnly = true)
     @Override
