@@ -215,3 +215,4 @@ gradle-app.setting
 /closet.pem
 /nginx/
 /codeit-final_accessKeys.csv
+/closet-batch/.dockerignore

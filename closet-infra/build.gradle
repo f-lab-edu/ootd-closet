@@ -11,7 +11,9 @@ project(':closet-infra') {
         implementation 'org.springframework.boot:spring-boot-starter-web'
         implementation 'org.springframework.retry:spring-retry'
         implementation 'software.amazon.awssdk:s3:2.31.7'
-
         implementation 'io.awspring.cloud:spring-cloud-aws-starter-secrets-manager:3.4.0'
+
+        implementation "org.apache.httpcomponents.client5:httpclient5"   // 버전은 Boot BOM이 관리
+
     }
 }

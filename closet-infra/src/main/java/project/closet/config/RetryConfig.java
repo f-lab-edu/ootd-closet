@@ -1,4 +1,4 @@
-package project.closet.batch.config;
+package project.closet.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.annotation.EnableRetry;
