@@ -5,16 +5,17 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
-import project.closet.batch.api.WeatherAPIClient;
-import project.closet.batch.api.WeatherApiResponseConverter;
-import project.closet.batch.api.response.WeatherApiResponse;
-import project.closet.weather.WeatherData;
-import project.closet.weather.WeatherDataParser;
+import project.closet.api.WeatherAPIClient;
+import project.closet.api.WeatherApiResponseConverter;
+import project.closet.api.response.WeatherApiResponse;
 import project.closet.weather.entity.Weather;
+import project.closet.weather.parser.WeatherData;
+import project.closet.weather.parser.WeatherDataParser;
 import project.closet.weatherlocation.WeatherLocation;
 
 @Component
@@ -43,9 +44,10 @@ public class WeatherApiItemProcessor implements ItemProcessor<WeatherLocation, L
             forecastTime
         );
         // api 응답을 시스템이 가지는 스펙으로 컨버터
-        List<WeatherData> weatherData = weatherApiResponseConverter.parseToWeatherDataList(apiResponse);
+        Map<LocalDate, List<WeatherData>> weatherData =
+            weatherApiResponseConverter.parseToWeatherDataList(apiResponse);
 
         // 도메인 엔티티로 변경 -> 하나의 좌표에 여러 개의 날씨 시간 데이터
-        return weatherDataParser.parseToWeatherEntities(weatherData, forecastedAt);
+        return weatherDataParser.parseToWeatherEntities(weatherData);
     }
 }
