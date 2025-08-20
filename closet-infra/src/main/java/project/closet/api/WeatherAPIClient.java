@@ -31,7 +31,7 @@ public class WeatherAPIClient {
 
         try {
             return restTemplate.getForObject(uri, WeatherApiResponse.class);
-        } catch (RestClientException exception) {
+        } catch (Exception exception) {
             log.error("날씨 API 호출에 실패했습니다.", exception);
             throw new WeatherApiCallFailedException(exception.getMessage(), exception);
         }
