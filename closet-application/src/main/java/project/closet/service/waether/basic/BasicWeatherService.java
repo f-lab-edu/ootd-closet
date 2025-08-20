@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -13,10 +15,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.closet.api.AddressClient;
 import project.closet.api.response.KakaoAddressResponse;
 import project.closet.service.dto.response.WeatherAPILocation;
 import project.closet.service.dto.response.WeatherDto;
-import project.closet.api.AddressClient;
 import project.closet.service.waether.WeatherService;
 import project.closet.weather.GeoGridConverter;
 import project.closet.weather.GeoGridConverter.Grid;
@@ -66,14 +68,35 @@ public class BasicWeatherService implements WeatherService {
             .toInstant();
         // 3. 날씨 정보 가공 후 반환
         List<Weather> weathers =
-            weatherRepository.findAllByXAndYAndForecastedAtOrderByForecastAtAsc(grid.x(),
-                grid.y(), baseForecastedAt);
+            weatherRepository.findAllByXAndYAndForecastedAtOrderByForecastAtAsc(grid.x(), grid.y(), baseForecastedAt);
+
+        Map<LocalDate, List<Weather>> weathersByDate = weathers.stream()
+            .collect(Collectors.groupingBy(weather -> weather.getForecastAt().atZone(SEOUL).toLocalDate()));
+
+        LocalTime userTime = LocalTime.now(SEOUL); // 사용자의 현재 시간
+        List<Weather> resultWeathers = new ArrayList<>();
+
+        for (int i = 0; i < 4; i++) {
+            LocalDate targetDate = LocalDate.now(SEOUL).plusDays(i);
+            List<Weather> dailyWeathers = weathersByDate.get(targetDate);
+
+            if (dailyWeathers == null || dailyWeathers.isEmpty()) {
+                continue;
+            }
+
+            dailyWeathers.stream()
+                .min(Comparator.comparingLong(w ->
+                    Math.abs(ChronoUnit.MINUTES.between(
+                        userTime, w.getForecastAt().atZone(SEOUL).toLocalTime())))
+                )
+                .ifPresent(resultWeathers::add);
+        }
 
         // TODO 날씨 차이 로직 변경하기
-        Map<Instant, Weather> weatherMapByForecastAt = weathers.stream()
+        Map<Instant, Weather> weatherMapByForecastAt = resultWeathers.stream()
             .collect(Collectors.toMap(Weather::getForecastAt, w -> w));
 
-        return weathers.stream()
+        return resultWeathers.stream()
             .map(weather -> {
                 Weather yesterday = weatherMapByForecastAt.get(
                     weather.getForecastAt().minus(1, ChronoUnit.DAYS));
