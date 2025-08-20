@@ -5,7 +5,7 @@ import java.time.LocalTime;
 import lombok.Builder;
 
 @Builder
-public record WeatherData2(
+public record WeatherData(
     LocalDate baseDate,
     LocalTime baseTime,
     LocalDate fcstDate,

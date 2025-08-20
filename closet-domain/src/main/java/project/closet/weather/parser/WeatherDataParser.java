@@ -10,18 +10,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import project.closet.weather.entity.AsWord;
 import project.closet.weather.entity.PrecipitationType;
 import project.closet.weather.entity.SkyStatus;
 import project.closet.weather.entity.Weather;
 
 @Slf4j
-public class WeatherDataParser implements WeatherParser<Map<LocalDate, List<WeatherData2>>> {
+@Component
+public class WeatherDataParser implements WeatherParser<Map<LocalDate, List<WeatherData>>> {
 
     public static final ZoneId KST = ZoneId.of("Asia/Seoul");
 
     @Override
-    public List<Weather> parseToWeatherEntities(Map<LocalDate, List<WeatherData2>> byDate) {
+    public List<Weather> parseToWeatherEntities(Map<LocalDate, List<WeatherData>> byDate) {
 
         if (byDate == null || byDate.isEmpty()) {
             log.info("기상청 데이터가 존재하지 않습니다.");
@@ -30,14 +32,14 @@ public class WeatherDataParser implements WeatherParser<Map<LocalDate, List<Weat
 
         List<Weather> weathers = new ArrayList<>();
 
-        for (Map.Entry<LocalDate, List<WeatherData2>> entry : byDate.entrySet()) {
+        for (Map.Entry<LocalDate, List<WeatherData>> entry : byDate.entrySet()) {
 
-            List<WeatherData2> dayList = entry.getValue();
+            List<WeatherData> dayList = entry.getValue();
             if (dayList.isEmpty()) {
                 continue;
             }
 
-            WeatherData2 weatherDataFirst = dayList.get(0);
+            WeatherData weatherDataFirst = dayList.get(0);
             int nx = weatherDataFirst.nx();
             int ny = weatherDataFirst.ny();
 
@@ -57,17 +59,17 @@ public class WeatherDataParser implements WeatherParser<Map<LocalDate, List<Weat
                 .findFirst()
                 .orElse(0.0);
 
-            Map<LocalTime, List<WeatherData2>> byTime = dayList.stream()
-                .collect(Collectors.groupingBy(WeatherData2::fcstTime));
+            Map<LocalTime, List<WeatherData>> byTime = dayList.stream()
+                .collect(Collectors.groupingBy(WeatherData::fcstTime));
 
             LocalDate fcstDate = weatherDataFirst.fcstDate();
 
-            for (Map.Entry<LocalTime, List<WeatherData2>> timeEntry : byTime.entrySet()) {
+            for (Map.Entry<LocalTime, List<WeatherData>> timeEntry : byTime.entrySet()) {
                 LocalTime fcstTime = timeEntry.getKey();
                 Instant forecastAt = LocalDateTime.of(fcstDate, fcstTime).atZone(KST).toInstant();
 
-                List<WeatherData2> bucket = timeEntry.getValue();
-                double pcp = findNumeric(bucket, "PCP");
+                List<WeatherData> bucket = timeEntry.getValue();
+                String pcp = findRaw(bucket, "PCP");
                 String skyCode = findRaw(bucket, "SKY");
                 String ptyCode = findRaw(bucket, "PTY");
                 double pop = findNumeric(bucket, "POP");
@@ -81,10 +83,10 @@ public class WeatherDataParser implements WeatherParser<Map<LocalDate, List<Weat
                 }
 
                 Weather weather = Weather.builder()
-                    .forecastedAt(forecastAt)
+                    .forecastedAt(forecastedAt)
                     .forecastAt(forecastAt)
                     .skyStatus(SkyStatus.fromCode(skyCode))
-                    .amount(pcp)
+                    .amount(parsePrecipitation(pcp))
                     .probability(pop)
                     .precipitationType(PrecipitationType.fromCode(ptyCode))
                     .windSpeed(wsd)
@@ -104,24 +106,69 @@ public class WeatherDataParser implements WeatherParser<Map<LocalDate, List<Weat
         return weathers;
     }
 
-    private boolean filterByCategoryAndTime(WeatherData2 weatherData, String category, LocalTime fcstTime) {
+    private boolean filterByCategoryAndTime(WeatherData weatherData, String category, LocalTime fcstTime) {
         return category.equals(weatherData.category()) && fcstTime.equals(weatherData.fcstTime());
     }
 
-    private double findNumeric(List<WeatherData2> list, String category) {
+    private double findNumeric(List<WeatherData> list, String category) {
         return list.stream()
             .filter(weatherData -> category.equals(weatherData.category()))
-            .map(WeatherData2::fcstValue)
+            .map(WeatherData::fcstValue)
             .mapToDouble(Double::parseDouble)
             .findFirst()
             .orElse(0.0);
     }
 
-    private String findRaw(List<WeatherData2> list, String category) {
+    private String findRaw(List<WeatherData> list, String category) {
         return list.stream()
             .filter(weatherData -> category.equals(weatherData.category()))
-            .map(WeatherData2::fcstValue)
+            .map(WeatherData::fcstValue)
             .findFirst()
             .orElse(null);
+    }
+
+    private Double parsePrecipitation(String value) {
+        if (value == null || value.isBlank()) return 0.0;
+
+        if (value.contains("없음")) {
+            return 0.0;
+        }
+        if (value.contains("1mm 미만")) {
+            return 0.1;
+        }
+
+        // "30.0~50.0mm" 처리
+        if (value.contains("~")) {
+            String[] parts = value.replace("mm", "").split("~");
+            try {
+                double start = Double.parseDouble(parts[0].trim());
+                double end = Double.parseDouble(parts[1].trim());
+                return (start + end) / 2;
+            } catch (NumberFormatException e) {
+                log.warn("⛔ 강수량 범위 파싱 실패: {}", value);
+                return 0.0;
+            }
+        }
+
+        // "50.0mm 이상" → 고정 상한값 설정
+        if (value.contains("이상")) {
+            String numeric = value.replace("mm", "")
+                .replace("이상", "")
+                .trim();
+            try {
+                return Double.parseDouble(numeric);
+            } catch (NumberFormatException e) {
+                log.warn("⛔ 강수량 이상값 파싱 실패: {}", value);
+                return 0.0;
+            }
+        }
+
+        // "1.5mm" 등 일반적인 실수형
+        try {
+            return Double.parseDouble(value.replace("mm", "").trim());
+        } catch (NumberFormatException e) {
+            log.warn("⛔ 일반 강수량 파싱 실패: {}", value);
+            return 0.0;
+        }
     }
 }
