@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
-import project.closet.batch.api.WeatherApiCallFailedException;
+import project.closet.api.WeatherApiCallFailedException;
 import project.closet.weather.entity.Weather;
 import project.closet.weatherlocation.WeatherLocation;
 
@@ -41,7 +41,6 @@ public class CoordinateReadJobConfig {
         Step coordinateReadStep
     ) {
         return new JobBuilder("COORDINATE_READ_JOB", jobRepository)
-            .incrementer(new RunIdIncrementer())
             .start(coordinateReadStep)
             .build();
     }
