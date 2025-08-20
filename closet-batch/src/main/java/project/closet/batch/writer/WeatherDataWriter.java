@@ -26,6 +26,7 @@ public class WeatherDataWriter implements ItemWriter<List<Weather>> {
         if (flattened.isEmpty()) {
             log.debug("coordinate is null");
         } else {
+            log.info("Writing weather size : {}", flattened.size());
             weatherRepository.saveAll(flattened);
         }
     }
