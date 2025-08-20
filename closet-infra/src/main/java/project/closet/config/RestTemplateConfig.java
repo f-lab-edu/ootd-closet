@@ -17,8 +17,8 @@ public class RestTemplateConfig {
     @Bean
     public RestTemplate restTemplate() {
         HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-        factory.setConnectTimeout(Duration.ofSeconds(1000));
-        factory.setReadTimeout(Duration.ofSeconds(2000));
+        factory.setConnectTimeout(Duration.ofSeconds(5));
+        factory.setReadTimeout(Duration.ofSeconds(10));
 
         RestTemplate restTemplate = new RestTemplate(new BufferingClientHttpRequestFactory(factory));
         restTemplate.setInterceptors(Collections.singletonList(retryApiInterceptor()));

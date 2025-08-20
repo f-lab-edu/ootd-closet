@@ -1,4 +1,4 @@
-package project.closet.batch.api;
+package project.closet.api;
 
 public class WeatherApiCallFailedException extends RuntimeException {
     public WeatherApiCallFailedException(String message) {

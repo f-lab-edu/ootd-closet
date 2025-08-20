@@ -6,9 +6,9 @@ COPY gradlew ./
 COPY gradle/ gradle/
 COPY settings.gradle build.gradle ./
 
+COPY closet-infra/ closet-infra/
 COPY closet-batch/ closet-batch/
 COPY closet-domain/ closet-domain/
-COPY closet-infra/ closet-infra/
 
 RUN ./gradlew :closet-batch:bootJar -x test --no-daemon
 

@@ -1,7 +1,7 @@
-package project.closet.batch.api;
+package project.closet.api;
 
 
-import project.closet.batch.api.response.KakaoAddressResponse;
+import project.closet.api.response.KakaoAddressResponse;
 
 public interface AddressClient {
 

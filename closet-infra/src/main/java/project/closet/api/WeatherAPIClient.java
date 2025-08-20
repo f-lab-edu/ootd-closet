@@ -1,4 +1,4 @@
-package project.closet.batch.api;
+package project.closet.api;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import project.closet.batch.api.response.WeatherApiResponse;
+import project.closet.api.response.WeatherApiResponse;
 
 @Slf4j
 @Component
@@ -29,12 +29,10 @@ public class WeatherAPIClient {
         String formattedTime = baseTime.format(DateTimeFormatter.ofPattern("HHmm"));
         URI uri = buildUri(x, y, formattedDate, formattedTime);
 
-        log.debug("Weather API 호출 URI: {}", uri);
-        // TODO 실패 시 에러 감싸서 throw
         try {
             return restTemplate.getForObject(uri, WeatherApiResponse.class);
         } catch (RestClientException exception) {
-            log.error("날씨 API 호출에 실패했습니다. URI : {}", uri, exception);
+            log.error("날씨 API 호출에 실패했습니다.", exception);
             throw new WeatherApiCallFailedException(exception.getMessage(), exception);
         }
     }
