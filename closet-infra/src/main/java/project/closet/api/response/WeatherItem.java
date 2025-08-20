@@ -1,4 +1,4 @@
-package project.closet.batch.api.response;
+package project.closet.api.response;
 
 public record WeatherItem(
         String baseDate,   // 예보 발표 날짜

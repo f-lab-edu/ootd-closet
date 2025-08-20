@@ -1,4 +1,4 @@
-package project.closet.batch.api;
+package project.closet.api;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -9,10 +9,9 @@ import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
-import project.closet.batch.api.response.WeatherApiResponse;
-import project.closet.batch.api.response.WeatherItem;
-import project.closet.weather.WeatherData;
-import project.closet.weather.parser.WeatherData2;
+import project.closet.api.response.WeatherApiResponse;
+import project.closet.api.response.WeatherItem;
+import project.closet.weather.parser.WeatherData;
 
 @Component
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -21,31 +20,7 @@ public class WeatherApiResponseConverter {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HHmm");
 
-    public List<WeatherData> parseToWeatherDataList(WeatherApiResponse apiResponse) {
-        if (apiResponse == null || apiResponse.response() == null
-            || apiResponse.response().body() == null
-            || apiResponse.response().body().items() == null) {
-            return List.of();
-        }
-
-        List<WeatherItem> items = apiResponse.response().body().items().item();
-        return items.stream()
-            .map(item -> {
-                return WeatherData.builder()
-                    .baseDate(item.baseDate())
-                    .baseTime(item.baseTime())
-                    .category(item.category())
-                    .fcstDate(item.fcstDate())
-                    .fcstTime(item.fcstTime())
-                    .fcstValue(item.fcstValue())
-                    .nx(item.nx())
-                    .ny(item.ny())
-                    .build();
-            })
-            .toList();
-    }
-
-    public Map<LocalDate, List<WeatherData2>> parseToWeatherDataList2(WeatherApiResponse response) {
+    public Map<LocalDate, List<WeatherData>> parseToWeatherDataList(WeatherApiResponse response) {
 
         if (
             response == null
@@ -59,11 +34,11 @@ public class WeatherApiResponseConverter {
         List<WeatherItem> items = response.response().body().items().item();
         return items.stream()
             .map(this::parseToDto)
-            .collect(Collectors.groupingBy(WeatherData2::fcstDate));
+            .collect(Collectors.groupingBy(WeatherData::fcstDate));
     }
 
-    private WeatherData2 parseToDto(WeatherItem item) {
-        return WeatherData2.builder()
+    private WeatherData parseToDto(WeatherItem item) {
+        return WeatherData.builder()
             .baseDate(LocalDate.parse(item.baseDate(), DATE_FORMATTER))
             .baseTime(LocalTime.parse(item.baseTime(), TIME_FORMATTER))
             .category(item.category())
