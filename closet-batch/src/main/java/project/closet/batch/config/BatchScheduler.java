@@ -19,7 +19,7 @@ public class BatchScheduler {
     private final JobLauncher jobLauncher;
     private final Job coordinateJob;
 
-    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 20  * * *", zone = "Asia/Seoul")
     public void runCoordinateJob() throws Exception {
         LocalDate batchDate = LocalDate.now(ZoneId.of("Asia/Seoul"));
 

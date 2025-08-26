@@ -202,7 +202,7 @@ public class BasicUserService implements UserService {
             nextIdAfter = lastUser.getId();
         }
 
-        long totalCount = userRepository.countAllUsers(emailLike, Role.valueOf(roleEqual.name()), locked);
+        long totalCount = userRepository.countAllUsers(emailLike, RoleMapper.toDomain(roleEqual), locked);
 
         return new UserDtoCursorResponse(
             userDtos,
