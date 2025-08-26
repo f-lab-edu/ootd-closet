@@ -41,6 +41,7 @@ public class CoordinateReadJobConfig {
         Step coordinateReadStep
     ) {
         return new JobBuilder("COORDINATE_READ_JOB", jobRepository)
+            .incrementer(new RunIdIncrementer())
             .start(coordinateReadStep)
             .build();
     }
