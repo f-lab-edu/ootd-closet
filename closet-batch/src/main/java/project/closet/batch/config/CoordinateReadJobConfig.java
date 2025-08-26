@@ -38,11 +38,13 @@ public class CoordinateReadJobConfig {
     @Bean
     public Job coordinateJob(
         JobRepository jobRepository,
-        Step coordinateReadStep
+        Step coordinateReadStep,
+        DailyJobParameterIncrementer dailyIncrementer
     ) {
-        return new JobBuilder("COORDINATE_READ_JOB", jobRepository)
-            .incrementer(new RunIdIncrementer())
+        return new JobBuilder("COORDINATE_JOB", jobRepository)
+            .incrementer(dailyIncrementer)
             .start(coordinateReadStep)
+            .preventRestart()
             .build();
     }
 
@@ -54,12 +56,12 @@ public class CoordinateReadJobConfig {
         ItemReader<WeatherLocation> weatherDataReader
     ) {
         return new StepBuilder("coordinateReadStep", jobRepository)
-            .<WeatherLocation, Future<List<Weather>>>chunk(10, transactionManager)
+            .<WeatherLocation, Future<List<Weather>>>chunk(20, transactionManager)
             .reader(weatherDataReader)
             .processor(asyncItemProcessor())
             .writer(asyncItemWriter())
             .faultTolerant()
-            .skipLimit(10)
+            .skipLimit(20)
             .skip(WeatherApiCallFailedException.class)
             .build();
     }

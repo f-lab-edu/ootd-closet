@@ -10,7 +10,8 @@ spring:
       - 'aws-secretsmanager:/secret/closet'
   batch:
     job:
-      enabled: false
+      name: COORDINATE_JOB
+      enabled: true
     jdbc:
       initialize-schema: never
 
