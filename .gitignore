@@ -216,3 +216,4 @@ gradle-app.setting
 /nginx/
 /codeit-final_accessKeys.csv
 /closet-batch/.dockerignore
+/k6/script/login-tests/prod/login-result-2025-08-29.csv
