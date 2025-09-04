@@ -23,7 +23,7 @@ public class RetryApiInterceptor implements ClientHttpRequestInterceptor {
             try {
                 return execution.execute(request, body);
             } catch (Exception exception) {
-                log.warn("API 호출 실패, 재시도 ({}회)", context.getRetryCount(), exception);
+                log.warn("API 호출 실패, 재시도 ({}회), cause : {}", context.getRetryCount(),  exception.getMessage());
                 throw exception;
             }
         }, context -> {

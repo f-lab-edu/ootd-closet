@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import project.closet.api.response.WeatherApiResponse;
@@ -32,7 +31,7 @@ public class WeatherAPIClient {
         try {
             return restTemplate.getForObject(uri, WeatherApiResponse.class);
         } catch (Exception exception) {
-            log.error("날씨 API 호출에 실패했습니다.", exception);
+            log.error("날씨 API 호출에 실패했습니다. x : {}, y : {}", x, y);
             throw new WeatherApiCallFailedException(exception.getMessage(), exception);
         }
     }
