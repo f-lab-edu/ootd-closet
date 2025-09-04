@@ -21,8 +21,8 @@ export const options = {
 };
 
 export function setup() {
-    const login_url = 'https://daily-ootd.online/api/auth/csrf-token';
-    let csrfRes = http.get(login_url);
+    const csrfTokenUrl = 'https://daily-ootd.online/api/auth/csrf-token';
+    let csrfRes = http.get(csrfTokenUrl);
     let csrfToken = JSON.parse(csrfRes.body).token;
     check(
         csrfRes,
