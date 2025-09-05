@@ -65,7 +65,7 @@ public class User extends BaseUpdatableEntity {
         if (this.profile == null) {
             this.profile = Profile.createDefault(this);
         }
-        if (name != null && !name.equals(newName)) {
+        if (newName != null && !name.equals(newName)) {
             this.name = newName;
         }
         this.profile.updateGender(newGender);
