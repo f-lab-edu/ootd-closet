@@ -15,5 +15,7 @@ project(':closet-infra') {
 
         implementation "org.apache.httpcomponents.client5:httpclient5"   // 버전은 Boot BOM이 관리
 
+        // Cache
+        implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     }
 }
