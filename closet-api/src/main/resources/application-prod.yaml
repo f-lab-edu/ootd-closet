@@ -1,5 +1,8 @@
 server:
-    port: 8080
+  tomcat:
+    connection-timeout: 15s
+    keep-alive-timeout: 20s
+  port: 8080
 aws:
   secretsmanager:
     region: ap-northeast-2
