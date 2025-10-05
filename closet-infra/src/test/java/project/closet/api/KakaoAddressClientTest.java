@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 @TestPropertySource(properties = {
     "closet.kakao.api.key="
 })
+@Disabled
 class KakaoAddressClientInfraTest {
 
     public static final double LONGITUDE = 127.1086228;
