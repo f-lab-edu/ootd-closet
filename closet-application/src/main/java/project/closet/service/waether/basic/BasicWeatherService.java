@@ -38,7 +38,6 @@ public class BasicWeatherService implements WeatherService {
 
     private final GeoGridConverter geoGridConverter;
 
-    @Transactional(readOnly = true)
     @Override
     public WeatherAPILocation getLocation(Double longitude, Double latitude) {
         log.info("위도 경도로 행정구역 반환 요청: longitude={}, latitude={}", longitude, latitude);
