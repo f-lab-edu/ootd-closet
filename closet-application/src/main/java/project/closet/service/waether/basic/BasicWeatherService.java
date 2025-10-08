@@ -1,5 +1,7 @@
 package project.closet.service.waether.basic;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,10 +15,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.closet.api.AddressClient;
 import project.closet.api.response.KakaoAddressResponse;
+import project.closet.config.RedisConfig;
 import project.closet.service.dto.response.WeatherAPILocation;
 import project.closet.service.dto.response.WeatherDto;
 import project.closet.service.waether.WeatherService;
@@ -31,26 +36,41 @@ import project.closet.weatherlocation.WeatherLocationRepository;
 @RequiredArgsConstructor
 public class BasicWeatherService implements WeatherService {
     private static final ZoneId SEOUL = ZoneId.of("Asia/Seoul");
+    private static final String CACHE_PREFIX = "weather:location:";
 
+    private final RedisTemplate<String, Object> redisTemplate;
     private final AddressClient addressClient;
     private final WeatherRepository weatherRepository;
-    private final WeatherLocationRepository weatherLocationRepository;
-
     private final GeoGridConverter geoGridConverter;
+    private final ObjectMapper objectMapper;
 
     @Override
     public WeatherAPILocation getLocation(Double longitude, Double latitude) {
         log.info("위도 경도로 행정구역 반환 요청: longitude={}, latitude={}", longitude, latitude);
-        KakaoAddressResponse kakaoAddressResponse =
-            addressClient.requestAddressFromKakao(longitude, latitude);
         Grid grid = geoGridConverter.convert(latitude, longitude);
-        return new WeatherAPILocation(
+        String cacheKey = CACHE_PREFIX + grid.x() + ":" + grid.y();
+
+        Object cacheValue = redisTemplate.opsForValue().get(cacheKey);
+        if (cacheValue != null) {
+            log.info("Cache Hit for grid ({}, {})", grid.x(), grid.y());
+            return objectMapper.convertValue(cacheValue, WeatherAPILocation.class);
+        }
+
+        log.info("❌ Cache Miss for grid ({}, {}) - calling Kakao API", grid.x(), grid.y());
+        KakaoAddressResponse kakaoAddressResponse = addressClient.requestAddressFromKakao(longitude, latitude);
+
+        WeatherAPILocation location = new WeatherAPILocation(
             latitude,
             longitude,
             grid.x(),
             grid.y(),
             kakaoAddressResponse.getLocationNames()
         );
+
+        // 3️⃣ Redis에 저장 (TTL = 30분)
+        redisTemplate.opsForValue().set(cacheKey, location, Duration.ofMinutes(30));
+
+        return location;
     }
 
     // TODO 바로 전 날짜의 온도와 비교해서 온도 정보 반환

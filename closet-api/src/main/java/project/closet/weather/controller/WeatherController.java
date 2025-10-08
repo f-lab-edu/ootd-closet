@@ -40,8 +40,7 @@ public class WeatherController implements WeatherApi {
         @RequestParam Double latitude
     ) {
         log.info("날씨 위치 정보 조회 요청: longitude={}, latitude={}", longitude, latitude);
-        WeatherAPILocation location = weatherService.getLocation(longitude, latitude);
-        return ResponseEntity.ok(location);
+        return ResponseEntity.ok(weatherService.getLocation(longitude, latitude));
     }
 
 }
