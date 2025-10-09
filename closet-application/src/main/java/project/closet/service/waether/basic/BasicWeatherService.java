@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.closet.api.AddressClient;
 import project.closet.api.response.KakaoAddressResponse;
+import project.closet.cache.RedisCacheService;
 import project.closet.config.RedisConfig;
 import project.closet.service.dto.response.WeatherAPILocation;
 import project.closet.service.dto.response.WeatherDto;
@@ -38,11 +39,10 @@ public class BasicWeatherService implements WeatherService {
     private static final ZoneId SEOUL = ZoneId.of("Asia/Seoul");
     private static final String CACHE_PREFIX = "weather:location:";
 
-    private final RedisTemplate<String, Object> redisTemplate;
     private final AddressClient addressClient;
     private final WeatherRepository weatherRepository;
     private final GeoGridConverter geoGridConverter;
-    private final ObjectMapper objectMapper;
+    private final RedisCacheService cacheService;
 
     @Override
     public WeatherAPILocation getLocation(Double longitude, Double latitude) {
@@ -50,13 +50,13 @@ public class BasicWeatherService implements WeatherService {
         Grid grid = geoGridConverter.convert(latitude, longitude);
         String cacheKey = CACHE_PREFIX + grid.x() + ":" + grid.y();
 
-        Object cacheValue = redisTemplate.opsForValue().get(cacheKey);
+        WeatherAPILocation cacheValue = cacheService.get(cacheKey, WeatherAPILocation.class);
         if (cacheValue != null) {
-            log.info("Cache Hit for grid ({}, {})", grid.x(), grid.y());
-            return objectMapper.convertValue(cacheValue, WeatherAPILocation.class);
+            log.info("Cache Hit → {}", cacheKey);
+            return cacheValue;
         }
 
-        log.info("❌ Cache Miss for grid ({}, {}) - calling Kakao API", grid.x(), grid.y());
+        log.info("Cache Miss → Kakao API 호출");
         KakaoAddressResponse kakaoAddressResponse = addressClient.requestAddressFromKakao(longitude, latitude);
 
         WeatherAPILocation location = new WeatherAPILocation(
@@ -67,13 +67,10 @@ public class BasicWeatherService implements WeatherService {
             kakaoAddressResponse.getLocationNames()
         );
 
-        // 3️⃣ Redis에 저장 (TTL = 30분)
-        redisTemplate.opsForValue().set(cacheKey, location, Duration.ofMinutes(30));
-
+        cacheService.set(cacheKey, location, Duration.ofMinutes(30));
         return location;
     }
 
-    // TODO 바로 전 날짜의 온도와 비교해서 온도 정보 반환
     @Transactional(readOnly = true)
     @Override
     public List<WeatherDto> getWeatherInfo(Double longitude, Double latitude) {
