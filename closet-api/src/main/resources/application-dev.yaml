@@ -11,6 +11,10 @@ spring:
       hibernate:
         format_sql: true
         show_sql: false
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 logging:
   level:
