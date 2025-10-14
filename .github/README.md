@@ -28,11 +28,11 @@
 <p></p>
 <br>
 
-- 제목 : 옷장을 부탁해
-- 소개 : 개인화 의상 및 아이템 추천 SaaS
-- 프로젝트 기간 : 2025.06.30 ~ 2025.07.31
-- 시연 영상 : [구글 드라이브](https://drive.google.com/file/d/1k5ciqW8g0Vt3FSqepVLnryiLvufBWWCp/view)
-- 배포 링크 : [https://daily-ootd.online/](https://daily-ootd.online/)
+* __제목__ : 옷장을 부탁해
+* __소개__ : 개인화 의상 및 아이템 추천 SaaS
+* __프로젝트 기간__ : 2025.06.30 ~ 2025.07.31
+* __시연 영상__ : [구글 드라이브](https://drive.google.com/file/d/1k5ciqW8g0Vt3FSqepVLnryiLvufBWWCp/view)
+* __배포 링크__ : [https://daily-ootd.online/](https://daily-ootd.online/)
 
 <br>
 
@@ -118,8 +118,8 @@
 # R&R (Role & Responsibility)
 | 이름 | 역할 및 기여 |
 | :------: | :---------------- |
-| **백재우** | 🧩 **팀장 / 백엔드 개발** <br> - **사용자 관리**: 회원가입, 로그인, 프로필 수정 API 구현<br> - **팔로우 기능**: 사용자 간 팔로우/언팔로우 및 목록 조회 API<br> - **DM(Direct Message)**: WebSocket 기반 실시간 메시징 구현<br> - **알림(Notification)**: 팔로우·DM 등 이벤트 기반 SSE 알림 시스템 설계 및 개발<br> - **날씨 데이터 처리**: 기상청 OpenAPI 연동 및 데이터 파싱, 캐싱<br> - **배포 및 인프라 관리**: AWS EC2, Nginx, Docker 기반 배포 환경 구축 |
-| **설유일** |  **백엔드 개발** <br> - **의상 관리**: 사용자 의상 등록, 수정, 삭제 및 이미지 업로드 기능 구현<br> - **의상 추천**: 날씨 데이터 기반 개인 맞춤형 의상 추천 로직 구현 |
+| **백재우** |  **팀장 / 백엔드 개발** <br> - **사용자 관리**: 회원가입, 로그인, 프로필 수정 API 구현<br> - **팔로우 기능**: 사용자 간 팔로우/언팔로우 및 목록 조회 API<br> - **DM(Direct Message)**: WebSocket 기반 실시간 메시징 구현<br> - **알림(Notification)**: 팔로우·DM 등 이벤트 기반 SSE 알림 시스템 설계 및 개발<br> - **날씨 데이터 처리**: 기상청 OpenAPI 연동 및 데이터 파싱, 캐싱<br> - **배포 및 인프라 관리**: AWS EC2, Nginx, Docker 기반 배포 환경 구축 |
+| **설유일** |  **팀원 / 백엔드 개발** <br> - **의상 관리**: 사용자 의상 등록, 수정, 삭제 및 이미지 업로드 기능 구현<br> - **의상 추천**: 날씨 데이터 기반 개인 맞춤형 의상 추천 로직 구현 |
 
 <br>
 
@@ -249,6 +249,8 @@ closet/
 <br>
 
 # 리팩토링
+__WIKI Link__
+
 - [날씨 데이터 처리 성능 최적화](https://github.com/f-lab-edu/ootd-closet/wiki/%EB%82%A0%EC%94%A8-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%B2%98%EB%A6%AC-%EC%84%B1%EB%8A%A5-%EC%B5%9C%EC%A0%81%ED%99%94)
 - [서버 CPU 스파이크 원인 분석 및 안정화](https://github.com/f-lab-edu/ootd-closet/wiki/%EC%84%9C%EB%B2%84-CPU-%EC%8A%A4%ED%8C%8C%EC%9D%B4%ED%81%AC-%EC%9B%90%EC%9D%B8-%EB%B6%84%EC%84%9D-%EB%B0%8F-%EC%95%88%EC%A0%95%ED%99%94)
 - [Kakao API 호출 개선](https://github.com/f-lab-edu/ootd-closet/wiki/Kakao-API-%ED%98%B8%EC%B6%9C-%EA%B0%9C%EC%84%A0)
