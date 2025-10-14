@@ -1,5 +1,42 @@
 # 옷장을 부탁해 👗
 
+### TEAM 08
+[팀 협업 문서 - Notion](https://cuddly-dumpling-45d.notion.site/_8-21b7f7675e3d81b4871ae44b4c1dee01?source=copy_link)
+
+<br>
+
+### 팀원 구성
+| <img src="https://img.shields.io/badge/Project_Leader-FF5733" /> | <img src="https://img.shields.io/badge/Team_Member-6DB33F" /> |
+| :--------------------------------------------------------------: | :----------------------------------------------------------: |
+| <div align="center"><img src="https://github.com/jaewoo9797.png" width="150"/> | <div align="center"><img src="https://github.com/you1-2.png" width="150"> |
+| [@jaewoo9797](https://github.com/jaewoo9797)<br><p><b>백재우</b></p> | [@you1-2](https://github.com/you1-2)<br><p><b>설유일</b></p> |
+
+<br>
+
+## 프로젝트 소개
+<img width="1919" height="auto" alt="옷장을부탁해-피드화면" src="https://github.com/user-attachments/assets/7ed2d427-2c8e-41e9-8408-5edd9424a697" />
+
+<p></p>
+<br>
+
+- 제목 : 옷장을 부탁해
+- 소개 : 개인화 의상 및 아이템 추천 SaaS
+- 프로젝트 기간 : 2025.06.30 ~ 2025.07.31
+- 시연 영상 : [구글 드라이브](https://drive.google.com/file/d/1k5ciqW8g0Vt3FSqepVLnryiLvufBWWCp/view)
+
+
+<br>
+
+> 👗 오늘 뭐 입지? 고민은 그만!
+> 
+> 이 서비스는 사용자가 등록한 옷과 날씨 데이터를 기반으로 개인 맞춤형 의상 조합을 추천해주는 플랫폼입니다.
+> 
+> 추천된 의상은 OOTD 피드에 공유할 수 있고, 다른 사용자의 스타일을 팔로우, 좋아요, 댓글, DM을 통해 함께 즐길 수 있어요.
+> 
+> 옷장을 부탁해는 오늘도 당신의 스타일을 책임집니다. 🌦👕💬
+
+<br>
+
 # 프로젝트 전체 구상도
 <div align="center"><img width="1504" height="1025" alt="Image" src="https://github.com/user-attachments/assets/ee1a5a77-2009-49d0-a8c7-bb79027f9479" /></div>
 <br>
