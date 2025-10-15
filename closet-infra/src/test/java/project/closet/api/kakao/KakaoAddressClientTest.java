@@ -1,4 +1,4 @@
-package project.closet.api;
+package project.closet.api.kakao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,6 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.RestTemplate;
+import project.closet.api.kakaoapi.KakaoAddressClient;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
