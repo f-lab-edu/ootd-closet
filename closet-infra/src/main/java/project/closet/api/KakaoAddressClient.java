@@ -1,5 +1,6 @@
 package project.closet.api;
 
+import io.github.bucket4j.Bucket;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +24,15 @@ public class KakaoAddressClient implements AddressClient {
     private String kakaoApiKey;
 
     private final RestTemplate restTemplate;
+    private final Bucket kakaoApiBucket;
 
     @Override
     public KakaoAddressResponse requestAddressFromKakao(Double longitude, Double latitude) {
+
+        if (!kakaoApiBucket.tryConsume(1)) {
+            throw new RuntimeException();
+        }
+
         String url =
             "https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x="
                 + longitude
@@ -60,5 +67,6 @@ public class KakaoAddressClient implements AddressClient {
             log.error("Kakao API 호출 실패: {}", e.getMessage());
             throw new RuntimeException("Kakao 주소 API 호출 실패", e);
         }
+
     }
 }
