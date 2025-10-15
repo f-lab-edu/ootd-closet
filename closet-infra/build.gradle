@@ -17,5 +17,8 @@ project(':closet-infra') {
 
         // Cache
         implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+        // https://mvnrepository.com/artifact/com.bucket4j/bucket4j_jdk17-core
+        implementation("com.bucket4j:bucket4j_jdk17-core:8.15.0")
     }
 }

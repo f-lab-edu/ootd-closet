@@ -1,6 +1,5 @@
 package project.closet.service.waether.basic;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -15,14 +14,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.closet.api.AddressClient;
 import project.closet.api.response.KakaoAddressResponse;
 import project.closet.cache.RedisCacheService;
-import project.closet.config.RedisConfig;
 import project.closet.service.dto.response.WeatherAPILocation;
 import project.closet.service.dto.response.WeatherDto;
 import project.closet.service.waether.WeatherService;
@@ -30,7 +26,6 @@ import project.closet.weather.GeoGridConverter;
 import project.closet.weather.GeoGridConverter.Grid;
 import project.closet.weather.entity.Weather;
 import project.closet.weather.repository.WeatherRepository;
-import project.closet.weatherlocation.WeatherLocationRepository;
 
 @Slf4j
 @Service
